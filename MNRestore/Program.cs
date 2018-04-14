@@ -11,7 +11,7 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("命令开始");
+            Console.WriteLine("命令开始 ");
             DateTime beforDT = System.DateTime.Now;
 
             Puzzle puzzle = new Puzzle(1000,1000);
