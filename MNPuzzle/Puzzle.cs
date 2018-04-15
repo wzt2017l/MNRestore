@@ -113,9 +113,19 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         public void EmptyVerticalPlan( int offset, int direction)
         {
+            EmptyVerticalPlan(this.mnPosition,offset,direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap = new Swap(mnPosition + (offset - 1) * LieShu * direction, mnPosition + offset * LieShu * direction);
+            //    Command.Push(swap);
+            //}
+        }
+        public void EmptyVerticalPlan(int mnPosition, int offset, int direction)
+        {
             for (; offset > 0; offset--)
             {
-                Swap swap = new Swap(mnPosition + (offset - 1) * LieShu * direction, mnPosition + offset * LieShu * direction);
+                int j =mnPosition+ offset * LieShu * direction;
+                Swap swap = new Swap( j - LieShu * direction, j);
                 Command.Push(swap);
             }
         }
@@ -129,9 +139,19 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         public void EmptyTransversePlan( int offset, int direction)
         {
+            EmptyTransversePlan(this.mnPosition,offset,direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap = new Swap(mnPosition + (offset - 1) * direction, mnPosition + offset  * direction);
+            //    Command.Push(swap);
+            //}
+        }
+        public void EmptyTransversePlan(int mnPosition, int offset, int direction)
+        {
             for (; offset > 0; offset--)
             {
-                Swap swap = new Swap(mnPosition + (offset - 1) * direction, mnPosition + offset  * direction);
+                int j =mnPosition+ offset * direction;
+                Swap swap = new Swap(j- direction, j);
                 Command.Push(swap);
             }
         }
@@ -145,17 +165,36 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         public void RigthEntityVerticalPlan(int offset, int direction)
         {
+            RigthEntityVerticalPlan(this.mnPosition,offset,direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap1 = new Swap(mnPosition + offset*LieShu * direction+1, mnPosition + offset *LieShu* direction);
+            //    Command.Push(swap1);
+            //    Swap swap2 = new Swap(mnPosition + (offset - 1)*LieShu * direction+1, mnPosition + offset * LieShu * direction + 1);
+            //    Command.Push(swap2);
+            //    Swap swap3 = new Swap(mnPosition + (offset - 2) *LieShu* direction+1, mnPosition + (offset - 1) * LieShu * direction + 1);
+            //    Command.Push(swap3);
+            //    Swap swap4 = new Swap(mnPosition + (offset - 2) *LieShu* direction, mnPosition + (offset - 2) * LieShu * direction + 1);
+            //    Command.Push(swap4);
+            //    Swap swap5 = new Swap(mnPosition + (offset - 1)*LieShu * direction, mnPosition + (offset-2)*LieShu * direction);
+            //    Command.Push(swap5);
+            //}
+        }
+        public void RigthEntityVerticalPlan(int mnPosition, int offset, int direction)
+        {
+            int k = LieShu * direction;
             for (; offset > 0; offset--)
             {
-                Swap swap1 = new Swap(mnPosition + offset*LieShu * direction+1, mnPosition + offset *LieShu* direction);
+                int j = mnPosition+ offset * k-k;
+                Swap swap1 = new Swap(j + k+ 1,j + k);
                 Command.Push(swap1);
-                Swap swap2 = new Swap(mnPosition + (offset - 1)*LieShu * direction+1, mnPosition + offset * LieShu * direction + 1);
+                Swap swap2 = new Swap(j  + 1, j + k+1);
                 Command.Push(swap2);
-                Swap swap3 = new Swap(mnPosition + (offset - 2) *LieShu* direction+1, mnPosition + (offset - 1) * LieShu * direction + 1);
+                Swap swap3 = new Swap(j -  k + 1,j + 1);
                 Command.Push(swap3);
-                Swap swap4 = new Swap(mnPosition + (offset - 2) *LieShu* direction, mnPosition + (offset - 2) * LieShu * direction + 1);
+                Swap swap4 = new Swap(j- k, j - k + 1);
                 Command.Push(swap4);
-                Swap swap5 = new Swap(mnPosition + (offset - 1)*LieShu * direction, mnPosition + (offset-2)*LieShu * direction);
+                Swap swap5 = new Swap( j , j -  k);
                 Command.Push(swap5);
             }
         }
@@ -169,17 +208,36 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         public void LeftEntityVerticalPlan(int offset, int direction)
         {
+            LeftEntityVerticalPlan(this.mnPosition,offset,direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap1 = new Swap(mnPosition + offset * LieShu * direction -1, mnPosition + offset * LieShu * direction);
+            //    Command.Push(swap1);
+            //    Swap swap2 = new Swap(mnPosition + (offset - 1) * LieShu * direction - 1, mnPosition + offset * LieShu * direction - 1);
+            //    Command.Push(swap2);
+            //    Swap swap3 = new Swap(mnPosition + (offset - 2) * LieShu * direction - 1, mnPosition + (offset - 1) * LieShu * direction - 1);
+            //    Command.Push(swap3);
+            //    Swap swap4 = new Swap(mnPosition + (offset - 2) * LieShu * direction, mnPosition + (offset - 2) * LieShu * direction - 1);
+            //    Command.Push(swap4);
+            //    Swap swap5 = new Swap(mnPosition + (offset - 1) * LieShu * direction, mnPosition + (offset - 2) * LieShu * direction);
+            //    Command.Push(swap5);
+            //}
+        }
+        public void LeftEntityVerticalPlan(int mnPosition, int offset, int direction)
+        {
+            int k = LieShu * direction;
             for (; offset > 0; offset--)
             {
-                Swap swap1 = new Swap(mnPosition + offset * LieShu * direction -1, mnPosition + offset * LieShu * direction);
+                int j =mnPosition+ offset * k-k;
+                Swap swap1 = new Swap( j+k - 1,  j+k);
                 Command.Push(swap1);
-                Swap swap2 = new Swap(mnPosition + (offset - 1) * LieShu * direction - 1, mnPosition + offset * LieShu * direction - 1);
+                Swap swap2 = new Swap(j - 1,  j+k - 1);
                 Command.Push(swap2);
-                Swap swap3 = new Swap(mnPosition + (offset - 2) * LieShu * direction - 1, mnPosition + (offset - 1) * LieShu * direction - 1);
+                Swap swap3 = new Swap( j- k - 1,  j - 1);
                 Command.Push(swap3);
-                Swap swap4 = new Swap(mnPosition + (offset - 2) * LieShu * direction, mnPosition + (offset - 2) * LieShu * direction - 1);
+                Swap swap4 = new Swap( j - k, j- k - 1);
                 Command.Push(swap4);
-                Swap swap5 = new Swap(mnPosition + (offset - 1) * LieShu * direction, mnPosition + (offset - 2) * LieShu * direction);
+                Swap swap5 = new Swap( j ,j - k);
                 Command.Push(swap5);
             }
         }
@@ -193,17 +251,35 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         public void LowerEntityTransversePlan(int offset, int direction)
         {
+            LowerEntityTransversePlan(this.mnPosition,offset,direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap1 = new Swap(mnPosition + offset * direction +LieShu, mnPosition + offset * direction);
+            //    Command.Push(swap1);
+            //    Swap swap2 = new Swap(mnPosition + (offset - 1) * direction +LieShu, mnPosition + offset * direction +LieShu);
+            //    Command.Push(swap2);
+            //    Swap swap3 = new Swap(mnPosition + (offset - 2) * direction +LieShu, mnPosition + (offset - 1) * direction + LieShu);
+            //    Command.Push(swap3);
+            //    Swap swap4 = new Swap(mnPosition + (offset - 2) * direction, mnPosition + (offset - 2) * direction +LieShu);
+            //    Command.Push(swap4);
+            //    Swap swap5 = new Swap(mnPosition + (offset - 1) * direction, mnPosition + (offset - 2) * direction);
+            //    Command.Push(swap5);
+            //}
+        }
+        public void LowerEntityTransversePlan(int mnPosition, int offset, int direction)
+        {
             for (; offset > 0; offset--)
             {
-                Swap swap1 = new Swap(mnPosition + offset * direction +LieShu, mnPosition + offset * direction);
+                int j =mnPosition+ offset * direction-direction+LieShu;
+                Swap swap1 = new Swap(j+direction , j+direction-LieShu);
                 Command.Push(swap1);
-                Swap swap2 = new Swap(mnPosition + (offset - 1) * direction +LieShu, mnPosition + offset * direction +LieShu);
+                Swap swap2 = new Swap(j , j+direction );
                 Command.Push(swap2);
-                Swap swap3 = new Swap(mnPosition + (offset - 2) * direction +LieShu, mnPosition + (offset - 1) * direction + LieShu);
+                Swap swap3 = new Swap( j - direction , j );
                 Command.Push(swap3);
-                Swap swap4 = new Swap(mnPosition + (offset - 2) * direction, mnPosition + (offset - 2) * direction +LieShu);
+                Swap swap4 = new Swap(j - direction-LieShu, j- direction);
                 Command.Push(swap4);
-                Swap swap5 = new Swap(mnPosition + (offset - 1) * direction, mnPosition + (offset - 2) * direction);
+                Swap swap5 = new Swap( j-LieShu ,  j -  direction-LieShu);
                 Command.Push(swap5);
             }
         }
@@ -217,17 +293,35 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         public void RiseEntityTransversePlan(int offset, int direction)
         {
+            RiseEntityTransversePlan(this.mnPosition,offset,direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap1 = new Swap(mnPosition + offset * direction - LieShu, mnPosition + offset * direction);
+            //    Command.Push(swap1);
+            //    Swap swap2 = new Swap(mnPosition + (offset - 1) * direction - LieShu, mnPosition + offset * direction - LieShu);
+            //    Command.Push(swap2);
+            //    Swap swap3 = new Swap(mnPosition + (offset - 2) * direction - LieShu, mnPosition + (offset - 1) * direction - LieShu);
+            //    Command.Push(swap3);
+            //    Swap swap4 = new Swap(mnPosition + (offset - 2) * direction, mnPosition + (offset - 2) * direction - LieShu);
+            //    Command.Push(swap4);
+            //    Swap swap5 = new Swap(mnPosition + (offset - 1) * direction, mnPosition + (offset - 2) * direction);
+            //    Command.Push(swap5);
+            //}
+        }
+        public void RiseEntityTransversePlan(int mnPosition, int offset, int direction)
+        {
             for (; offset > 0; offset--)
             {
-                Swap swap1 = new Swap(mnPosition + offset * direction - LieShu, mnPosition + offset * direction);
+                int j = mnPosition+ offset * direction-direction-LieShu;
+                Swap swap1 = new Swap(j+direction,  j+direction+LieShu);
                 Command.Push(swap1);
-                Swap swap2 = new Swap(mnPosition + (offset - 1) * direction - LieShu, mnPosition + offset * direction - LieShu);
+                Swap swap2 = new Swap( j , j+direction );
                 Command.Push(swap2);
-                Swap swap3 = new Swap(mnPosition + (offset - 2) * direction - LieShu, mnPosition + (offset - 1) * direction - LieShu);
+                Swap swap3 = new Swap(j - direction ,  j );
                 Command.Push(swap3);
-                Swap swap4 = new Swap(mnPosition + (offset - 2) * direction, mnPosition + (offset - 2) * direction - LieShu);
+                Swap swap4 = new Swap( j - direction+LieShu,j - direction );
                 Command.Push(swap4);
-                Swap swap5 = new Swap(mnPosition + (offset - 1) * direction, mnPosition + (offset - 2) * direction);
+                Swap swap5 = new Swap(j+LieShu , j - direction+LieShu);
                 Command.Push(swap5);
             }
         }
@@ -242,19 +336,40 @@ namespace MNPuzzle
         /// <param name="directionC">列 1或-1</param>
         public void RiseEntityObliquePlan(int offset, int directionR,int directionC)
         {
+            RiseEntityObliquePlan(this.mnPosition,offset,directionR,directionC);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap1 = new Swap(mnPosition + offset * LieShu * directionR +(offset-1)*directionC, mnPosition + offset *LieShu* directionR+offset*directionC);
+            //    Command.Push(swap1);
+            //    Swap swap2 = new Swap(mnPosition + (offset - 1) *LieShu* directionR + (offset-1)*directionC, mnPosition + offset * LieShu * directionR + (offset - 1) * directionC);
+            //    Command.Push(swap2);
+            //    Swap swap3 = new Swap(mnPosition + (offset - 1) *LieShu* directionR + offset*directionC, mnPosition + (offset - 1) *LieShu* directionR + (offset-1)*directionC);
+            //    Command.Push(swap3);
+            //    Swap swap4 = new Swap(mnPosition + (offset - 2) *LieShu* directionR+offset*directionC, mnPosition + (offset - 1) * LieShu * directionR + offset * directionC);
+            //    Command.Push(swap4);
+            //    Swap swap5 = new Swap(mnPosition + (offset - 2) *LieShu* directionR+(offset-1)*directionC, mnPosition + (offset - 2) * LieShu * directionR + offset * directionC);
+            //    Command.Push(swap5);
+            //    Swap swap6 = new Swap(mnPosition + (offset - 1) *LieShu* directionR+(offset-1)*directionC, mnPosition + (offset - 2) * LieShu * directionR + (offset - 1) * directionC);
+            //    Command.Push(swap6);
+            //}
+        }
+        public void RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC)
+        {
+            int k = LieShu * directionR;
             for (; offset > 0; offset--)
             {
-                Swap swap1 = new Swap(mnPosition + offset * LieShu * directionR +(offset-1)*directionC, mnPosition + offset *LieShu* directionR+offset*directionC);
+                int j =mnPosition+offset * k+offset*directionC-k-directionC;
+                Swap swap1 = new Swap(j+k , j+k+directionC );
                 Command.Push(swap1);
-                Swap swap2 = new Swap(mnPosition + (offset - 1) *LieShu* directionR + (offset-1)*directionC, mnPosition + offset * LieShu * directionR + (offset - 1) * directionC);
+                Swap swap2 = new Swap( j, j +k);
                 Command.Push(swap2);
-                Swap swap3 = new Swap(mnPosition + (offset - 1) *LieShu* directionR + offset*directionC, mnPosition + (offset - 1) *LieShu* directionR + (offset-1)*directionC);
+                Swap swap3 = new Swap( j+directionC , j);
                 Command.Push(swap3);
-                Swap swap4 = new Swap(mnPosition + (offset - 2) *LieShu* directionR+offset*directionC, mnPosition + (offset - 1) * LieShu * directionR + offset * directionC);
+                Swap swap4 = new Swap( j -k+directionC , j+directionC );
                 Command.Push(swap4);
-                Swap swap5 = new Swap(mnPosition + (offset - 2) *LieShu* directionR+(offset-1)*directionC, mnPosition + (offset - 2) * LieShu * directionR + offset * directionC);
+                Swap swap5 = new Swap( j -  k ,  j- k+directionC );
                 Command.Push(swap5);
-                Swap swap6 = new Swap(mnPosition + (offset - 1) *LieShu* directionR+(offset-1)*directionC, mnPosition + (offset - 2) * LieShu * directionR + (offset - 1) * directionC);
+                Swap swap6 = new Swap( j, j-k);
                 Command.Push(swap6);
             }
         }
@@ -269,24 +384,46 @@ namespace MNPuzzle
         /// <param name="directionC">列 1或-1</param>
         public void LateralEntityObliquePlan(int offset, int directionR, int directionC)
         {
+            LateralEntityObliquePlan(this.mnPosition,offset,directionR,directionC);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap1 = new Swap(mnPosition + (offset-1) * LieShu * directionR + offset * directionC, mnPosition + offset * LieShu * directionR + offset * directionC);
+            //    Command.Push(swap1);
+            //    Swap swap2 = new Swap(mnPosition + (offset - 1) * LieShu * directionR + (offset - 1) * directionC, mnPosition + (offset-1) * LieShu * directionR + offset * directionC);
+            //    Command.Push(swap2);
+            //    Swap swap3 = new Swap(mnPosition + offset * LieShu * directionR + (offset-1) * directionC, mnPosition + (offset - 1) * LieShu * directionR + (offset - 1) * directionC);
+            //    Command.Push(swap3);
+            //    Swap swap4 = new Swap(mnPosition + offset * LieShu * directionR + (offset-2) * directionC, mnPosition + offset * LieShu * directionR + (offset-1) * directionC);
+            //    Command.Push(swap4);
+            //    Swap swap5 = new Swap(mnPosition + (offset - 1) * LieShu * directionR + (offset - 2) * directionC, mnPosition + offset * LieShu * directionR + (offset-2) * directionC);
+            //    Command.Push(swap5);
+            //    Swap swap6 = new Swap(mnPosition + (offset - 1) * LieShu * directionR + (offset - 1) * directionC, mnPosition + (offset - 2) * LieShu * directionR + (offset - 2) * directionC);
+            //    Command.Push(swap6);
+            //}
+        }
+        public void LateralEntityObliquePlan(int mnPosition,  int offset, int directionR, int directionC)
+        {
+            int k = LieShu * directionR;
             for (; offset > 0; offset--)
             {
-                Swap swap1 = new Swap(mnPosition + (offset-1) * LieShu * directionR + offset * directionC, mnPosition + offset * LieShu * directionR + offset * directionC);
+                int j =mnPosition+ offset * k+offset*directionC-k-directionC;
+                Swap swap1 = new Swap( j+directionC , j+k+directionC );
                 Command.Push(swap1);
-                Swap swap2 = new Swap(mnPosition + (offset - 1) * LieShu * directionR + (offset - 1) * directionC, mnPosition + (offset-1) * LieShu * directionR + offset * directionC);
+                Swap swap2 = new Swap( j,  j+directionC );
                 Command.Push(swap2);
-                Swap swap3 = new Swap(mnPosition + offset * LieShu * directionR + (offset-1) * directionC, mnPosition + (offset - 1) * LieShu * directionR + (offset - 1) * directionC);
+                Swap swap3 = new Swap( j+k,  j);
                 Command.Push(swap3);
-                Swap swap4 = new Swap(mnPosition + offset * LieShu * directionR + (offset-2) * directionC, mnPosition + offset * LieShu * directionR + (offset-1) * directionC);
+                Swap swap4 = new Swap( j+k - directionC,  j+k);
                 Command.Push(swap4);
-                Swap swap5 = new Swap(mnPosition + (offset - 1) * LieShu * directionR + (offset - 2) * directionC, mnPosition + offset * LieShu * directionR + (offset-2) * directionC);
+                Swap swap5 = new Swap(j - directionC,  j+k -directionC);
                 Command.Push(swap5);
-                Swap swap6 = new Swap(mnPosition + (offset - 1) * LieShu * directionR + (offset - 1) * directionC, mnPosition + (offset - 2) * LieShu * directionR + (offset - 2) * directionC);
+                Swap swap6 = new Swap(j, j -directionC);
                 Command.Push(swap6);
             }
         }
         #endregion
         #endregion
+
 
         #region 执行命令
         /// <summary>
