@@ -11,10 +11,14 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("命令开始 ");
+            Console.WriteLine("命令开始");
             DateTime beforDT = System.DateTime.Now;
-
+            
             Puzzle puzzle = new Puzzle(1000,1000);
+            PointOffset off= puzzle.RelativePosition(0,0);
+            PointOffset off1 = puzzle.RelativePosition(0, 10);
+            PointOffset off2 = puzzle.RelativePosition(200020, 100010);
+
             //puzzle.EmptyTransversePlan(999,-1);//mn横移
             //puzzle.ExecutePlan();//执行命令
             //puzzle.EmptyVerticalPlan(998,-1);//mn竖移
