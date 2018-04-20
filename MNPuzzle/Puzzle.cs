@@ -18,6 +18,7 @@ namespace MNPuzzle
         public int InversionNumber { get; set; }//数组逆序数
         public PuzzleState State { get; set; }//状态
         public Stack<Swap> Command { get; set; }//交换命令栈 
+        public Queue<Swap> Command1 { get; set; }//命令队列
         #endregion
 
         #region 构造函数
@@ -35,6 +36,7 @@ namespace MNPuzzle
             InversionNumber = 0;
             State = PuzzleState.Original;
             Command = new Stack<Swap>();
+            Command1 = new Queue<Swap>();
         }
         #endregion
 
@@ -424,6 +426,73 @@ namespace MNPuzzle
         #endregion
         #endregion
 
+        #region 基础命令队列
+        #region mn竖向移动命令
+        /// <summary>
+        /// 生成竖向移动命令
+        /// </summary>
+        /// <param name="mnPosition">mn的位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="direction">方向1或-1</param>
+        public void _EmptyVerticalPlan(int offset, int direction)
+        {
+            _EmptyVerticalPlan(this.mnPosition, offset, direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap = new Swap(mnPosition + (offset - 1) * LieShu * direction, mnPosition + offset * LieShu * direction);
+            //    Command.Push(swap);
+            //}
+        }
+        public void _EmptyVerticalPlan(int mnPosition, int offset, int direction)
+        {
+            int k = LieShu * direction;
+            for (int i=0;i<offset;i++)
+            {
+                int j = mnPosition + i * k;//j是当前循环mn的初始位置
+                Swap swap = new Swap(j,j+LieShu*direction);
+                Command1.Enqueue(swap);
+            }
+            //for (; offset > 0; offset--)
+            //{
+            //    int j = mnPosition + offset * LieShu * direction;
+            //    Swap swap = new Swap(j - LieShu * direction, j);
+            //    Command.Push(swap);
+            //}
+        }
+        #endregion
+        #region mn横向移动命令
+        /// <summary>
+        /// 生成横向移动命令
+        /// </summary>
+        /// <param name="mnPosition">mn的坐标</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="direction">方向1或-1</param>
+        public void _EmptyTransversePlan(int offset, int direction)
+        {
+            _EmptyTransversePlan(this.mnPosition, offset, direction);
+            //for (; offset > 0; offset--)
+            //{
+            //    Swap swap = new Swap(mnPosition + (offset - 1) * direction, mnPosition + offset  * direction);
+            //    Command.Push(swap);
+            //}
+        }
+        public void _EmptyTransversePlan(int mnPosition, int offset, int direction)
+        {
+            for (int i=0;i<offset;i++)
+            {
+                int j = mnPosition + i * direction;
+                Swap swap = new Swap(j, j+direction);
+                Command1.Enqueue(swap);
+            }
+            //for (; offset > 0; offset--)
+            //{
+            //    int j = mnPosition + offset * direction;
+            //    Swap swap = new Swap(j - direction, j);
+            //    Command.Push(swap);
+            //}
+        }
+        #endregion
+        #endregion
 
         #region 执行命令
         /// <summary>
@@ -444,6 +513,29 @@ namespace MNPuzzle
             for (int i = 0; i < count; i++)
             {
                 SwapAction(Command.Pop());
+            }
+        }
+        #endregion
+
+        #region 执行命令队列
+        /// <summary>
+        /// 执行命令
+        /// </summary>
+        /// <param name="command"></param>
+        public void _ExecutePlan(Queue<Swap> command1)
+        {
+            int count = command1.Count;
+            for (int i = 0; i < count; i++)
+            {
+                SwapAction(command1.Dequeue());
+            }
+        }
+        public void _ExecutePlan()
+        {
+            int count = Command1.Count;
+            for (int i = 0; i < count; i++)
+            {
+                SwapAction(Command1.Dequeue());
             }
         }
         #endregion
