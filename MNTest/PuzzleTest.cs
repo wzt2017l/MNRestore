@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MNPuzzle;
 namespace MNTest
@@ -18,6 +20,8 @@ namespace MNTest
         {
             puzzle = new Puzzle(1000,1000);
         }
+
+        #region 基础命令测试
 
         #region 联合测试，这部分必须按顺序运行
         [TestMethod]
@@ -101,6 +105,70 @@ namespace MNTest
             puzzle._ExecutePlan();
             Assert.IsTrue(puzzle.PuzzleArray[119110] == 19110, "左侧a_j竖向移动命令错误");
             Assert.IsTrue(puzzle.PuzzleArray[120110] == 999999, "左侧a_j竖向移动命令错误");
+        }
+        #endregion
+
+        [TestMethod]
+        public void _RiseEntityObliquePlanTest()
+        {
+            puzzle = new Puzzle(1000, 1000);
+            puzzle._EmptyTransversePlan(999999, 999, -1);
+            puzzle._EmptyVerticalPlan(999000, 998, -1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[1000] == 999999, "上侧a_j斜向移动命令错误");
+            puzzle._RiseEntityObliquePlan(1000, 100, 1, 1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[100100] == 0, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[101100] == 999999, "上侧a_j斜向移动命令错误");
+
+            Assert.IsTrue(puzzle.PuzzleArray[102100] == 102100, "上侧a_j斜向移动命令错误");
+            puzzle._RiseEntityObliquePlan(101100, 50, -1, 1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[52150] == 102100, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[51150] == 999999, "上侧a_j斜向移动命令错误");
+
+            Assert.IsTrue(puzzle.PuzzleArray[50150] == 50150, "上侧a_j斜向移动命令错误");
+            puzzle._RiseEntityObliquePlan(51150, 100, 1, -1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[150050] == 50150, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[151050] == 999999, "上侧a_j斜向移动命令错误");
+
+            Assert.IsTrue(puzzle.PuzzleArray[152050] == 152050, "上侧a_j斜向移动命令错误");
+            puzzle._RiseEntityObliquePlan(151050, 40, -1, -1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[112010] == 152050, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[111010] == 999999, "上侧a_j斜向移动命令错误");
+        }
+
+        [TestMethod]
+        public void _LateralEntityObliquePlanTest()
+        {
+            puzzle = new Puzzle(1000, 1000);
+            puzzle._EmptyTransversePlan(999999, 1, -1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[999998] == 999999, "横侧a_j斜向移动命令错误");
+            puzzle._LateralEntityObliquePlan(999998, 200, -1, -1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[799799] == 999998, "横侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[799798] == 999999, "横侧a_j斜向移动命令错误");
+
+            Assert.IsTrue(puzzle.PuzzleArray[799797] == 799797, "横侧a_j斜向移动命令错误");
+            puzzle._LateralEntityObliquePlan(799798, 100, -1, 1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[699897] == 799797, "横侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[699898] == 999999, "横侧a_j斜向移动命令错误");
+
+            Assert.IsTrue(puzzle.PuzzleArray[699899] == 699899, "横侧a_j斜向移动命令错误");
+            puzzle._LateralEntityObliquePlan(699898, 150, 1, -1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[849749] == 699899, "横侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[849748] == 999999, "横侧a_j斜向移动命令错误");
+
+            Assert.IsTrue(puzzle.PuzzleArray[849747] == 849747, "横侧a_j斜向移动命令错误");
+            puzzle._LateralEntityObliquePlan(849748, 100, 1, 1);
+            puzzle._ExecutePlan();
+            Assert.IsTrue(puzzle.PuzzleArray[949847] == 849747, "横侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.PuzzleArray[949848] == 999999, "横侧a_j斜向移动命令错误");
         } 
         #endregion
 
