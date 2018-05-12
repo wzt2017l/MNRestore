@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MNPuzzle
@@ -15,7 +16,7 @@ namespace MNPuzzle
         public int Total { get; private set; }//拼图总块数
         public int mnPosition { get; set; }//mn当前位置
         public int[] Items { get; private set; }//拼图数组
-        public int InversionNumber { get; set; }//数组逆序数
+        public long InversionNumber { get; set; }//数组逆序数
         public PuzzleState State { get; set; }//状态 
         public Queue<Swap> Command { get; set; }//命令队列
         #endregion
@@ -40,7 +41,18 @@ namespace MNPuzzle
 
         #region 交换位置
         /// <summary>
-        /// 交换
+        /// 交换位置，不对拼图状态做任何更新
+        /// </summary>
+        /// <param name="empty">空格所在的位置</param>
+        /// <param name="entity">要与之交换的拼图块的位置</param>
+        private void Swap(int empty, int entity)
+        {
+            int t = this.Items[empty];
+            Items[empty] = Items[entity];
+            Items[entity] = t;
+        }
+        /// <summary>
+        /// 交换位置，更新逆序数和拼图的状态
         /// </summary>
         /// <param name="empty">空格所在的位置</param>
         /// <param name="entity">要与之交换的拼图块的位置</param>
@@ -100,6 +112,80 @@ namespace MNPuzzle
                 difference = 2 * difference - 1;
             }
             return difference;
+        }
+        #endregion
+
+        #region 打乱拼图
+        /// <summary>
+        /// 打乱拼图
+        /// </summary>
+        public void Disrupt()
+        {
+
+            int count = (int)(Total * Math.Log(Total, (double)(Total * (Total - 1.0) / 2.0)));
+            int Length = (int)Math.Log10(Total) + 1;
+            Random r = new Random();
+            Parallel.For(0, count, i =>
+            {
+                int k, j;
+                k = r.Next(0, i + 1);
+                j = r.Next(i, Total);
+                if (k != j)
+                {
+                    Swap(k, j);
+                }
+            });
+            Swap(Total - 1, r.Next(0, Total - 1));
+
+            //for (int i = 0; i < count; i++)
+            //{
+            //    Random r = new Random();
+            //    int k = r.Next(0, Total);
+            //    int j = r.Next(0, Total);
+            //    if (k != j)
+            //    {
+            //        Swap(k, j);
+            //    }
+            //}
+        }
+        #endregion
+        #region 重算逆序数
+        /// <summary>
+        /// 计算逆序数
+        /// </summary>
+        /// <param name="array">数组</param>
+        /// <returns>逆序数</returns>
+        public long RetryInversionNumber(int[] array)
+        {
+            long inversion = 0;
+            int len = array.Length;
+            long[] list = new long[len];
+            Parallel.For(1, len, i =>
+            {
+                long l = 0;
+                int length = len - i;
+                int index = array[length];
+                //如何才能提前结束循环？
+                for (int k = 0; k < length; k++)
+                {
+                    if (index < array[k])
+                    {
+                        l++;
+                    }
+                }
+                list[i] = l;
+            });
+            Parallel.For(0, len, i => {
+                lock (list)
+                {
+                    inversion += list[i];
+                }
+            });
+            return inversion;
+        }
+        public long RetryInversionNumber()
+        {
+            return RetryInversionNumber(this.Items);
         }
         #endregion
 
