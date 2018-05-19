@@ -169,5 +169,32 @@ namespace MNTest
         }
         #endregion
 
+        #region 复合命令测试,这部分按顺序执行
+        [TestMethod]
+        public void EmptyToVtTest()
+        {
+            puzzle = new Puzzle(1000,1000);
+            puzzleAide = new PuzzleAide(puzzle);
+            puzzleAide.EmptyToVt(999999,123456);
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[123456] == 999999, "复合命令，移动mn错误");
+
+            puzzleAide.EmptyToVt(123456, 654321);
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[654321] == 999999, "复合命令，移动mn错误");
+        }
+        [TestMethod]
+        public void EmptyToTvTest()
+        {
+            puzzleAide.EmptyToVt(654321, 876543);
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[876543] == 999999, "复合命令，移动mn错误");
+
+            puzzleAide.EmptyToVt(876543, 1001);
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[1001] == 999999, "复合命令，移动mn错误");
+        }
+        #endregion
+
     }
 }

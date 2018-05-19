@@ -11,6 +11,7 @@ namespace MNPuzzle
         public Queue<Swap> Command { get; set; }//命令队列
         public Puzzle puzzle { get; private set; }
 
+        public PuzzleAide() { }
         public PuzzleAide(Puzzle puzzle)
         {
             this.puzzle = puzzle;
@@ -19,13 +20,13 @@ namespace MNPuzzle
 
         #region 打乱拼图
         /// <summary>
-        /// 打乱拼图
+        /// 打乱拼图，但不关心是否能够复原
         /// </summary>
-        public void Disrupt()
+        /// <param name="puzzle"></param>
+        public void Disrupt(Puzzle puzzle)
         {
             int Total = puzzle.Total;
             int count = (int)(Total * Math.Log(Total, (double)(Total * (Total - 1.0) / 2.0)));
-            int Length = (int)Math.Log10(Total) + 1;
             Random r = new Random();
             Parallel.For(0, count, i =>
             {
@@ -38,6 +39,14 @@ namespace MNPuzzle
                 }
             });
             puzzle.Swap(Total - 1, r.Next(0, Total - 1));
+        }
+        /// <summary>
+        /// 打乱拼图,并使其可以还原，并更新逆序、状态、mn位置
+        /// </summary>
+        public void Disrupt()
+        {
+            Disrupt(this.puzzle);
+            int Total = puzzle.Total;
             puzzle.RetryNiXu();//重算逆序
             //找到mn的位置
             Parallel.For(0, Total, i => {
@@ -300,6 +309,43 @@ namespace MNPuzzle
         #endregion
         #endregion
 
+        #region 生成复合命令
+        #region 生成mn到目标位置的命令
+        /// <summary>
+        /// 移动mn到目标位置,先竖移再横移
+        /// </summary>
+        /// <param name="mnPosition">mn位置</param>
+        /// <param name="target">目标位置</param>
+        public void EmptyToVt(int mnPosition,int target)
+        {
+            PointOffset po = new PointOffset(mnPosition,target,puzzle.LieShu);
+            EmptyVerticalPlan(mnPosition,po.Offset.Y,po.Direction.Y);
+            EmptyTransversePlan(mnPosition+puzzle.LieShu*po.Offset.Y*po.Direction.Y,po.Offset.X,po.Direction.X);
+        }
+        public void EmptyToVt(int target)
+        {
+            EmptyToVt(puzzle.mnPosition,target);
+        }
+        #endregion
+        #region 生成mn到目标位置的命令
+        /// <summary>
+        /// 移动mn到目标位置,先横移再竖移
+        /// </summary>
+        /// <param name="mnPosition">mn位置</param>
+        /// <param name="target">目标位置</param>
+        public void EmptyToTv(int mnPosition, int target)
+        {
+            PointOffset po = new PointOffset(mnPosition, target, puzzle.LieShu);
+            EmptyTransversePlan(mnPosition,po.Offset.X,po.Direction.X);
+            EmptyVerticalPlan(mnPosition+po.Offset.X*po.Direction.X, po.Offset.Y, po.Direction.Y);
+        }
+        public void EmptyToTv(int target)
+        {
+            EmptyToTv(puzzle.mnPosition,target);
+        }
+        #endregion
+        #endregion
+
         #region 执行命令
         /// <summary>
         /// 执行命令
@@ -317,13 +363,24 @@ namespace MNPuzzle
         {
             ExecutePlan(Command);
         }
-        #endregion
 
-        #region 相对位置分析
-        public PointOffset RelativePosition(int origin, int end)
+        /// <summary>
+        /// 快速执行命令，复原拼图时不会更新拼图的状态
+        /// </summary>
+        /// <param name="command">命令队列</param>
+        public void ExecutePlanFast(Queue<Swap> command)
         {
-            return new PointOffset(origin, end, puzzle.LieShu);
+            int count = command.Count;
+            for (int i = 0; i < count; i++)
+            {
+                puzzle.Swap(command.Dequeue());
+            }
+        }
+        public void ExecutePlanFast()
+        {
+            ExecutePlanFast(Command);
         }
         #endregion
+
     }
 }
