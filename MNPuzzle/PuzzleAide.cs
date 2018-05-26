@@ -118,6 +118,7 @@ namespace MNPuzzle
         /// </summary>
         LateralEntityObliquePlan
     }
+
    public class PuzzleAide
    {
         public Queue<Swap> Command { get; set; }//命令队列
@@ -197,7 +198,11 @@ namespace MNPuzzle
         /// <param name="target">目标</param>
         /// <param name="lieShu">列数</param>
         /// <returns>方位枚举</returns>
-        public Position PositionAnalysis(int origin, int target, int lieShu) => PositionAnalysis(new PointOffset(origin, target, lieShu));
+        public Position PositionAnalysis(int origin, int target, int lieShu)
+        {
+            return PositionAnalysis(new PointOffset(origin, target, lieShu));
+        }
+          
         public Position PositionAnalysis(PointOffset po)
         {
             Position position = new Position();
@@ -339,6 +344,7 @@ namespace MNPuzzle
         /// <param name="offset">偏移量</param>
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
+        /// <returns>命令队列</returns>
         public Queue<Swap> EmptyVerticalPlanOut(int mnPosition, int offset, int direction, int lieShu)
         {
             Queue<Swap> command = new Queue<Swap>();
@@ -358,7 +364,8 @@ namespace MNPuzzle
         /// <param name="offset">偏移量</param>
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
-        public void EmptyVerticalPlan(int mnPosition, int offset, int direction ,int lieShu)
+        /// <returns>mn移动后的位置</returns>
+        public int EmptyVerticalPlan(int mnPosition, int offset, int direction ,int lieShu)
         {
             int k = lieShu * direction;
             for (int i = 0; i < offset; i++)
@@ -367,6 +374,7 @@ namespace MNPuzzle
                 Swap swap = new Swap(j, j + lieShu * direction);
                 Command.Enqueue(swap);
             }
+            return mnPosition + k * offset;
         }
         /// <summary>
         /// 生成竖向移动命令
@@ -374,23 +382,43 @@ namespace MNPuzzle
         /// <param name="mnPosition">mn当前位置</param>
         /// <param name="offset">偏移量</param>
         /// <param name="direction">方向1或-1</param>
-        public void EmptyVerticalPlan(int mnPosition, int offset, int direction)
+        /// <returns>mn移动后的位置</returns>
+        public int EmptyVerticalPlan(int mnPosition, int offset, int direction)
         {
-            EmptyVerticalPlan(mnPosition,offset,direction,puzzle.LieShu);
+           return EmptyVerticalPlan(mnPosition,offset,direction,puzzle.LieShu);
         }
-        public void EmptyVerticalPlan(int offset, int direction)
+        public int EmptyVerticalPlan(int offset, int direction)
         {
-            EmptyVerticalPlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
+           return EmptyVerticalPlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
         }
         #endregion
         #region mn横向移动命令
+        /// <summary>
+        /// 输出横向移动命令,生成的命令不加入内置的命令队列
+        /// </summary>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="direction">方向-1或1</param>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> EmptyTransversePlanOut(int mnPosition, int offset, int direction)
+        {
+            Queue<Swap> command = new Queue<Swap>();
+            for (int i = 0; i < offset; i++)
+            {
+                int j = mnPosition + i * direction;
+                Swap swap = new Swap(j, j + direction);
+                command.Enqueue(swap);
+            }
+            return command;
+        }
         /// <summary>
         /// 生成横向移动命令
         /// </summary>
         /// <param name="mnPosition">mn的坐标</param>
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
-        public void EmptyTransversePlan(int mnPosition, int offset, int direction)
+        /// <returns>mn执行完命令所在的位置</returns>
+        public int EmptyTransversePlan(int mnPosition, int offset, int direction)
         {
             for (int i = 0; i < offset; i++)
             {
@@ -398,13 +426,42 @@ namespace MNPuzzle
                 Swap swap = new Swap(j, j + direction);
                 Command.Enqueue(swap);
             }
+            return mnPosition + offset * direction;
         }
-        public void EmptyTransversePlan(int offset, int direction)
+        public int EmptyTransversePlan(int offset, int direction)
         {
-            EmptyTransversePlan(puzzle.mnPosition, offset, direction);
+           return EmptyTransversePlan(puzzle.mnPosition, offset, direction);
         }
         #endregion
         #region 右侧a_j竖向移动命令
+        /// <summary>
+        /// 输出右侧a_j竖向移动命令,生成的命令不加入内置的命令队列
+        /// </summary>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="direction">方向1或-1</param>
+        /// <param name="lieShu">列数</param>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> RigthEntityVerticalPlanOut(int mnPosition, int offset, int direction, int lieShu)
+        {
+            Queue<Swap> command = new Queue<Swap>();
+            int k = lieShu * direction;
+            for (int i = 0; i < offset; i++)
+            {
+                int j = mnPosition + i * k;
+                Swap swap1 = new Swap(j, j - k);
+                command.Enqueue(swap1);
+                Swap swap2 = new Swap(j - k, j - k + 1);
+                command.Enqueue(swap2);
+                Swap swap3 = new Swap(j - k + 1, j + 1);
+                command.Enqueue(swap3);
+                Swap swap4 = new Swap(j + 1, j + k + 1);
+                command.Enqueue(swap4);
+                Swap swap5 = new Swap(j + k + 1, j + k);
+                command.Enqueue(swap5);
+            }
+            return command;
+        }
         /// <summary>
         /// 生成a_j竖向移动命令,mn右侧一列回到相对位置
         /// </summary>
@@ -412,7 +469,7 @@ namespace MNPuzzle
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
-        public void RigthEntityVerticalPlan(int mnPosition, int offset, int direction ,int lieShu)
+        public int RigthEntityVerticalPlan(int mnPosition, int offset, int direction ,int lieShu)
         {
             int k = lieShu * direction;
             for (int i = 0; i < offset; i++)
@@ -429,6 +486,7 @@ namespace MNPuzzle
                 Swap swap5 = new Swap(j + k + 1, j + k);
                 Command.Enqueue(swap5);
             }
+            return mnPosition + offset * k;
         }
         /// <summary>
         /// 生成a_j竖向移动命令,mn右侧一列回到相对位置
@@ -436,16 +494,44 @@ namespace MNPuzzle
         /// <param name="mnPosition">mn的坐标</param>
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
-        public void RigthEntityVerticalPlan(int mnPosition, int offset, int direction)
+        public int RigthEntityVerticalPlan(int mnPosition, int offset, int direction)
         {
-            RigthEntityVerticalPlan(mnPosition,offset,direction,puzzle.LieShu);
+           return RigthEntityVerticalPlan(mnPosition,offset,direction,puzzle.LieShu);
         }
-        public void RigthEntityVerticalPlan(int offset, int direction)
+        public int RigthEntityVerticalPlan(int offset, int direction)
         {
-            RigthEntityVerticalPlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
+           return RigthEntityVerticalPlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
         }
         #endregion
         #region 左侧a_j竖向移动命令
+        /// <summary>
+        ///  输出左侧a_j竖向移动命令,生成的命令不加入内置的命令队列
+        /// </summary>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="direction">方向1或-1</param>
+        /// <param name="lieShu">列数</param>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> LeftEntityVerticalPlanOut(int mnPosition, int offset, int direction, int lieShu)
+        {
+            Queue<Swap> command = new Queue<Swap>();
+            int k = lieShu * direction;
+            for (int i = 0; i < offset; i++)
+            {
+                int j = mnPosition + i * k;
+                Swap swap1 = new Swap(j, j - k);
+                command.Enqueue(swap1);
+                Swap swap2 = new Swap(j - k, j - k - 1);
+                command.Enqueue(swap2);
+                Swap swap3 = new Swap(j - k - 1, j - 1);
+                command.Enqueue(swap3);
+                Swap swap4 = new Swap(j - 1, j + k - 1);
+                command.Enqueue(swap4);
+                Swap swap5 = new Swap(j + k - 1, j + k);
+                command.Enqueue(swap5);
+            }
+            return command;
+        }
         /// <summary>
         /// 生成a_j竖向移动命令,mn左侧一列回到相对位置
         /// </summary>
@@ -453,7 +539,7 @@ namespace MNPuzzle
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
-        public void LeftEntityVerticalPlan(int mnPosition, int offset, int direction,int lieShu)
+        public int LeftEntityVerticalPlan(int mnPosition, int offset, int direction,int lieShu)
         {
             int k = lieShu * direction;
             for (int i = 0; i < offset; i++)
@@ -470,6 +556,7 @@ namespace MNPuzzle
                 Swap swap5 = new Swap(j + k - 1, j + k);
                 Command.Enqueue(swap5);
             }
+            return mnPosition + offset * k;
         }
         /// <summary>
         /// 生成a_j竖向移动命令,mn左侧一列回到相对位置
@@ -477,16 +564,43 @@ namespace MNPuzzle
         /// <param name="mnPosition">mn的坐标</param>
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
-        public void LeftEntityVerticalPlan(int mnPosition, int offset, int direction)
+        public int LeftEntityVerticalPlan(int mnPosition, int offset, int direction)
         {
-            LeftEntityVerticalPlan(mnPosition,offset,direction,puzzle.LieShu);
+           return LeftEntityVerticalPlan(mnPosition,offset,direction,puzzle.LieShu);
         }
-        public void LeftEntityVerticalPlan(int offset, int direction)
+        public int LeftEntityVerticalPlan(int offset, int direction)
         {
-            LeftEntityVerticalPlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
+           return LeftEntityVerticalPlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
         }
         #endregion
         #region 下侧a_j横向移动命令
+        /// <summary>
+        /// 输出下侧a_j横向移动命令,生成的命令不加入内置的命令队列
+        /// </summary>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="direction">方向1或-1</param>
+        /// <param name="lieShu">列数</param>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> LowerEntityTransversePlanOut(int mnPosition, int offset, int direction, int lieShu)
+        {
+            Queue<Swap> command = new Queue<Swap>();
+            for (int i = 0; i < offset; i++)
+            {
+                int j = mnPosition + i * direction + lieShu;
+                Swap swap1 = new Swap(j - lieShu, j - direction - lieShu);
+                command.Enqueue(swap1);
+                Swap swap2 = new Swap(j - direction - lieShu, j - direction);
+                command.Enqueue(swap2);
+                Swap swap3 = new Swap(j - direction, j);
+                command.Enqueue(swap3);
+                Swap swap4 = new Swap(j, j + direction);
+                command.Enqueue(swap4);
+                Swap swap5 = new Swap(j + direction, j + direction - lieShu);
+                command.Enqueue(swap5);
+            }
+            return command;
+        }
         /// <summary>
         /// 生成a_j横向移动命令,mn下侧一行回到相对位置
         /// </summary>
@@ -494,7 +608,7 @@ namespace MNPuzzle
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
-        public void LowerEntityTransversePlan(int mnPosition, int offset, int direction ,int lieShu)
+        public int LowerEntityTransversePlan(int mnPosition, int offset, int direction ,int lieShu)
         {
             for (int i = 0; i < offset; i++)
             {
@@ -510,6 +624,7 @@ namespace MNPuzzle
                 Swap swap5 = new Swap(j + direction, j + direction - lieShu);
                 Command.Enqueue(swap5);
             }
+            return mnPosition + offset * direction;
         }
         /// <summary>
         /// 生成a_j横向移动命令,mn下侧一行回到相对位置
@@ -517,16 +632,43 @@ namespace MNPuzzle
         /// <param name="mnPosition">mn的坐标</param>
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
-        public void LowerEntityTransversePlan(int mnPosition, int offset, int direction)
+        public int LowerEntityTransversePlan(int mnPosition, int offset, int direction)
         {
-            LowerEntityTransversePlan(mnPosition,offset,direction,puzzle.LieShu);
+            return LowerEntityTransversePlan(mnPosition,offset,direction,puzzle.LieShu);
         }
-        public void LowerEntityTransversePlan(int offset, int direction)
+        public int LowerEntityTransversePlan(int offset, int direction)
         {
-            LowerEntityTransversePlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
+            return LowerEntityTransversePlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
         }
         #endregion
         #region 上侧a_j横向移动命令
+        /// <summary>
+        /// 输出上侧a_j横向移动命令,生成的命令不加入内置的命令队列
+        /// </summary>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="direction">方向1或-1</param>
+        /// <param name="lieShu">列数</param>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> RiseEntityTransversePlanOut(int mnPosition, int offset, int direction, int lieShu)
+        {
+            Queue<Swap> command = new Queue<Swap>();
+            for (int i = 0; i < offset; i++)
+            {
+                int j = mnPosition + i * direction - lieShu;
+                Swap swap1 = new Swap(j + lieShu, j - direction + lieShu);
+                command.Enqueue(swap1);
+                Swap swap2 = new Swap(j - direction + lieShu, j - direction);
+                command.Enqueue(swap2);
+                Swap swap3 = new Swap(j - direction, j);
+                command.Enqueue(swap3);
+                Swap swap4 = new Swap(j, j + direction);
+                command.Enqueue(swap4);
+                Swap swap5 = new Swap(j + direction, j + direction + lieShu);
+                command.Enqueue(swap5);
+            }
+            return command;
+        }
         /// <summary>
         /// 生成a_j横向移动命令,mn上侧一行回到相对位置
         /// </summary>
@@ -534,7 +676,7 @@ namespace MNPuzzle
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
-        public void RiseEntityTransversePlan(int mnPosition, int offset, int direction, int lieShu)
+        public int RiseEntityTransversePlan(int mnPosition, int offset, int direction, int lieShu)
         {
             for (int i = 0; i < offset; i++)
             {
@@ -550,6 +692,7 @@ namespace MNPuzzle
                 Swap swap5 = new Swap(j + direction, j + direction + lieShu);
                 Command.Enqueue(swap5);
             }
+            return mnPosition + offset * direction;
         }
         /// <summary>
         /// 生成a_j横向移动命令,mn上侧一行回到相对位置
@@ -557,16 +700,47 @@ namespace MNPuzzle
         /// <param name="mnPosition">mn的坐标</param>
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向1或-1</param>
-        public void RiseEntityTransversePlan(int mnPosition, int offset, int direction)
+        public int RiseEntityTransversePlan(int mnPosition, int offset, int direction)
         {
-            RiseEntityTransversePlan(mnPosition,offset,direction,puzzle.LieShu);
+           return RiseEntityTransversePlan(mnPosition,offset,direction,puzzle.LieShu);
         }
-        public void RiseEntityTransversePlan(int offset, int direction)
+        public int RiseEntityTransversePlan(int offset, int direction)
         {
-            RiseEntityTransversePlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
+           return RiseEntityTransversePlan(puzzle.mnPosition, offset, direction,puzzle.LieShu);
         }
         #endregion
         #region 竖侧a_j斜向移动命令
+        /// <summary>
+        /// 输出竖侧a_j斜向移动命令,生成的命令不加入内置的命令队列
+        /// </summary>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="directionR">行方向1或-1</param>
+        /// <param name="directionC">列方向1或-1</param>
+        /// <param name="lieShu">列数</param>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> RiseEntityObliquePlanOut(int mnPosition, int offset, int directionR, int directionC, int lieShu)
+        {
+            Queue<Swap> command = new Queue<Swap>();
+            int k = lieShu * directionR;
+            for (int i = 0; i < offset; i++)
+            {
+                int j = mnPosition + i * k + i * directionC;
+                Swap swap1 = new Swap(j, j - k);
+                command.Enqueue(swap1);
+                Swap swap2 = new Swap(j - k, j - k + directionC);
+                command.Enqueue(swap2);
+                Swap swap3 = new Swap(j - k + directionC, j + directionC);
+                command.Enqueue(swap3);
+                Swap swap4 = new Swap(j + directionC, j);
+                command.Enqueue(swap4);
+                Swap swap5 = new Swap(j, j + k);
+                command.Enqueue(swap5);
+                Swap swap6 = new Swap(j + k, j + k + directionC);
+                command.Enqueue(swap6);
+            }
+            return command;
+        }
         /// <summary>
         /// 生成a_j斜向移动命令,mn竖侧开始移动
         /// </summary>
@@ -575,7 +749,7 @@ namespace MNPuzzle
         /// <param name="directionR">行 1或-1</param>
         /// <param name="directionC">列 1或-1</param>
         /// <param name="lieShu">列数</param>
-        public void RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC,int lieShu)
+        public int RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC,int lieShu)
         {
             int k = lieShu * directionR;
             for (int i = 0; i < offset; i++)
@@ -594,6 +768,7 @@ namespace MNPuzzle
                 Swap swap6 = new Swap(j + k, j + k + directionC);
                 Command.Enqueue(swap6);
             }
+            return mnPosition + k * offset + offset * directionC;
         }
         /// <summary>
         /// 生成a_j斜向移动命令,mn竖侧开始移动
@@ -602,16 +777,47 @@ namespace MNPuzzle
         /// <param name="offset">移动格数</param>
         /// <param name="directionR">行 1或-1</param>
         /// <param name="directionC">列 1或-1</param>
-        public void RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC)
+        public int RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC)
         {
-            RiseEntityObliquePlan(mnPosition,offset,directionR,directionC,puzzle.LieShu);
+           return RiseEntityObliquePlan(mnPosition,offset,directionR,directionC,puzzle.LieShu);
         }
-        public void RiseEntityObliquePlan(int offset, int directionR, int directionC)
+        public int RiseEntityObliquePlan(int offset, int directionR, int directionC)
         {
-            RiseEntityObliquePlan(puzzle.mnPosition, offset, directionR, directionC,puzzle.LieShu);
+           return RiseEntityObliquePlan(puzzle.mnPosition, offset, directionR, directionC,puzzle.LieShu);
         }
         #endregion
         #region 横侧a_j斜向移动命令
+        /// <summary>
+        /// 输出横侧a_j斜向移动命令,生成的命令不加入内置的命令队列
+        /// </summary>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="offset">移动格数</param>
+        /// <param name="directionR">行方向1或-1</param>
+        /// <param name="directionC">列方向1或-1</param>
+        /// <param name="lieShu">列数</param>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> LateralEntityObliquePlanOut(int mnPosition, int offset, int directionR, int directionC, int lieShu)
+        {
+            Queue<Swap> command = new Queue<Swap>();
+            int k = lieShu * directionR;
+            for (int i = 0; i < offset; i++)
+            {
+                int j = mnPosition + i * k + i * directionC;
+                Swap swap1 = new Swap(j, j - directionC);
+                command.Enqueue(swap1);
+                Swap swap2 = new Swap(j - directionC, j + k - directionC);
+                command.Enqueue(swap2);
+                Swap swap3 = new Swap(j + k - directionC, j + k);
+                command.Enqueue(swap3);
+                Swap swap4 = new Swap(j + k, j);
+                command.Enqueue(swap4);
+                Swap swap5 = new Swap(j, j + directionC);
+                command.Enqueue(swap5);
+                Swap swap6 = new Swap(j + directionC, j + k + directionC);
+                command.Enqueue(swap6);
+            }
+            return command;
+        }
         /// <summary>
         /// 生成a_j斜向移动命令,mn横侧开始移动
         /// </summary>
@@ -620,7 +826,7 @@ namespace MNPuzzle
         /// <param name="directionR">行 1或-1</param>
         /// <param name="directionC">列 1或-1</param>
         /// <param name="lieShu">列数</param>
-        public void LateralEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC,int lieShu)
+        public int LateralEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC,int lieShu)
         {
             int k = lieShu * directionR;
             for (int i = 0; i < offset; i++)
@@ -639,6 +845,7 @@ namespace MNPuzzle
                 Swap swap6 = new Swap(j + directionC, j + k + directionC);
                 Command.Enqueue(swap6);
             }
+            return mnPosition + offset * k + offset * directionC;
         }
         /// <summary>
         /// 生成a_j斜向移动命令,mn横侧开始移动
@@ -647,13 +854,13 @@ namespace MNPuzzle
         /// <param name="offset">移动格数</param>
         /// <param name="directionR">行 1或-1</param>
         /// <param name="directionC">列 1或-1</param>
-        public void LateralEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC)
+        public int LateralEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC)
         {
-            LateralEntityObliquePlan(mnPosition,offset,directionR,directionC,puzzle.LieShu);
+           return LateralEntityObliquePlan(mnPosition,offset,directionR,directionC,puzzle.LieShu);
         }
-        public void LateralEntityObliquePlan(int offset, int directionR, int directionC)
+        public int LateralEntityObliquePlan(int offset, int directionR, int directionC)
         {
-            LateralEntityObliquePlan(puzzle.mnPosition, offset, directionR, directionC,puzzle.LieShu);
+           return LateralEntityObliquePlan(puzzle.mnPosition, offset, directionR, directionC,puzzle.LieShu);
         }
         #endregion
         #endregion
