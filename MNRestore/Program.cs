@@ -12,6 +12,25 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
+            Puzzle puzzle1 = new Puzzle(10000,10000);
+            Console.WriteLine("开始计算");
+            DateTime beforDTa = System.DateTime.Now;
+            puzzle1.MnPosition();
+            DateTime afterDTa = System.DateTime.Now;
+            TimeSpan tsa = afterDTa.Subtract(beforDTa);
+            Console.WriteLine("DateTime总共花费{0}ms.", tsa.TotalMilliseconds);
+            Console.WriteLine("开始计算");
+            DateTime beforDTb = System.DateTime.Now;
+            for (int i=0;i<100000000;i++)
+            {
+                if (puzzle1.Items[i]==999999)
+                {
+                    break;
+                }
+            }
+            DateTime afterDTb = System.DateTime.Now;
+            TimeSpan tsb = afterDTb.Subtract(beforDTb);
+            Console.WriteLine("DateTime总共花费{0}ms.", tsb.TotalMilliseconds);
             //=========================================================================
             Console.WriteLine("命令开始");
             int l = 1000000;

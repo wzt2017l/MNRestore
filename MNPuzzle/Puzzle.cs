@@ -169,7 +169,24 @@ namespace MNPuzzle
             return NiXu;
         }
         #endregion
-
+        #region 矫正，重置mn的位置
+        /// <summary>
+        /// 矫正，重置mn的位置
+        /// </summary>
+        /// <returns>mn的位置</returns>
+        public int MnPosition()
+        {
+            int mn = Total - 1;
+            for (int i=0;i<Total;i++)
+            {
+                if (Items[i]==mn)
+                {
+                  return mnPosition = i;
+                }
+            }
+            return -1;
+        }
+        #endregion
     }
     
 }

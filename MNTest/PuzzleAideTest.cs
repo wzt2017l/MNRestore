@@ -81,18 +81,18 @@ namespace MNTest
         [TestMethod]
         public void RiseEntityTransversePlanTest()
         {
-            Assert.IsTrue(puzzle.Items[60059] == 60059, "上侧a_j横向移动命令错误");
+            Assert.IsTrue(puzzle.Items[60059] == 60059, "上侧a_j横向移动命令错误1");
             int i1= puzzleAide.RiseEntityTransversePlan(60060, 100, 1);
             puzzleAide.ExecutePlan();
-            Assert.IsTrue(i1 == 60160, "返回值错误");
-            Assert.IsTrue(puzzle.Items[60159] == 60059, "上侧a_j横向移动命令错误");
-            Assert.IsTrue(puzzle.Items[60160] == 999999, "上侧a_j横向移动命令错误");
-            Assert.IsTrue(puzzle.Items[60161] == 60161, "上侧a_j横向移动命令错误");
+            Assert.IsTrue(i1 == 60160, "返回值错误2");
+            Assert.IsTrue(puzzle.Items[60159] == 60059, "上侧a_j横向移动命令错误3");
+            Assert.IsTrue(puzzle.Items[60160] == 999999, "上侧a_j横向移动命令错误4");
+            Assert.IsTrue(puzzle.Items[60161] == 60161, "上侧a_j横向移动命令错误5");
             int i2=puzzleAide.RiseEntityTransversePlan(60160, 50, -1);
             puzzleAide.ExecutePlan();
-            Assert.IsTrue(i2 == 60110, "返回值错误");
-            Assert.IsTrue(puzzle.Items[60111] == 60161, "上侧a_j横向移动命令错误");
-            Assert.IsTrue(puzzle.Items[60110] == 999999, "上侧a_j横向移动命令错误");
+            Assert.IsTrue(i2 == 60110, "返回值错误6");
+            Assert.IsTrue(puzzle.Items[60111] == 60161, "上侧a_j横向移动命令错误7");
+            Assert.IsTrue(puzzle.Items[60110] == 999999, "上侧a_j横向移动命令错误8");
         }
 
         [TestMethod]
@@ -121,29 +121,29 @@ namespace MNTest
             puzzleAide.EmptyTransversePlan(999999, 999, -1);
             int i1=puzzleAide.EmptyVerticalPlan(999000, 998, -1);
             puzzleAide.ExecutePlan();
-            Assert.IsTrue(i1 == 1000, "返回值错误");
-            Assert.IsTrue(puzzle.Items[1000] == 999999, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(i1 == 1000, "返回值错误1");
+            Assert.IsTrue(puzzle.Items[1000] == 999999, "上侧a_j斜向移动命令错误2");
             int i2= puzzleAide.RiseEntityObliquePlan(1000, 100, 1, 1);
             puzzleAide.ExecutePlan();
-            Assert.IsTrue(i2 == 101100, "返回值错误");
-            Assert.IsTrue(puzzle.Items[100100] == 0, "上侧a_j斜向移动命令错误");
-            Assert.IsTrue(puzzle.Items[101100] == 999999, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(i2 == 101100, "返回值错误3");
+            Assert.IsTrue(puzzle.Items[100100] == 0, "上侧a_j斜向移动命令错误4");
+            Assert.IsTrue(puzzle.Items[101100] == 999999, "上侧a_j斜向移动命令错误5");
 
-            Assert.IsTrue(puzzle.Items[102100] == 102100, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.Items[102100] == 102100, "上侧a_j斜向移动命令错误6");
             int i3=puzzleAide.RiseEntityObliquePlan(101100, 50, -1, 1);
             puzzleAide.ExecutePlan();
-            Assert.IsTrue(i3 == 51150, "返回值错误");
-            Assert.IsTrue(puzzle.Items[52150] == 102100, "上侧a_j斜向移动命令错误");
-            Assert.IsTrue(puzzle.Items[51150] == 999999, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(i3 == 51150, "返回值错误7");
+            Assert.IsTrue(puzzle.Items[52150] == 102100, "上侧a_j斜向移动命令错误8");
+            Assert.IsTrue(puzzle.Items[51150] == 999999, "上侧a_j斜向移动命令错误9");
 
-            Assert.IsTrue(puzzle.Items[50150] == 50150, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.Items[50150] == 50150, "上侧a_j斜向移动命令错误10");
             int i4=puzzleAide.RiseEntityObliquePlan(51150, 100, 1, -1);
             puzzleAide.ExecutePlan();
-            Assert.IsTrue(i4 == 151050, "返回值错误");
-            Assert.IsTrue(puzzle.Items[150050] == 50150, "上侧a_j斜向移动命令错误");
-            Assert.IsTrue(puzzle.Items[151050] == 999999, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(i4 == 151050, "返回值错误11");
+            Assert.IsTrue(puzzle.Items[150050] == 50150, "上侧a_j斜向移动命令错误12");
+            Assert.IsTrue(puzzle.Items[151050] == 999999, "上侧a_j斜向移动命令错误13");
 
-            Assert.IsTrue(puzzle.Items[152050] == 152050, "上侧a_j斜向移动命令错误");
+            Assert.IsTrue(puzzle.Items[152050] == 152050, "上侧a_j斜向移动命令错误14");
             int i5=puzzleAide.RiseEntityObliquePlan(151050, 40, -1, -1);
             puzzleAide.ExecutePlan();
             Assert.IsTrue(i5 == 111010, "返回值错误");
@@ -194,24 +194,38 @@ namespace MNTest
         {
             puzzle = new Puzzle(1000,1000);
             puzzleAide = new PuzzleAide(puzzle);
-            puzzleAide.EmptyToVt(999999,123456);
+            int i1=puzzleAide.EmptyToVt(999999,123456);
             puzzleAide.ExecutePlan();
+            Assert.IsTrue(i1 == 123456, "复合命令，移动mn错误");
             Assert.IsTrue(puzzle.Items[123456] == 999999, "复合命令，移动mn错误");
 
-            puzzleAide.EmptyToVt(123456, 654321);
+            int i2=puzzleAide.EmptyToVt(123456, 654321);
             puzzleAide.ExecutePlan();
+            Assert.IsTrue(i2 == 654321, "复合命令，移动mn错误");
             Assert.IsTrue(puzzle.Items[654321] == 999999, "复合命令，移动mn错误");
+
+            int i3 = puzzleAide.EmptyToVt(654321, 888888);
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(i3 == 888888, "复合命令，移动mn错误");
+            Assert.IsTrue(puzzle.Items[888888] == 999999, "复合命令，移动mn错误");
         }
         [TestMethod]
         public void EmptyToTvTest()
         {
-            puzzleAide.EmptyToVt(654321, 876543);
+            int i1= puzzleAide.EmptyToVt(888888, 876543);
             puzzleAide.ExecutePlan();
+            Assert.IsTrue(i1 == 876543, "复合命令，移动mn错误");
             Assert.IsTrue(puzzle.Items[876543] == 999999, "复合命令，移动mn错误");
 
-            puzzleAide.EmptyToVt(876543, 1001);
+            int i2=puzzleAide.EmptyToVt(876543, 1001);
             puzzleAide.ExecutePlan();
+            Assert.IsTrue(i2 == 1001, "复合命令，移动mn错误");
             Assert.IsTrue(puzzle.Items[1001] == 999999, "复合命令，移动mn错误");
+
+            int i3 = puzzleAide.EmptyToVt(1001, 666666);
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(i3 == 666666, "复合命令，移动mn错误");
+            Assert.IsTrue(puzzle.Items[666666] == 999999, "复合命令，移动mn错误");
         }
         #endregion
 
@@ -308,6 +322,16 @@ namespace MNTest
             Assert.IsTrue(puzzleAide.PositionAnalysis(64, 19, 17) == Position.LeftGtUp, "方位判断错误");
             Assert.IsTrue(puzzleAide.PositionAnalysis(288, 18, 17) == Position.LeftEqUp, "方位判断错误");
             Assert.IsTrue(puzzleAide.PositionAnalysis(288,30,17) == Position.UpGtLeft, "方位判断错误");
+        }
+
+        [TestMethod]
+        public void DisruptReducibleTest()
+        {
+            puzzle = new Puzzle(100,100);
+            puzzleAide = new PuzzleAide(puzzle);
+            long nixu=puzzleAide.DisruptReducible();
+            Assert.IsTrue(nixu==puzzle.RetryNiXu(puzzle.Items),"打乱拼图错误");
+            Assert.IsTrue((nixu+(puzzle.mnPosition%100)+(puzzle.mnPosition-puzzle.mnPosition%100)/100)%2==0,"无法复原");
         }
     }
 }
