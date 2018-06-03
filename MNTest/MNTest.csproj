@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="测试用例\PuzzleAide用例.txt" />
+    <Content Include="测试用例\复合命令测试用例.txt" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
