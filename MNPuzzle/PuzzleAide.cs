@@ -891,14 +891,14 @@ namespace MNPuzzle
                 {
                     mnPos = EmptyVerticalPlan(command,mnPosition,y1-y2-1,-1,lieShu);
                     mnPos = EmptyTransversePlan(command,mnPos,x1-x2+1,-1);
-                    command.Enqueue(new Swap(mnPos,mnPos-1));
+                    command.Enqueue(new Swap(mnPos,mnPos-lieShu));
                 }
                 else
                 if(y1<y2)
                 {
                     mnPos = EmptyVerticalPlan(command, mnPosition, y2 - y1 - 1, 1, lieShu);
                     mnPos = EmptyTransversePlan(command, mnPos, x1 - x2 + 1, -1);
-                    command.Enqueue(new Swap(mnPos, mnPos + 1));
+                    command.Enqueue(new Swap(mnPos, mnPos +lieShu));
                 }
                 return target - 1;
             }

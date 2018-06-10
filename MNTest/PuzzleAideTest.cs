@@ -476,11 +476,258 @@ namespace MNTest
             Assert.IsTrue(i17 == 420350, "生成mn到目标位置上方的命令,先横移,错误");
             Assert.IsTrue(k17 == puzzle.Items[421350], "生成mn到目标位置上方的命令，先横移,错误");
 
+            puzzleAide.EmptyToTv(666666);
+            puzzleAide.ExecutePlan();
         }
 
         [TestMethod]
         public void EmptyToVtLeftTest()
         {
+            int i1 = puzzleAide.EmptyToVtLeft(666666, 600666);
+            int k1 = puzzle.Items[600666];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i1] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i1 == 600665, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k1 == puzzle.Items[600666], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i2 = puzzleAide.EmptyToVtLeft(600665, 500700);
+            int k2 = puzzle.Items[500700];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i2] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i2 == 500699, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k2 == puzzle.Items[500700], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i3 = puzzleAide.EmptyToVtLeft(500699, 450749);
+            int k3 = puzzle.Items[450749];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i3] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i3 == 450748, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k3 == puzzle.Items[450749], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i4 = puzzleAide.EmptyToVtLeft(450748, 400850);
+            int k4 = puzzle.Items[400850];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i4] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i4 == 400849, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k4 == puzzle.Items[400850], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i5 = puzzleAide.EmptyToVtLeft(400849, 400900);
+            int k5 = puzzle.Items[400900];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i5] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i5 == 400899, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k5 == puzzle.Items[400900], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i6 = puzzleAide.EmptyToVtLeft(400899, 420930);
+            int k6 = puzzle.Items[420930];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i6] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i6 == 420929, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k6 == puzzle.Items[420930], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i7 = puzzleAide.EmptyToVtLeft(420929, 430939);
+            int k7 = puzzle.Items[430939];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i7] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i7 == 430938, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k7 == puzzle.Items[430939], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i8 = puzzleAide.EmptyToVtLeft(430938, 500950);
+            int k8 = puzzle.Items[500950];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i8] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i8 == 500949, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k8 == puzzle.Items[500950], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i9 = puzzleAide.EmptyToVtLeft(500949, 550949);
+            int k9 = puzzle.Items[550949];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i9] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i9 == 550948, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k9 == puzzle.Items[550949], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i10 = puzzleAide.EmptyToVtLeft(550948, 650900);
+            int k10 = puzzle.Items[650900];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i10] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i10 == 650899, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k10 == puzzle.Items[650900], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i11 = puzzleAide.EmptyToVtLeft(650899, 700849);
+            int k11 = puzzle.Items[700849];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i11] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i11 == 700848, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k11 == puzzle.Items[700849], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i12 = puzzleAide.EmptyToVtLeft(700848, 750750);
+            int k12 = puzzle.Items[750750];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i12] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i12 == 750749, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k12 == puzzle.Items[750750], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i13 = puzzleAide.EmptyToVtLeft(750749, 750700);
+            int k13 = puzzle.Items[750700];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i13] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i13 == 750699, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k13 == puzzle.Items[750700], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i14 = puzzleAide.EmptyToVtLeft(750699, 750650);
+            int k14 = puzzle.Items[750650];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i14] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i14 == 750649, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k14 == puzzle.Items[750650], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i15 = puzzleAide.EmptyToVtLeft(750649, 700550);
+            int k15 = puzzle.Items[700550];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i15] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i15 == 700549, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k15 == puzzle.Items[700550], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i16 = puzzleAide.EmptyToVtLeft(700549, 600449);
+            int k16 = puzzle.Items[600449];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i16] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i16 == 600448, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k16 == puzzle.Items[600449], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i17 = puzzleAide.EmptyToVtLeft(600448, 500400);
+            int k17 = puzzle.Items[500400];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i17] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i17 == 500399, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k17 == puzzle.Items[500400], "生成mn到目标位置左方的命令，先横移,错误");
+
+            puzzleAide.EmptyToTv(666666);
+            puzzleAide.ExecutePlan();
+
+        }
+
+        [TestMethod]
+        public void EmptyToTvLeftTest()
+        {
+            int i1 = puzzleAide.EmptyToTvLeft(666666, 600666);
+            int k1 = puzzle.Items[600666];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i1] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i1 == 600665, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k1 == puzzle.Items[600666], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i2 = puzzleAide.EmptyToTvLeft(600665, 500700);
+            int k2 = puzzle.Items[500700];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i2] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i2 == 500699, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k2 == puzzle.Items[500700], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i3 = puzzleAide.EmptyToTvLeft(500699, 450749);
+            int k3 = puzzle.Items[450749];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i3] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i3 == 450748, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k3 == puzzle.Items[450749], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i4 = puzzleAide.EmptyToTvLeft(450748, 400850);
+            int k4 = puzzle.Items[400850];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i4] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i4 == 400849, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k4 == puzzle.Items[400850], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i5 = puzzleAide.EmptyToTvLeft(400849, 400900);
+            int k5 = puzzle.Items[400900];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i5] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i5 == 400899, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k5 == puzzle.Items[400900], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i6 = puzzleAide.EmptyToTvLeft(400899, 420930);
+            int k6 = puzzle.Items[420930];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i6] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i6 == 420929, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k6 == puzzle.Items[420930], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i7 = puzzleAide.EmptyToTvLeft(420929, 430939);
+            int k7 = puzzle.Items[430939];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i7] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i7 == 430938, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k7 == puzzle.Items[430939], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i8 = puzzleAide.EmptyToTvLeft(430938, 500950);
+            int k8 = puzzle.Items[500950];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i8] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i8 == 500949, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k8 == puzzle.Items[500950], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i9 = puzzleAide.EmptyToTvLeft(500949, 550949);
+            int k9 = puzzle.Items[550949];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i9] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i9 == 550948, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k9 == puzzle.Items[550949], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i10 = puzzleAide.EmptyToTvLeft(550948, 650900);
+            int k10 = puzzle.Items[650900];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i10] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i10 == 650899, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k10 == puzzle.Items[650900], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i11 = puzzleAide.EmptyToTvLeft(650899, 700849);
+            int k11 = puzzle.Items[700849];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i11] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i11 == 700848, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k11 == puzzle.Items[700849], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i12 = puzzleAide.EmptyToTvLeft(700848, 750750);
+            int k12 = puzzle.Items[750750];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i12] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i12 == 750749, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k12 == puzzle.Items[750750], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i13 = puzzleAide.EmptyToTvLeft(750749, 750700);
+            int k13 = puzzle.Items[750700];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i13] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i13 == 750699, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k13 == puzzle.Items[750700], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i14 = puzzleAide.EmptyToTvLeft(750699, 750650);
+            int k14 = puzzle.Items[750650];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i14] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i14 == 750649, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k14 == puzzle.Items[750650], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i15 = puzzleAide.EmptyToTvLeft(750649, 700550);
+            int k15 = puzzle.Items[700550];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i15] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i15 == 700549, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k15 == puzzle.Items[700550], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i16 = puzzleAide.EmptyToTvLeft(700549, 600449);
+            int k16 = puzzle.Items[600449];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i16] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i16 == 600448, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k16 == puzzle.Items[600449], "生成mn到目标位置左方的命令，先横移,错误");
+
+            int i17 = puzzleAide.EmptyToTvLeft(600448, 500400);
+            int k17 = puzzle.Items[500400];
+            puzzleAide.ExecutePlan();
+            Assert.IsTrue(puzzle.Items[i17] == 999999, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(i17 == 500399, "生成mn到目标位置左方的命令,先横移,错误");
+            Assert.IsTrue(k17 == puzzle.Items[500400], "生成mn到目标位置左方的命令，先横移,错误");
 
         }
         #endregion
