@@ -83,7 +83,7 @@ namespace MNPuzzle
     /// <summary>
     /// PuzzleAide类里面的基础命令
     /// </summary>
-    public enum Plan
+   public enum Plan
     {
         /// <summary>
         /// mn竖向移动命令
@@ -116,9 +116,11 @@ namespace MNPuzzle
         /// <summary>
         /// 横侧a_j斜向移动命令
         /// </summary>
-        LateralEntityObliquePlan
+        LateralEntityOblique
     }
-
+    /// <summary>
+    /// 拼图助手
+    /// </summary>
    public class PuzzleAide
    {
         public Queue<Swap> Command { get; set; }//命令队列
@@ -775,7 +777,7 @@ namespace MNPuzzle
             return EmptyToVtUp(this.Command, puzzle.mnPosition, target, puzzle.LieShu, rOrL);
         }
         #endregion
-        #region 生成mn到目标位置上方的命令，先竖移
+        #region 生成mn到目标位置上方的命令，先横移
         /// <summary>
         /// 生成mn到目标位置上方的命令，且mn不能经过位置target,先横移
         /// </summary>
@@ -959,6 +961,130 @@ namespace MNPuzzle
         public int EmptyToTvLeft(int target, string upOrdown = "Down")
         {
             return EmptyToTvLeft(this.Command, puzzle.mnPosition, target, puzzle.LieShu, upOrdown);
+        }
+        #endregion
+
+        #region 生成mn到目标位置下侧的命令，先竖移
+        /// <summary>
+        /// 生成mn到目标位置下侧的命令，且mn不能经过位置target，先竖移
+        /// </summary>
+        /// <param name="command">存放命令的队列</param>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="target">目标位置</param>
+        /// <param name="lieShu">列数</param>
+        /// <param name="upOrdown">如果mn在目标正上方，则有两种可选移动方式，默认值为"Right"，如果rOrL = "Right"则选择另一种方式</param>
+        /// <returns>mn移动后的位置</returns>
+        public int EmptyToVtDown(Queue<Swap> command, int mnPosition, int target, int lieShu, string rOrL = "Right")
+        {
+            if (mnPosition<target&&mnPosition%lieShu==target%lieShu)
+            {
+                int y1 = (mnPosition - mnPosition % lieShu) / lieShu;
+                int y2 = (target - target % lieShu) / lieShu;
+                int mnPos = EmptyVerticalPlan(command,mnPosition,y2-y1-1,1,lieShu);
+                if (rOrL=="Right")
+                {
+                    command.Enqueue(new Swap(mnPos,mnPos+1));
+                    command.Enqueue(new Swap(mnPos+1,mnPos+1+lieShu));
+                    command.Enqueue(new Swap(mnPos+1+lieShu,mnPos+1+2*lieShu));
+                    command.Enqueue(new Swap(mnPos + 1 + 2 * lieShu, mnPos + 2 * lieShu));
+                }
+                else
+                {
+                    command.Enqueue(new Swap(mnPos, mnPos - 1));
+                    command.Enqueue(new Swap(mnPos - 1, mnPos - 1 + lieShu));
+                    command.Enqueue(new Swap(mnPos - 1 + lieShu, mnPos - 1 + 2 * lieShu));
+                    command.Enqueue(new Swap(mnPos - 1 + 2 * lieShu, mnPos + 2 * lieShu));
+                }
+                return target + lieShu;
+            }
+            else
+            {
+                return EmptyToVt(command,mnPosition,target+lieShu,lieShu);
+            }
+        }
+        public int EmptyToVtDown(int mnPosition, int target, int lieShu, string rOrL = "Right")
+        {
+            return EmptyToVtDown(this.Command,mnPosition,target,lieShu,rOrL);
+        }
+        public int EmptyToVtDown(int mnPosition, int target, string rOrL = "Right")
+        {
+            return EmptyToVtDown(this.Command, mnPosition, target, this.puzzle.LieShu, rOrL);
+        }
+        public int EmptyToVtDown( int target, string rOrL = "Right")
+        {
+            return EmptyToVtDown(this.Command, this.puzzle.mnPosition, target, this.puzzle.LieShu, rOrL);
+        }
+        #endregion
+        #region 生成mn到目标位置下侧的命令，先横移
+        /// <summary>
+        /// 生成mn到目标位置下方的命令，且mn不能经过位置target,先横移
+        /// </summary>
+        /// <param name="command">存放命令的队列</param>
+        /// <param name="mnPosition">mn当前的位置</param>
+        /// <param name="target">目标位置</param>
+        /// <param name="lieShu">列数</param>
+        /// <param name="rOrL">如果mn在目标正上方，则有两种可选移动方式，默认值为"Right"，如果rOrL！= "Right"则选择另一种方式</param>
+        /// <returns>mn移动后的位置</returns>
+        public int EmptyToTvDown(Queue<Swap> command, int mnPosition, int target, int lieShu, string rOrL = "Right")
+        {
+            int x1 = mnPosition % lieShu;
+            int y1 = (mnPosition - x1) / lieShu;
+            int x2 = target % lieShu;
+            int y2 = (target - x2) / lieShu;
+            int mnPos = 0;
+            if (y2 > y1 && x1 == x2)
+            {
+                mnPos = EmptyVerticalPlan(command, mnPosition, y2-y1 - 1, 1, lieShu);
+                if (rOrL == "Right")
+                {
+                    command.Enqueue(new Swap(mnPos, mnPos + 1));
+                    command.Enqueue(new Swap(mnPos + 1, mnPos + 1 + lieShu));
+                    command.Enqueue(new Swap(mnPos + 1 + lieShu, mnPos + 1 + 2 * lieShu));
+                    command.Enqueue(new Swap(mnPos + 1 + 2 * lieShu, mnPos + 2 * lieShu));
+                }
+                else
+                {
+                    command.Enqueue(new Swap(mnPos, mnPos - 1));
+                    command.Enqueue(new Swap(mnPos - 1, mnPos - 1 + lieShu));
+                    command.Enqueue(new Swap(mnPos - 1 + lieShu, mnPos - 1 + 2 * lieShu));
+                    command.Enqueue(new Swap(mnPos - 1 + 2 * lieShu, mnPos + 2 * lieShu));
+                }
+                return target + lieShu;
+            }
+            else
+            if (y2 >= y1)//
+            {
+                if (x1 >x2)//偏左下，正左
+                {
+                    mnPos = EmptyTransversePlan(command, mnPosition, x1-x2 - 1, -1);
+                    mnPos = EmptyVerticalPlan(command, mnPos, y2-y1 + 1, 1, lieShu);
+                    command.Enqueue(new Swap(mnPos, mnPos - 1));
+                }
+                else
+                if (x1 < x2)//偏右上，正右
+                {
+                    mnPos = EmptyTransversePlan(command, mnPosition, x2 - x1 - 1, 1);
+                    mnPos = EmptyVerticalPlan(command, mnPos, y2-y1 + 1, 1, lieShu);
+                    command.Enqueue(new Swap(mnPos, mnPos + 1));
+                }
+                return target + lieShu;
+            }
+            else
+            {
+                return EmptyToTv(command, mnPosition, target + lieShu, lieShu);
+            }
+        }
+        public int EmptyToTvDown( int mnPosition, int target, int lieShu, string rOrL = "Right")
+        {
+            return EmptyToTvDown(this.Command, mnPosition, target,  lieShu, rOrL);
+        }
+        public int EmptyToTvDown(int mnPosition, int target, string rOrL = "Right")
+        {
+            return EmptyToTvDown(this.Command, mnPosition, target, this.puzzle.LieShu, rOrL);
+        }
+        public int EmptyToTvDown(int target, string rOrL = "Right")
+        {
+            return EmptyToTvDown(this.Command,this.puzzle.mnPosition, target, this.puzzle.LieShu, rOrL);
         }
         #endregion
         #endregion
