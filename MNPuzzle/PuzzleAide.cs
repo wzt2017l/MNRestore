@@ -924,6 +924,15 @@ namespace MNPuzzle
         }
         #endregion
         #region 生成mn到目标位置左侧的命令，先横移
+        /// <summary>
+        /// 生成mn到目标位置左侧的命令，且mn不能经过位置target，先横移
+        /// </summary>
+        /// <param name="command">存放命令的队列</param>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="target">目标位置</param>
+        /// <param name="lieShu">列数</param>
+        /// <param name="upOrdown">如果mn在目标正右方，则有两种可选移动方式，默认值为"Down"，如果upOrdown！= "Down"则选择另一种方式</param>
+        /// <returns>mn移动后的位置</returns>
         public int EmptyToTvLeft(Queue<Swap> command, int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
             if (target<mnPosition&&(target-target%lieShu)/lieShu==(mnPosition-mnPosition%lieShu)/lieShu)
@@ -1209,6 +1218,134 @@ namespace MNPuzzle
         {
             return EmptyToTvRight(this.Command, this.puzzle.mnPosition, target, this.puzzle.LieShu, upOrdown);
         }
+        #endregion
+        #endregion
+
+        #region 生成高级命令
+        #region 将位置在entityPos的图块移动到位置target
+        /// <summary>
+        /// 将位置在entityPos的图块移动到位置target
+        /// </summary>
+        /// <param name="command">存放命令的队列</param>
+        /// <param name="mnPosition">mn当前位置</param>
+        /// <param name="entityPos">要移动的图块的位置</param>
+        /// <param name="target">目标位置</param>
+        /// <param name="lieShu">列数</param>
+        /// <param name="VorT">将mn移动到entityPos附近的合理位置时，优先移动到其左右还是上下，ture 上下，false 左右</param>
+        /// <param name="entityRDorLU">移动entityPos到目标时，优先使用右侧和下侧移动命令，还是使用左侧和上侧移动命令，ture 右侧和下侧，false 左侧和上侧</param>
+        /// <param name="mnToVorT">将mn移动到entityPos附近的合理位置前，mn优先横移还是竖移，ture 竖移，false 横移</param>
+        /// <param name="mnToDefault">将mn移动到entityPos附近的合理位置时,是否使用默认得移动策略，是ture,否false,默认为true</param>
+        /// <returns>mn移动后的位置</returns>
+        public int EntityTo(Queue<Swap> command, int mnPosition, int entityPos, int target, int lieShu, bool VorT, bool entityRDorLU, bool mnToVorT, bool mnToDefault = true)
+        {
+            PointOffset po = new PointOffset(entityPos, target, lieShu);
+            Position postion = PositionAnalysis(po);
+            int p = 0;//0原点，1,2,3,4上下左右
+            switch (postion)
+            {
+                case Position.Up:
+                case Position.UpGtRight:
+                case Position.UpGtLeft:
+                    p = 1;
+                    break;
+                case Position.Down:
+                case Position.DownGtRight:
+                case Position.DownGtLeft:
+                    p = 2;
+                    break;
+                case Position.Left:
+                case Position.LeftGtDown:
+                case Position.LeftGtUp:
+                    p = 3;
+                    break;
+                case Position.Right:
+                case Position.RightGtDown:
+                case Position.RightGtUp:
+                    p = 4;
+                    break;
+                case Position.UpEqRight:
+                    p = VorT ? 1 : 4;
+                    break;
+                case Position.RightEqDown:
+                    p = VorT ? 2 : 4;
+                    break;
+                case Position.DownEqLeft:
+                    p = VorT ? 2 : 3;
+                    break;
+                case Position.LeftEqUp:
+                    p = VorT ? 1 : 3;
+                    break;
+
+            }
+            switch (p)
+            {
+                case 1:
+                    mnPosition = mnToVorT ?
+                        (mnToDefault ? EmptyToVtUp(command, mnPosition, entityPos, lieShu) : EmptyToVtUp(command, mnPosition, entityPos, lieShu, "Left"))
+                        : (mnToDefault ? EmptyToTvUp(command, mnPosition, entityPos, lieShu) : EmptyToTvUp(command, mnPosition, entityPos, lieShu, "Left"));
+                    break;
+                case 2:
+                    mnPosition = mnToVorT ?
+                        (mnToDefault ? EmptyToVtDown(command, mnPosition, entityPos, lieShu) : EmptyToVtDown(command, mnPosition, entityPos, lieShu, "Left"))
+                        : (mnToDefault ? EmptyToTvUp(command, mnPosition, entityPos, lieShu) : EmptyToTvDown(command, mnPosition, entityPos, lieShu, "Left"));
+                    break;
+                case 3:
+                    mnPosition = mnToVorT ?
+                        (mnToDefault ? EmptyToVtLeft(command, mnPosition, entityPos, lieShu) : EmptyToVtLeft(command, mnPosition, entityPos, lieShu, "Up"))
+                        : (mnToDefault ? EmptyToTvLeft(command, mnPosition, entityPos, lieShu) : EmptyToTvLeft(command, mnPosition, entityPos, lieShu, "Up"));
+                    break;
+                case 4:
+                    mnPosition = mnToVorT ?
+                        (mnToDefault ? EmptyToVtRight(command, mnPosition, entityPos, lieShu) : EmptyToVtRight(command, mnPosition, target - lieShu, lieShu, "Up"))
+                        : (mnToDefault ? EmptyToTvRight(command, mnPosition, entityPos, lieShu) : EmptyToTvRight(command, mnPosition, target - lieShu, lieShu, "Up"));
+                    break;
+            }//mn移动到合理位置
+            switch (postion)//将entity移动到目标
+            {
+                case Position.Up:
+                case Position.Down:
+                    mnPosition = entityRDorLU ? RigthEntityVerticalPlan(command, mnPosition, po.Offset.Y, po.Direction.Y, lieShu) : LeftEntityVerticalPlan(command, mnPosition, po.Offset.Y, po.Direction.Y, lieShu);
+                    break;
+                case Position.Right:
+                case Position.Left:
+                    mnPosition = entityRDorLU ? LowerEntityTransversePlan(command, mnPosition, po.Offset.X, po.Direction.X, lieShu) : RiseEntityTransversePlan(command, mnPosition, po.Offset.X, po.Direction.X, lieShu);
+                    break;
+                case Position.UpEqRight:
+                case Position.RightEqDown:
+                case Position.DownEqLeft:
+                case Position.LeftEqUp:
+                    mnPosition = VorT ? RiseEntityObliquePlan(command, mnPosition, po.Offset.X, po.Direction.Y, po.Direction.X, lieShu) : LateralEntityObliquePlan(command, mnPosition, po.Offset.X, po.Direction.Y, po.Direction.X, lieShu);
+                    break;
+                case Position.UpGtRight:
+                case Position.UpGtLeft:
+                case Position.DownGtRight:
+                case Position.DownGtLeft:
+                    mnPosition = entityRDorLU ? RigthEntityVerticalPlan(command, mnPosition, po.OffsetYMinusX, po.Direction.Y, lieShu) : LeftEntityVerticalPlan(command, mnPosition, po.OffsetYMinusX, po.Direction.Y, lieShu);
+                    mnPosition = RiseEntityObliquePlan(command, mnPosition, po.Offset.X, po.Direction.Y, po.Direction.X, lieShu);
+                    break;
+
+                case Position.RightGtUp:
+                case Position.RightGtDown:
+                case Position.LeftGtDown:
+                case Position.LeftGtUp:
+                    mnPosition = entityRDorLU ? LowerEntityTransversePlan(command, mnPosition, -po.OffsetYMinusX, po.Direction.X, lieShu) : RiseEntityTransversePlan(command, mnPosition, -po.OffsetYMinusX, po.Direction.X, lieShu);
+                    mnPosition = LateralEntityObliquePlan(command, mnPosition, po.Offset.Y, po.Direction.Y, po.Direction.X, lieShu);
+                    break;
+            }
+            return mnPosition;
+        }
+        public int EntityTo(int mnPosition, int entityPos, int target, int lieShu, bool VorT, bool entityRDorLU, bool mnToVorT, bool mnToDefault = true)
+        {
+            return EntityTo(this.Command, mnPosition, entityPos, target, lieShu, VorT, entityRDorLU, mnToVorT, mnToDefault);
+        }
+        public int EntityTo(int mnPosition, int entityPos, int target, bool VorT, bool entityRDorLU, bool mnToVorT, bool mnToDefault = true)
+        {
+            return EntityTo(this.Command, mnPosition, entityPos, target, this.puzzle.LieShu, VorT, entityRDorLU, mnToVorT, mnToDefault);
+        }
+        public int EntityTo(int entityPos, int target, bool VorT, bool entityRDorLU, bool mnToVorT, bool mnToDefault = true)
+        {
+            return EntityTo(this.Command, this.puzzle.mnPosition, entityPos, target, this.puzzle.LieShu, VorT, entityRDorLU, mnToVorT, mnToDefault);
+        } 
         #endregion
         #endregion
 
