@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace MNRestore
 {
@@ -12,52 +13,44 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
-            Puzzle puzzle1 = new Puzzle(10000,10000);
-            Console.WriteLine("开始计算");
-            DateTime beforDTa = System.DateTime.Now;
-            puzzle1.MnPosition();
-            DateTime afterDTa = System.DateTime.Now;
-            TimeSpan tsa = afterDTa.Subtract(beforDTa);
-            Console.WriteLine("DateTime总共花费{0}ms.", tsa.TotalMilliseconds);
-            Console.WriteLine("开始计算");
-            DateTime beforDTb = System.DateTime.Now;
-            for (int i=0;i<100000000;i++)
+            Puzzle puzzle = new Puzzle(1000,1000);
+            PuzzleAide puzzleAide = new PuzzleAide(puzzle);
+            puzzleAide.Disrupt();
+            for (int i = 0; i < 1000000; i++)
             {
-                if (puzzle1.Items[i]==999999)
+                int[] rans = new int[8];
+                for (int j=0;j<8;j++)
                 {
-                    break;
+                    byte[] ranBytes = new byte[4];
+                    RNGCryptoServiceProvider rngServiceProvider = new RNGCryptoServiceProvider();
+                    rngServiceProvider.GetBytes(ranBytes);
+                    rans[j] = Math.Abs(BitConverter.ToInt32(ranBytes, 0));
+                }
+                int entityPos = (rans[0]%998+1) * 1000 + (rans[1] % 998 + 1);
+                int target = (rans[2] % 998 + 1) * 1000 + (rans[3] % 998 + 1);
+                bool VorT =rans[4]% 2 == 0 ? true : false;
+                bool entityRDorLU = rans[5] % 2 == 0 ? true : false;
+                bool mnToVorT = rans[6] % 2 == 0 ? true : false;
+                bool mnToDefault = rans[7] % 2 == 0 ? true : false;
+
+                int mnPos = puzzle.mnPosition;
+                int entity = puzzle.Items[entityPos];//值
+                if (mnPos != entityPos)
+                {
+                    string error0 = $"(前信息：i:{i},entity:{entity},entityPos:{entityPos}，target:{target},mnPos:{mnPos},VorT:{VorT},entityRDorLU:{entityRDorLU},mnToVorT:{mnToVorT},mnToDefault:{mnToDefault})";
+                    Console.WriteLine(error0);
+                    puzzleAide.EntityTo(entityPos, target, VorT, entityRDorLU, mnToVorT, mnToDefault);
+                    puzzleAide.ExecutePlan();
+                    int entity1 = puzzle.Items[target];
+                    string error = $"(信息：i:{i},entity:{entity}==entity1:{entity1},entityPos:{entityPos}，target:{target},mnPos:{mnPos},VorT:{VorT},entityRDorLU:{entityRDorLU},mnToVorT:{mnToVorT},mnToDefault:{mnToDefault})";
+                    Console.WriteLine(error);
+                    if (entity!=entity1)
+                    {
+                        Console.WriteLine("发生错误");
+                        Console.Read();
+                    }
                 }
             }
-            DateTime afterDTb = System.DateTime.Now;
-            TimeSpan tsb = afterDTb.Subtract(beforDTb);
-            Console.WriteLine("DateTime总共花费{0}ms.", tsb.TotalMilliseconds);
-            //=========================================================================
-            Console.WriteLine("命令开始");
-            int l = 1000000;
-            int[] array = new int[l];
-            int[] array1 = new int[l];
-            for (int i = 0; i < l; i++)
-            {
-                array[i] = l - i - 1;
-                array1[i] = l - i;
-            }
-            //Puzzle p = new Puzzle(1000, 1000);
-            //Console.WriteLine("开始计算");
-            //DateTime beforDT1 = System.DateTime.Now;
-            //long lg = p.RetryNiXu();
-            //Console.WriteLine(lg);
-            //DateTime afterDT1 = System.DateTime.Now;
-            //TimeSpan ts1 = afterDT1.Subtract(beforDT1);
-            //Console.WriteLine("DateTime总共花费{0}ms.", ts1.TotalMilliseconds);
-
-            Console.WriteLine("开始计算");
-            DateTime beforDT2 = System.DateTime.Now;
-            long lg2 = RetryNiXu(array);
-            Console.WriteLine(lg2);
-            DateTime afterDT2 = System.DateTime.Now;
-            TimeSpan ts2 = afterDT2.Subtract(beforDT2);
-            Console.WriteLine("DateTime总共花费{0}ms.", ts2.TotalMilliseconds);
-            //=========================================================================
             Console.Read();
         }
 

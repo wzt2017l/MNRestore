@@ -1224,7 +1224,9 @@ namespace MNPuzzle
         #region 生成高级命令
         #region 将位置在entityPos的图块移动到位置target
         /// <summary>
-        /// 将位置在entityPos的图块移动到位置target
+        /// 将位置在entityPos的图块移动到位置target。
+        /// entityPos在边界时，生成的命令会有超出索引的可能，要小心使用。
+        /// 当target在边界时无法处理,mn的位置等于entityPos时会出错。
         /// </summary>
         /// <param name="command">存放命令的队列</param>
         /// <param name="mnPosition">mn当前位置</param>
@@ -1287,7 +1289,7 @@ namespace MNPuzzle
                 case 2:
                     mnPosition = mnToVorT ?
                         (mnToDefault ? EmptyToVtDown(command, mnPosition, entityPos, lieShu) : EmptyToVtDown(command, mnPosition, entityPos, lieShu, "Left"))
-                        : (mnToDefault ? EmptyToTvUp(command, mnPosition, entityPos, lieShu) : EmptyToTvDown(command, mnPosition, entityPos, lieShu, "Left"));
+                        : (mnToDefault ? EmptyToTvDown(command, mnPosition, entityPos, lieShu) : EmptyToTvDown(command, mnPosition, entityPos, lieShu, "Left"));
                     break;
                 case 3:
                     mnPosition = mnToVorT ?
@@ -1296,8 +1298,8 @@ namespace MNPuzzle
                     break;
                 case 4:
                     mnPosition = mnToVorT ?
-                        (mnToDefault ? EmptyToVtRight(command, mnPosition, entityPos, lieShu) : EmptyToVtRight(command, mnPosition, target - lieShu, lieShu, "Up"))
-                        : (mnToDefault ? EmptyToTvRight(command, mnPosition, entityPos, lieShu) : EmptyToTvRight(command, mnPosition, target - lieShu, lieShu, "Up"));
+                        (mnToDefault ? EmptyToVtRight(command, mnPosition, entityPos, lieShu) : EmptyToVtRight(command, mnPosition, entityPos, lieShu, "Up"))
+                        : (mnToDefault ? EmptyToTvRight(command, mnPosition, entityPos, lieShu) : EmptyToTvRight(command, mnPosition, entityPos, lieShu, "Up"));
                     break;
             }//mn移动到合理位置
             switch (postion)//将entity移动到目标
@@ -1356,11 +1358,11 @@ namespace MNPuzzle
         /// <param name="command">命令队列</param>
         public void ExecutePlan(Queue<Swap> command)
         {
-            int count = command.Count;
-            for (int i = 0; i < count; i++)
-            {
+             int count = command.Count;
+             for (int i = 0; i < count; i++)
+             {
                 puzzle.SwapAction(command.Dequeue());
-            }
+             }
         }
         public void ExecutePlan()
         {

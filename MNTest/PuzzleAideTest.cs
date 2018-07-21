@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MNPuzzle;
 
@@ -1300,6 +1301,39 @@ namespace MNTest
         }
         #endregion
 
+        #region 高级命令 
+        [TestMethod]
+        public void EntityToTest()
+        {
+            for (int i=0;i<1000;i++)
+            {
+
+                int[] rans = new int[8];
+                for (int j = 0; j < 8; j++)
+                {
+                    byte[] ranBytes = new byte[4];
+                    RNGCryptoServiceProvider rngServiceProvider = new RNGCryptoServiceProvider();
+                    rngServiceProvider.GetBytes(ranBytes);
+                    rans[j] = Math.Abs(BitConverter.ToInt32(ranBytes, 0));
+                }
+                int entityPos = (rans[0] % 998 + 1) * 1000 + (rans[1] % 998 + 1);
+                int target = (rans[2] % 998 + 1) * 1000 + (rans[3] % 998 + 1);
+                bool VorT = rans[4] % 2 == 0 ? true : false;
+                bool entityRDorLU = rans[5] % 2 == 0 ? true : false;
+                bool mnToVorT = rans[6] % 2 == 0 ? true : false;
+                bool mnToDefault = rans[7] % 2 == 0 ? true : false;
+                int mnPos = puzzle.mnPosition;
+                int entity = puzzle.Items[entityPos];//值
+                if (mnPos!=entityPos)
+                {
+                    puzzleAide.EntityTo(entityPos, target, VorT, entityRDorLU, mnToVorT, mnToDefault);
+                    puzzleAide.ExecutePlan();
+                    string error = $"(高级命令测试错误，错误信息：i:{i},entity:{entity},entityPos:{entityPos}，target:{target},mnPos:{mnPos},VorT:{VorT},entityRDorLU:{entityRDorLU},mnToVorT:{mnToVorT},mnToDefault:{mnToDefault})";
+                    Assert.IsTrue(puzzle.Items[target] == entity, error);
+                }
+            }
+        }
+        #endregion
         [TestMethod]
         public void MnPositionTest()
         {
