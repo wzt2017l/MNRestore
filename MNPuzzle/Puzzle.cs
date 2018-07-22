@@ -176,13 +176,22 @@ namespace MNPuzzle
         /// <returns>mn的位置</returns>
         public int MnPosition()
         {
-            int mn = Total - 1;
+            return mnPosition= GetEntityPos(Total - 1);
+        }
+        #endregion
+
+        #region 查找某个图块的位置
+        /// <summary>
+        /// 查找某个图块的位置
+        /// </summary>
+        /// <param name="entity">图块编号</param>
+        /// <returns>位置</returns>
+        public int GetEntityPos(int entity)
+        {
             for (int i=0;i<Total;i++)
             {
-                if (Items[i]==mn)
-                {
-                  return mnPosition = i;
-                }
+                if (Items[i] == entity)
+                    return i;
             }
             return -1;
         }

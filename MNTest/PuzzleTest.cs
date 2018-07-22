@@ -9,19 +9,12 @@ namespace MNTest
     public class PuzzleTest
     {
         private static Puzzle puzzle;
-        //[AssemblyInitialize()]
-        //public static void AssemblyInit(TestContext context)
-        //{
-        //   // 
-        //}
-
+    
         [ClassInitialize()]
         public static void PuzzleInit(TestContext context)
         {
             puzzle = new Puzzle(1000,1000);
         }
-
-
 
         [TestMethod]
         public void RetryNiXuTest()
@@ -44,30 +37,18 @@ namespace MNTest
             Assert.IsTrue(inv1 == inv2, "逆序数计算错误");
         }
 
-        //[TestInitialize()]
-        //public void Initialize()
-        //{
-        //   // 每个测试方法运行前都会运行
-        //}
-
-        //[TestCleanup()]
-        //public void Cleanup()
-        //{
-        //   
-        //}
-        //[ClassCleanup()]
-        //public static void ClassCleanup()
-        //{
-        //  
-        //}
-
-        //[AssemblyCleanup()]
-        //public static void AssemblyCleanup()
-        //{
-        //  
-        //}
-
-
-
+        [TestMethod]
+        public void MnPositionTest()
+        {
+            int mnPos = puzzle.MnPosition();
+            int mnAss=-2;
+            for (int i=0;i<puzzle.Total;i++)
+            {
+                if (puzzle.Total - 1 == puzzle.Items[i])
+                    mnAss = i;
+            }
+            Assert.IsTrue(mnPos==puzzle.mnPosition,"错误");
+            Assert.IsTrue(mnPos == mnAss, "错误");
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -146,8 +147,16 @@ namespace MNPuzzle
             Parallel.For(0, count, i =>
             {
                 int k, j;
-                k = r.Next(0, i + 1);
-                j = r.Next(i, Total);
+                int[] rans = new int[2];
+                for (int m = 0; m < 2; m++)
+                {
+                    byte[] ranBytes = new byte[4];
+                    RNGCryptoServiceProvider rngServiceProvider = new RNGCryptoServiceProvider();
+                    rngServiceProvider.GetBytes(ranBytes);
+                    rans[m] = Math.Abs(BitConverter.ToInt32(ranBytes, 0));
+                }
+                k = Math.Abs(rans[0]%(i+1));
+                j = Math.Abs(rans[1]%(Total-i))+i;
                 if (k != j)
                 {
                     puzzle.Swap(k, j);
@@ -1347,8 +1356,191 @@ namespace MNPuzzle
         public int EntityTo(int entityPos, int target, bool VorT, bool entityRDorLU, bool mnToVorT, bool mnToDefault = true)
         {
             return EntityTo(this.Command, this.puzzle.mnPosition, entityPos, target, this.puzzle.LieShu, VorT, entityRDorLU, mnToVorT, mnToDefault);
-        } 
+        }
         #endregion
+        #endregion
+
+        #region 复原拼图某一行
+        /// <summary>
+        /// 复原拼图某一行
+        /// </summary>
+        /// <param name="puzzle">拼图</param>
+        /// <param name="rowIndex">行数，从0开始  </param>
+        /// <param name="def">假定自下而上复原它时请置为false</param>
+        /// <returns>是否成功，true 成功</returns>
+        public bool RestoreRow(Puzzle puzzle,int rowIndex,bool def=true)
+        { 
+            int lieShu = puzzle.LieShu;
+            List<int> rows = new List<int>();
+            Parallel.For(0,lieShu,i=> {
+                int j = (lieShu - puzzle.GetEntityPos(i + lieShu * rowIndex) % lieShu) / lieShu-rowIndex;
+                if(j!=0)
+                rows.Add(j>0?1:-1);
+            });
+            int check = 0;//0上下都有
+            if (rows.Count == 0)
+                check = def ? 1 : -1;
+            else if (rows.Select(i => i == 1).Count() == rows.Count)
+                check = 1;//全在下
+            else if (rows.Select(i => i == -1).Count() == rows.Count)
+                check = -1;//全在上
+            switch (check)//矫正mn
+            {
+                case 1:
+                    int mnRowIndex = (puzzle.mnPosition - puzzle.mnPosition % lieShu) / lieShu;
+                    if (mnRowIndex< rowIndex)
+                        EmptyTransversePlan(puzzle.mnPosition,rowIndex-mnRowIndex,1);
+                    this.ExecutePlan();
+                    break;
+                case -1:
+                    int mnRowIndex1 = (puzzle.mnPosition - puzzle.mnPosition % lieShu) / lieShu;
+                    if (mnRowIndex1 > rowIndex)
+                        EmptyTransversePlan(puzzle.mnPosition,mnRowIndex1-rowIndex, -1);
+                    this.ExecutePlan();
+                    break;
+                default:break;
+            }
+
+            for(int i = 0; i < lieShu; i++)
+            {   //当前复原
+                int j = lieShu - i % lieShu;//倒数第几块
+                int entity = rowIndex * lieShu + i;
+                int entityPos = puzzle.GetEntityPos(entity);
+                if (entity == entityPos)
+                    continue;
+                int mnPos = puzzle.mnPosition;
+                int entityPosColIndex = entityPos % lieShu;//列数
+                int entityPosRowIndex = (entityPos - entityPosColIndex) / lieShu;//行数
+                bool VorT, entityRDorLU, mnToVorT, mnToDefault;
+                //TODO:如果entityPos在边界如何处理呢？这是个问题，
+                //如果entityPos在右边界，且entity需要在边界竖值向上或向下运动，该如何？
+                //如果entityPos在左边界，且entity需要在边界竖值向上或向下运动，该如何？
+                switch (check)
+                {
+                    case 1:
+                        VorT = false;
+                        entityRDorLU = true;
+                        mnToVorT = true;
+                        mnToDefault = true;
+                        break;
+                    case -1:
+                        VorT = false;
+                        entityRDorLU = false;
+                        mnToVorT = true;
+                        mnToDefault = true;
+                        break;
+                    default:
+                        int mnRowIndex = (mnPos - mnPos % lieShu) / lieShu;
+                        if (mnRowIndex>=rowIndex&&entityPosRowIndex>=rowIndex||mnRowIndex<= rowIndex &&entityPosRowIndex<= rowIndex)
+                        {
+                            //检测是否需要跨越
+                        }
+                        else//跨行
+                        {
+                            if (mnPos < entityPos)//向下去
+                              mnPos=EmptyToTvUp(mnPos,entity+lieShu,lieShu);
+                            else//向上去
+                              mnPos=EmptyToTvDown(mnPos, entity - lieShu, lieShu);
+                            this.ExecutePlan();
+                        }
+                        if (entityPosRowIndex < rowIndex || entityPosRowIndex==rowIndex&&def)//在上
+                        {
+                            VorT = false;
+                            entityRDorLU = false;
+                            mnToVorT = true;
+                            mnToDefault = true;
+                        }
+                        else 
+                        {
+                            VorT = false;
+                            entityRDorLU = true;
+                            mnToVorT = true;
+                            mnToDefault = true;
+                        }
+                        break;
+                }
+                //矫正特殊情况
+                { /*待完善*/}
+                //entityPos是否在危险区域,如何避免打乱已经复原的图块！！！！？？？
+                switch (j)
+                {
+                    case 1:break;
+                    case 2:break;
+                    default:
+                        if (entityPosRowIndex> rowIndex)//向上
+                        {
+                            if (entityPosColIndex>i)//右
+                            {
+                                int target = entity - lieShu + 1;
+                                if (target != entityPos)
+                                {
+                                    EntityTo(puzzle.mnPosition, entityPos, target, VorT, entityRDorLU, mnToVorT, mnToDefault);
+                                    this.ExecutePlan();
+                                }
+                                else
+                                {
+                                    EmptyToTvUp(puzzle.mnPosition, entityPos);//移动到位置entityPos
+                                    this.ExecutePlan();
+                                }
+                                mnPos= puzzle.mnPosition;
+                                if (mnPos%lieShu==target%lieShu)
+                                {
+                                    Command.Enqueue(new Swap(mnPos,mnPos+lieShu));
+                                    Command.Enqueue(new Swap(mnPos+lieShu,mnPos+lieShu-1));
+                                    Command.Enqueue(new Swap(mnPos+lieShu-1, mnPos-1));
+                                    Command.Enqueue(new Swap(mnPos-1,mnPos));
+                                }
+                                else
+                                {
+                                    Command.Enqueue(new Swap(mnPos, mnPos +1));
+                                    Command.Enqueue(new Swap(mnPos + 1, mnPos+1-lieShu));
+                                    Command.Enqueue(new Swap(mnPos - lieShu + 1, mnPos-lieShu));
+                                    Command.Enqueue(new Swap(mnPos - lieShu, mnPos));
+                                }
+                                this.ExecutePlan();
+                            }
+                            else if (entityPosRowIndex<i)//左
+                            {
+
+                            }
+                            else//中
+                            {
+
+                            }
+                        }
+                        else if(entityPosRowIndex<rowIndex)//向下
+                        {
+                            if (entityPosColIndex > i)
+                            {
+
+                            }
+                            else if (entityPosRowIndex < i)
+                            {
+
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        else//等行
+                        {
+
+                        }
+                        break;
+                }
+                if (puzzle.Items[entity] != entity)
+                    return false;
+
+            }
+            return true;
+        }
+        #endregion
+        #region 复原拼图
+        public void Restore(Puzzle puzzle)
+        {
+          
+        }
         #endregion
 
         #region 执行命令

@@ -16,7 +16,8 @@ namespace MNRestore
             Puzzle puzzle = new Puzzle(1000,1000);
             PuzzleAide puzzleAide = new PuzzleAide(puzzle);
             puzzleAide.Disrupt();
-            for (int i = 0; i < 1000000; i++)
+            puzzle.MnPosition();
+            for (int i = 0; i < 1000; i++)
             {
                 int[] rans = new int[8];
                 for (int j=0;j<8;j++)
@@ -37,12 +38,12 @@ namespace MNRestore
                 int entity = puzzle.Items[entityPos];//值
                 if (mnPos != entityPos)
                 {
-                    string error0 = $"(前信息：i:{i},entity:{entity},entityPos:{entityPos}，target:{target},mnPos:{mnPos},VorT:{VorT},entityRDorLU:{entityRDorLU},mnToVorT:{mnToVorT},mnToDefault:{mnToDefault})";
+                    string error0 = $"前信息：i:{i},entity:{entity},entityPos:{entityPos}，target:{target},mnPos:{mnPos},VorT:{VorT},entityRDorLU:{entityRDorLU},mnToVorT:{mnToVorT},mnToDefault:{mnToDefault}";
                     Console.WriteLine(error0);
                     puzzleAide.EntityTo(entityPos, target, VorT, entityRDorLU, mnToVorT, mnToDefault);
                     puzzleAide.ExecutePlan();
                     int entity1 = puzzle.Items[target];
-                    string error = $"(信息：i:{i},entity:{entity}==entity1:{entity1},entityPos:{entityPos}，target:{target},mnPos:{mnPos},VorT:{VorT},entityRDorLU:{entityRDorLU},mnToVorT:{mnToVorT},mnToDefault:{mnToDefault})";
+                    string error = $"信息：i:{i},entity:{entity}==entity1:{entity1},entityPos:{entityPos}，target:{target},mnPos:{mnPos},VorT:{VorT},entityRDorLU:{entityRDorLU},mnToVorT:{mnToVorT},mnToDefault:{mnToDefault}";
                     Console.WriteLine(error);
                     if (entity!=entity1)
                     {
@@ -51,6 +52,7 @@ namespace MNRestore
                     }
                 }
             }
+            int mn= puzzle.MnPosition();
             Console.Read();
         }
 
