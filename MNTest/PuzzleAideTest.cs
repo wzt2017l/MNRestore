@@ -1333,6 +1333,45 @@ namespace MNTest
                 }
             }
         }
+        [TestMethod]
+        public void EntityToTest2()
+        {
+            for (int i = 0; i < 400; i++)
+            {
+                int[] rans = new int[8];
+                for (int j = 0; j < 8; j++)
+                {
+                    byte[] ranBytes = new byte[4];
+                    RNGCryptoServiceProvider rngServiceProvider = new RNGCryptoServiceProvider();
+                    rngServiceProvider.GetBytes(ranBytes);
+                    rans[j] = Math.Abs(BitConverter.ToInt32(ranBytes, 0));
+                }
+                int entityPos = 0;
+                //int target = 0;
+                switch (i / 100)
+                {
+                    case 0: entityPos = 0 + (rans[1] % 1000); break;
+                    case 1: entityPos = 999000 + (rans[1] % 1000); break;
+                    case 2: entityPos = (rans[0] % 1000) * 1000 + 0; break;
+                    case 3: entityPos = (rans[0] % 1000) * 1000 + 999; break;
+                }
+                //int entityPos = (rans[0]%999) * 1000 + (rans[1] % 999);
+                int target = (rans[2] % 998 + 1) * 1000 + (rans[3] % 998 + 1);
+                int mnPos = puzzle.mnPosition;
+                int entity = puzzle.Items[entityPos];//值
+                PuzzleAide.EntityToArgs entityToArgs = new PuzzleAide.EntityToArgs(mnPos, entityPos, target, puzzle.LieShu, puzzle.HangShu);
+                if (mnPos != entityPos)
+                {
+                    string error0 = $"前信息：i:{i},entity:{entity},pj起始位置entityPos:{entityPos}，目标target:{target},mnPos当前:{mnPos},VorT:{entityToArgs.VorT},entityRDorLU:{entityToArgs.entityRDorLU},mnToVorT:{entityToArgs.mnToVorT},mnToDefault:{entityToArgs.mnToDefault}";
+                    puzzleAide.EntityTo(entityToArgs);
+                    puzzleAide.ExecutePlan();
+                    int entity1 = puzzle.Items[target];
+                    string error = $"信息：i:{i},entity:{entity}==目标位置的值entity1:{entity1},pj起始entityPos:{entityPos}，target:{target},mnPos当前:{puzzle.mnPosition},VorT:{entityToArgs.VorT},entityRDorLU:{entityToArgs.entityRDorLU},mnToVorT:{entityToArgs.mnToVorT},mnToDefault:{entityToArgs.mnToDefault}";
+                    Assert.IsTrue(puzzle.Items[target] == entity, error);
+                    
+                }
+            }
+        }
         #endregion
         [TestMethod]
         public void MnPositionTest()

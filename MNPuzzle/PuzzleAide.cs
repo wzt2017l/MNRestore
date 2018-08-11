@@ -1236,6 +1236,7 @@ namespace MNPuzzle
         /// 将位置在entityPos的图块移动到位置target。
         /// entityPos在边界时，生成的命令会有超出索引的可能，要小心使用。
         /// 当target在边界时无法处理,mn的位置等于entityPos时会出错。
+        /// 矛盾的是真实状况下很少复原列数和行数很大的拼图，为了避免设置参数的烦恼 请使用EntityToArgs类
         /// </summary>
         /// <param name="command">存放命令的队列</param>
         /// <param name="mnPosition">mn当前位置</param>
@@ -1334,7 +1335,6 @@ namespace MNPuzzle
                     mnPosition = entityRDorLU ? RigthEntityVerticalPlan(command, mnPosition, po.OffsetYMinusX, po.Direction.Y, lieShu) : LeftEntityVerticalPlan(command, mnPosition, po.OffsetYMinusX, po.Direction.Y, lieShu);
                     mnPosition = RiseEntityObliquePlan(command, mnPosition, po.Offset.X, po.Direction.Y, po.Direction.X, lieShu);
                     break;
-
                 case Position.RightGtUp:
                 case Position.RightGtDown:
                 case Position.LeftGtDown:
@@ -1357,7 +1357,23 @@ namespace MNPuzzle
         {
             return EntityTo(this.Command, this.puzzle.mnPosition, entityPos, target, this.puzzle.LieShu, VorT, entityRDorLU, mnToVorT, mnToDefault);
         }
+        /// <summary>
+        /// 将位置在entityPos的图块移动到位置target。
+        /// 不必担心超出索引的问题
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="entityToArgs"></param>
+        /// <returns></returns>
+        public int EntityTo(Queue<Swap> command, EntityToArgs entityToArgs)
+        {
+            return EntityTo(command,entityToArgs.mnPosition,entityToArgs.entityPos,entityToArgs.target,entityToArgs.lieShu,entityToArgs.VorT,entityToArgs.entityRDorLU,entityToArgs.mnToVorT);
+        }
+        public int EntityTo(EntityToArgs entityToArgs)
+        {
+            return EntityTo(this.Command, entityToArgs.mnPosition, entityToArgs.entityPos, entityToArgs.target, entityToArgs.lieShu, entityToArgs.VorT, entityToArgs.entityRDorLU, entityToArgs.mnToVorT);
+        }
         #endregion
+
         #endregion
 
         #region 复原拼图某一行
@@ -1560,6 +1576,33 @@ namespace MNPuzzle
         {
             ExecutePlan(Command);
         }
+        /// <summary>
+        /// 检查执行命令，在交换不足以执行时停止
+        /// 必须使用带参构造函数实例化PuzzleAide
+        /// </summary>
+        /// <param name="command">命令队列</param>
+        /// <param name="action">执行命令后要执行的行动</param>
+        /// <returns>第一个未被执行的交换，如果都执行了返回null</returns>
+        public Swap CheckExecutePlan(Queue<Swap> command,Action<Swap> action)
+        {
+            int count = command.Count;
+            for (int i=0;i<count;i++)
+            {
+                Swap swap = command.Dequeue();
+                if (CheckSwap(swap))
+                {
+                    puzzle.SwapAction(command.Dequeue());
+                    action?.Invoke(swap);
+                }
+                else
+                    return swap;
+            }
+            return null;
+        }
+        public Swap CheckExecutePlan(Action<Swap> action)
+        {
+            return CheckExecutePlan(this.Command,action);
+        }
 
         /// <summary>
         /// 快速执行命令，复原拼图时不会更新拼图的状态
@@ -1577,7 +1620,118 @@ namespace MNPuzzle
         {
             ExecutePlanFast(Command);
         }
+        /// <summary>
+        /// 检查并快速执行命令，在交换不足以执行时停止
+        /// 必须使用带参构造函数实例化PuzzleAide
+        /// </summary>
+        /// <param name="command">命令队列</param>
+        /// <param name="action">执行命令后要执行的行动</param>
+        /// <returns>第一个未被执行的交换，如果都执行了返回null</returns>
+        public Swap CheckExecutePlanFast(Queue<Swap> command, Action<Swap> action)
+        {
+            int count = command.Count;
+            for (int i = 0; i < count; i++)
+            {
+                Swap swap = command.Dequeue();
+                if (CheckSwap(swap))
+                {
+                    puzzle.Swap(command.Dequeue());
+                    action?.Invoke(swap);
+                }
+                else
+                    return swap;
+            }
+            return null;
+        }
+        public Swap CheckExecutePlanFast(Action<Swap> action)
+        {
+            return CheckExecutePlanFast(this.Command, action);
+        }
         #endregion
 
+        #region 检查交换是否正确
+        /// <summary>
+        /// 检查交换是否正确
+        /// </summary>
+        /// <param name="swap">交换</param>
+        /// <param name="hanghu">拼图行数</param>
+        /// <param name="lieShu">拼图列数</param>
+        /// <returns></returns>
+        public bool CheckSwap(Swap swap,int hanghu,int lieShu)
+        {
+            if (swap.Entity<0||swap.Entity>=hanghu*lieShu)
+            {
+                return false;
+            }
+            if (Math.Abs(swap.Entity % lieShu- swap.Empty % lieShu) + Math.Abs((swap.Entity-swap.Entity%lieShu)/lieShu-(swap.Empty-swap.Empty%lieShu)/lieShu)!=1)
+            {
+                return false;
+            }
+            return true;
+        }
+        public bool CheckSwap(Swap swap)
+        {
+            return CheckSwap(swap,puzzle.HangShu,puzzle.LieShu);
+        }
+        #endregion
+        #region 高级命令参数
+        /// <summary>
+        /// 高级命令参数
+        /// 可以自动设置高级命令的合理参数
+        /// </summary>
+        public sealed class EntityToArgs
+        {
+            public int mnPosition { get; set; }
+            public int entityPos { get; set; }
+            public int target { get; set; }
+            public int lieShu { get; set; }
+            public int hangShu { get; set; }
+            public bool VorT { get; set; }
+            public bool entityRDorLU { get; set; }
+            public bool mnToVorT { get; set; }
+            public bool mnToDefault { get; set; }
+            /// <summary>
+            /// 设置参数值，
+            /// 使用第一高级命令时有：entityPos在边界时，生成的命令会有超出索引的可能，要小心使用。
+            /// 为避免这个问题请使用构造函数初始化参数
+            /// </summary>
+            /// <param name="mnPosition"></param>
+            /// <param name="entityPos"></param>
+            /// <param name="target"></param>
+            /// <param name="lieShu"></param>
+            /// <param name="hangShu"></param>
+            public EntityToArgs(int mnPosition, int entityPos, int target, int lieShu, int hangShu)
+            {
+                this.mnPosition = mnPosition;
+                this.entityPos = entityPos;
+                this.target = target;
+                this.lieShu = lieShu;
+                this.hangShu = hangShu;
+                mnToVorT = true;
+                mnToDefault = true;
+                PointOffset po = new PointOffset(entityPos, target, lieShu);
+                if (po.Origin.Y == 0 && target != entityPos && po.OffsetYMinusX < 0)
+                {
+                    VorT = false;
+                    entityRDorLU = true;
+                }
+                else if (po.Origin.X == lieShu - 1 && target != entityPos && po.OffsetYMinusX > 0)
+                {
+                    VorT = true;
+                    entityRDorLU = false;
+                }
+                else if (po.Origin.Y == hangShu - 1 && target != entityPos && po.OffsetYMinusX < 0)
+                {
+                    VorT = false;
+                    entityRDorLU = false;
+                }
+                else
+                {
+                    VorT = true;
+                    entityRDorLU = true;
+                }
+            }
+        } 
+        #endregion
     }
 }
