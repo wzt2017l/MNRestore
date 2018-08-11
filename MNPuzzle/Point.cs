@@ -56,6 +56,13 @@ namespace MNPuzzle
             Empty = empty;
             Entity = entity;
         }
+        public static bool IsIntersect(Swap swap1, Swap swap2)
+        {
+            if (swap1.Empty == swap2.Empty || swap1.Empty == swap2.Entity || swap1.Entity == swap2.Empty || swap1.Entity == swap2.Entity)
+                return true;
+            return false;
+
+        }
     }
 
     /// <summary>

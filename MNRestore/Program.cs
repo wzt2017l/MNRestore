@@ -13,6 +13,7 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
+            int kk = 4 / 2 * 7;
             Puzzle puzzle = new Puzzle(1000,1000);
             PuzzleAide puzzleAide = new PuzzleAide(puzzle);
             puzzleAide.Disrupt();
