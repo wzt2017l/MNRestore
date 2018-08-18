@@ -188,11 +188,37 @@ namespace MNPuzzle
         /// <returns>位置</returns>
         public int GetEntityPos(int entity)
         {
-            for (int i=0;i<Total;i++)
+            return GetEntityPos(entity,0);
+        }
+        /// <summary>
+        /// 从某个位置开始向后查找查找某个图块的位置
+        /// </summary>
+        /// <param name="entity">图块编号</param>
+        /// <param name="begin">起始位置</param>
+        /// <returns>位置</returns>
+        public int GetEntityPos(int entity,int begin)
+        {
+            for (int i = begin; i < Total; i++)
             {
                 if (Items[i] == entity)
                     return i;
             }
+            return -1;
+        }
+        #endregion
+        #region 查找某位置正向附近固定编号的图块
+        /// <summary>
+        /// 查找某位置正向附近固定编号的图块
+        /// </summary>
+        /// <param name="origin">参照点</param>
+        /// <param name="blockNo">块编号</param>
+        /// <returns>位置</returns>
+        public int GetNearBlock(int origin,int blockNo)
+        {
+            if (origin+1<Total&& Items[origin + 1] == blockNo) return origin + 1;
+            if (origin-1>-1&& Items[origin - 1] == blockNo) return origin - 1;
+            if (origin+LieShu<Total&&Items[origin + LieShu] == blockNo) return origin + LieShu;
+            if (origin-LieShu>-1&&Items[origin + 1] == blockNo) return origin - LieShu;
             return -1;
         }
         #endregion

@@ -128,7 +128,10 @@ namespace MNPuzzle
         public Puzzle puzzle { get; private set; }
         public long StepNum { get; private set; }
 
-        public PuzzleAide() { }
+        public PuzzleAide()
+        {
+            StepNum = 0;
+        }
         public PuzzleAide(Puzzle puzzle)
         {
             this.puzzle = puzzle;
@@ -1376,14 +1379,56 @@ namespace MNPuzzle
             return EntityTo(this.Command, entityToArgs.mnPosition, entityToArgs.entityPos, entityToArgs.target, entityToArgs.lieShu, entityToArgs.VorT, entityToArgs.entityRDorLU, entityToArgs.mnToVorT);
         }
         #endregion
-
         #endregion
 
-       
         #region 复原拼图
-        public void Restore(Puzzle puzzle)
+        /// <summary>
+        /// 采用较为保守的策略复原拼图，尽最大可能保证成功
+        /// </summary>
+        /// <param name="puzzle">被复原的拼图</param>
+        /// <param name="action">每移动一次要附加的行动</param>
+        /// <returns>true:成功</returns>
+        public bool Restore(Action<Swap>action)
         {
-          
+            int hangShu = puzzle.HangShu, lieShu = puzzle.LieShu,mn=puzzle.Total-1;
+            int mnPos = puzzle.GetEntityPos(puzzle.Total-1);//找到mn当前的位置
+            for (int i=0;i<hangShu;i++)
+            {
+                for (int j=0;j<lieShu;j++)
+                {
+                    int index = i * puzzle.LieShu + j;//当前需复原拼图编号
+                    int entityPos = puzzle.GetEntityPos(index);
+                    if (hangShu - i > 2)
+                    {
+                        if (lieShu-i>2)
+                        {
+                            if (puzzle.Items[index] == index) continue;
+                            mnPos = EntityTo(new EntityToArgs(mnPos, puzzle.GetEntityPos(index,index), index, lieShu, hangShu));
+                            Swap swap= CheckExecutePlanFast(action);//检查执行
+                            if (swap != null)//未完成复原
+                            {
+                                if (puzzle.Items[index] == index) continue;
+                                Command= new Structure(swap.Empty, puzzle.GetNearBlock(swap.Empty, index), index, hangShu, lieShu).SearchPath();
+                                ExecutePlanFast(action);
+                                mnPos = puzzle.Items[index + 1] == mn ? index + 1 : index + lieShu;
+                            }
+                        }
+                        else if (lieShu-i==2)
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            return true;
         }
         #endregion
 
@@ -1399,6 +1444,7 @@ namespace MNPuzzle
              {
                 Swap swap = command.Dequeue();
                 puzzle.SwapAction(swap);
+                StepNum++;
                 action?.Invoke(swap);
              }
         }
@@ -1422,6 +1468,7 @@ namespace MNPuzzle
                 if (CheckSwap(swap))
                 {
                     puzzle.SwapAction(command.Dequeue());
+                    StepNum++;
                     action?.Invoke(swap);
                 }
                 else
@@ -1445,6 +1492,7 @@ namespace MNPuzzle
             {
                 Swap swap = command.Dequeue();
                 puzzle.Swap(swap);
+                StepNum++;
                 action?.Invoke(swap);
             }
         }
@@ -1468,6 +1516,7 @@ namespace MNPuzzle
                 if (CheckSwap(swap))
                 {
                     puzzle.Swap(command.Dequeue());
+                    StepNum++;
                     action?.Invoke(swap);
                 }
                 else
