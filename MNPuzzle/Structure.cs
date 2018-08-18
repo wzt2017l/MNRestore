@@ -20,7 +20,7 @@ namespace MNPuzzle
         /// </summary>
         public Node[] NodeGrid = new Node[17];
         /// <summary>
-        /// 构造函数，初始化结构,
+        /// 构造函数，初始化结构,以目标为参照点
         /// 专门为从上至下按行复原设计
         /// </summary>
         public Structure(int mnPos,int entityPos,int target,int hangShu,int lieShu)
@@ -57,59 +57,77 @@ namespace MNPuzzle
             for (int i=0;i<5;i++)
             {
                 int count=0;int index = 0;
-                PosNo[] pns = new PosNo[2];
                 switch (i%2)
                 {
                     case 0:
                         count = 3;
                         index =i/2*7;
-                        pns[0] = matrix[i / 2, 0];
-                        pns[1] = matrix[i / 2, 1];
                         break;
                     case 1:
                         count = 4;
                         index = 3 + i / 2 * 7;
-                        pns[0] = matrix[i / 2, 0];
-                        pns[1] = matrix[i / 2+1, 0];
                         break;
                 }
                 for (int j=0;j<count;j++)
                 {
+                    PosNo[] pns = new PosNo[2];
+                    switch (count)
+                    {
+                        case 3:
+                            pns[0] = matrix[i / 2, j];
+                            pns[1] = matrix[i / 2, j+1];
+                            break;
+                        case 4:
+                            pns[0] = matrix[i / 2, j];
+                            pns[1] = matrix[i / 2 + 1, j];
+                            break;
+                    }
                     NodeGrid[index + j] = new Node(pns);
                 }
             }
             for (int i=0;i<17;i++)
             {
                 if (!NodeGrid[i].Valid)continue;
-                int count = 0;
                 for (int j=0;j<17;j++)
                 {
                     if (i != j && NodeGrid[j].Valid && Swap.IsIntersect(NodeGrid[i].swap, NodeGrid[j].swap))
                     {
-                        NodeGrid[i].nearNodes[count] = NodeGrid[j];
-                        count++;
+                        NodeGrid[i].AddnearNode(NodeGrid[j]);
                     }      
                 }
             }
-
         }
+        /// <summary>
+        /// 根据现有条件搜索路径
+        /// </summary>
+        /// <returns>命令队列</returns>
+        public Queue<Swap> SearchPath()
+        {
+            return null;
+        }
+
+        #region 辅助实体
         /// <summary>
         /// 交换节点
         /// </summary>
         public class Node
         {
             public Swap swap { get; set; }
-            public PosNo[] PosNos = new PosNo[2];
+            public PosNo[] PosNos;
             public bool Valid { get; set; }
-            public Node[] nearNodes = new Node[5];
+            public List<Node> nearNodes;
             public Node(PosNo[] posNos)
             {
                 this.PosNos = posNos;
-                swap = new Swap(posNos[0].Pos,posNos[1].Pos);
+                swap = new Swap(posNos[0].Pos, posNos[1].Pos);
                 if (posNos[0].posNoType == PosNoType.Invalid || posNos[1].posNoType == PosNoType.Invalid)
                     Valid = false;
                 else Valid = true;
-
+                nearNodes = new List<Node>();
+            }
+            public void AddnearNode(Node node)
+            {
+                nearNodes.Add(node);
             }
         }
         /// <summary>
@@ -125,14 +143,16 @@ namespace MNPuzzle
             /// 类型
             /// </summary>
             public PosNoType posNoType { get; set; }
-            public PosNo(int pos,PosNoType posNoType)
+            public PosNo(int pos, PosNoType posNoType)
             {
                 Pos = pos;
                 this.posNoType = posNoType;
             }
 
         }
-        //位置类型
+        /// <summary>
+        /// 位置类型
+        /// </summary>
         public enum PosNoType
         {
             Invalid = 0,//无效位置
@@ -140,7 +160,8 @@ namespace MNPuzzle
             mnPos,//mn所在
             EntityPos,//当前要移动的图块
             Else//其它有效位置
-        }
+        } 
+        #endregion
     }
 
 }

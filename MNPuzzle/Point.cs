@@ -56,12 +56,31 @@ namespace MNPuzzle
             Empty = empty;
             Entity = entity;
         }
+        /// <summary>
+        /// 判断对换是否有交点
+        /// </summary>
+        /// <param name="swap1"></param>
+        /// <param name="swap2"></param>
+        /// <returns></returns>
         public static bool IsIntersect(Swap swap1, Swap swap2)
         {
             if (swap1.Empty == swap2.Empty || swap1.Empty == swap2.Entity || swap1.Entity == swap2.Empty || swap1.Entity == swap2.Entity)
                 return true;
             return false;
 
+        }
+        /// <summary>
+        /// 判断两个对换是否等价
+        /// </summary>
+        /// <param name="swap"></param>
+        /// <returns></returns>
+        public bool Equals(Swap swap)
+        {   
+            if (Entity==swap.Entity&&Empty==swap.Empty||Empty==swap.Entity&&Entity==swap.Empty)
+            {
+                return true;
+            }
+            return false;
         }
     }
 
