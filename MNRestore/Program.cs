@@ -13,6 +13,24 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
+            for (int i=0;i<10;i++)
+            {
+                for (int j=0;j<10;j++)
+                {
+                    if (j%4==3)
+                    {
+                        break;
+                    }
+                }
+            }
+            Swap swap1 = new Swap(1,2);
+            Swap swap2 = new Swap(3, 4);
+            Swap swap3 = new Swap(5, 6);
+            swap1 = swap2;
+            swap2 = swap3;
+            Console.WriteLine(swap1.Empty);
+            Console.WriteLine(swap2.Empty);
+
             Structure structure = new Structure(1001, 0, 1, 1000, 1000);
             int kk = 4 / 2 * 7;
             Puzzle puzzle = new Puzzle(1000,1000);

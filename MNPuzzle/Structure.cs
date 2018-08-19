@@ -8,6 +8,7 @@ namespace MNPuzzle
 {
     /// <summary>
     /// 3*4结构图
+    /// 帮助puzzleAide完成复原拼图时，求解某块最后几步的步骤，若单独使用它复原较小的拼图，请重写SearchPath方法
     /// </summary>
     public class Structure
     {
@@ -20,11 +21,28 @@ namespace MNPuzzle
         /// </summary>
         public Node[] NodeGrid = new Node[17];
         /// <summary>
+        /// mn位置信息
+        /// </summary>
+        public PosNo mnPosNo { get; private set; }
+        /// <summary>
+        /// 当前要移动图块信息
+        /// </summary>
+        public PosNo EntityPosNo { get; private set; }
+        /// <summary>
+        /// 目标信息
+        /// </summary>
+        public PosNo TargetPosNo { get; private set; }
+        public int hangShu { get; private set; }
+        public int lieShu { get; private set; }
+
+        /// <summary>
         /// 构造函数，初始化结构,以目标为参照点
         /// 专门为从上至下按行复原设计
+        /// invalidNo:指出有效编号的起始位置，如果不指定则invalid的值==target
         /// </summary>
-        public Structure(int mnPos,int entityPos,int target,int hangShu,int lieShu)
+        public Structure(int mnPos,int entityPos,int target,int hangShu,int lieShu,int invalidNo=0)
         {
+            if (invalidNo == 0) invalidNo = target;
             for (int i=0;i<3;i++)
             {
                 for (int j=0;j<4;j++)
@@ -43,7 +61,7 @@ namespace MNPuzzle
                     {
                         pt = PosNoType.Target;
                     }
-                    else if (pos<target||pos>=hangShu*lieShu|| (pos-pos%lieShu)/lieShu!=(target-target%lieShu)/lieShu+i)
+                    else if (pos<invalidNo||pos>=hangShu*lieShu|| (pos-pos%lieShu)/lieShu!=(target-target%lieShu)/lieShu+i)
                     {
                         pt = PosNoType.Invalid;
                     }
@@ -51,7 +69,13 @@ namespace MNPuzzle
                     {
                         pt = PosNoType.Else;
                     }
-                    matrix[i, j] = new PosNo(pos,pt);
+                    matrix[i, j] = new PosNo(pos,pt,lieShu);
+                    switch (pt)
+                    {
+                        case PosNoType.mnPos:mnPosNo = matrix[i, j]; break;
+                        case PosNoType.EntityPos: EntityPosNo= matrix[i, j]; break;
+                        case PosNoType.Target: TargetPosNo = matrix[i, j]; break;
+                    }
                 }
             }
             for (int i=0;i<5;i++)
@@ -96,14 +120,94 @@ namespace MNPuzzle
                     }      
                 }
             }
+            this.hangShu = hangShu;
+            this.lieShu = lieShu;
         }
         /// <summary>
         /// 根据现有条件搜索路径
+        /// 先求出起始交换
         /// </summary>
         /// <returns>命令队列</returns>
         public Queue<Swap> SearchPath()
         {
-            return null;
+            Queue<Swap> comm = new Queue<Swap>();
+            IEnumerable<Node> beginNodes = from f in NodeGrid where f.Valid==true&&(f.swap.Empty == mnPosNo.Pos || f.swap.Entity == mnPosNo.Pos )select f;
+            Node indexNode = null, beginNode = null ;//当前交换，上一步交换
+            PosNo mnIndexNo = mnPosNo, mnNextNo = null;//mn当前位置，mn执行完当前交换后的位置
+            PosNo entityIndexNo = EntityPosNo, entityNextNo = EntityPosNo;//entity当前位置，entity执行完当前交换后的位置
+            int distance = Math.Abs(entityIndexNo.hangNo-TargetPosNo.hangNo) + Math.Abs(entityIndexNo.lieNo-TargetPosNo.lieNo);//到达目标的距离
+            switch (distance)
+            {
+                case 2:
+                    foreach (Node node in beginNodes)
+                    {
+                        PosNo next = node.PosNos[0].posNoType == PosNoType.mnPos ? node.PosNos[1] : node.PosNos[0];//mn要到达的位置
+                        if (next.posNoType != PosNoType.EntityPos && Math.Abs(next.lieNo - EntityPosNo.lieNo) < 2 && Math.Abs(next.hangNo - EntityPosNo.hangNo) < 2)
+                        {
+                            indexNode = node;
+                            comm.Enqueue(node.swap);
+                            mnNextNo = node.PosNos[0].Pos == mnIndexNo.Pos ? node.PosNos[1] : node.PosNos[0];
+                        }
+                    }
+                    break;
+                case 1:break;
+            }
+            
+            //必须分两个步骤进行：在distance=2时和distance=1时，当distance=2时entityPos=target+lieShu-1,mnPos=entityPos-1
+            while (entityNextNo.posNoType!=PosNoType.Target)//假定执行完当前交换后
+            {
+                mnIndexNo = mnNextNo;
+                entityIndexNo = entityNextNo;
+                IEnumerable<Node> tempNodes = from f in indexNode.nearNodes where f.swap.Empty == mnIndexNo.Pos || f.swap.Entity == mnIndexNo.Pos select f;//下一步可能的交换
+                switch (distance)
+                {
+                    case 2:
+                        foreach (Node node in tempNodes)//可能的下一步
+                        {
+                            PosNo tempmnNextPos = node.PosNos[0].Pos == mnIndexNo.Pos ? node.PosNos[1] : node.PosNos[1];//假设为node，则执行完node后mn在的位置
+                            if (tempmnNextPos.Pos == entityIndexNo.Pos)//如果mn与entity交换，则entity会到达位置mnIndexNo
+                            {
+                                int tempdis = Math.Abs(mnIndexNo.hangNo - TargetPosNo.hangNo) + Math.Abs(mnIndexNo.lieNo - TargetPosNo.lieNo);//entity是否离目标更近
+                                if (tempdis < distance)
+                                {
+                                    beginNode = indexNode;
+                                    indexNode = node;
+                                    mnNextNo = tempmnNextPos;
+                                    entityNextNo = mnIndexNo;
+                                    comm.Enqueue(node.swap);
+                                    distance = tempdis;
+                                    break;//结束当前循环
+                                }
+                            }
+                            else//mn与不是entity的位置的图块交换？
+                            {
+                                //if (beginNode == null)
+                                //{
+                                    if (Math.Abs(tempmnNextPos.hangNo - entityIndexNo.hangNo) + Math.Abs(tempmnNextPos.lieNo - entityIndexNo.lieNo) > 2) continue;
+                                    else//下一步距离不大于2则选中
+                                    {
+                                        beginNode = indexNode;
+                                        indexNode = node;
+                                        mnNextNo = tempmnNextPos;
+                                        entityNextNo = mnIndexNo;
+                                        comm.Enqueue(node.swap);
+                                        break;//结束当前循环
+                                    }
+                                //}
+                                //else//如果有上一步
+                                //{
+
+                                //}
+                            }
+                        }
+                        break;
+                    case 1:
+
+                        break;
+                }
+               
+            }
+            return comm;
         }
 
         #region 辅助实体
@@ -138,15 +242,25 @@ namespace MNPuzzle
             /// <summary>
             /// 位置
             /// </summary>
-            public int Pos { get; set; }
+            public int Pos { get; private set; }
+            /// <summary>
+            /// 行编号
+            /// </summary>
+            public int hangNo { get;private set; }
+            /// <summary>
+            /// 列编号
+            /// </summary>
+            public int lieNo { get; private set; }
             /// <summary>
             /// 类型
             /// </summary>
-            public PosNoType posNoType { get; set; }
-            public PosNo(int pos, PosNoType posNoType)
+            public PosNoType posNoType { get;private set; }
+            public PosNo(int pos, PosNoType posNoType,int lieShu)
             {
                 Pos = pos;
                 this.posNoType = posNoType;
+                lieNo = pos % lieShu;
+                hangNo = (pos - lieNo) / lieShu;
             }
 
         }
@@ -155,11 +269,26 @@ namespace MNPuzzle
         /// </summary>
         public enum PosNoType
         {
-            Invalid = 0,//无效位置
-            Target,//目标
-            mnPos,//mn所在
-            EntityPos,//当前要移动的图块
-            Else//其它有效位置
+            /// <summary>
+            /// 无效位置
+            /// </summary>
+            Invalid = 0,
+            /// <summary>
+            /// 目标
+            /// </summary>
+            Target,
+            /// <summary>
+            /// mn所在
+            /// </summary>
+            mnPos,
+            /// <summary>
+            /// 当前要移动的图块
+            /// </summary>
+            EntityPos,
+            /// <summary>
+            /// 其它有效位置
+            /// </summary>
+            Else
         } 
         #endregion
     }

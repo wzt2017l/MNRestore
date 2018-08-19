@@ -1591,28 +1591,32 @@ namespace MNPuzzle
                 mnToVorT = true;
                 mnToDefault = true;
                 PointOffset po = new PointOffset(entityPos, target, lieShu);
-                if (po.Origin.Y == 0 && target != entityPos && po.OffsetYMinusX < 0)
+                if (po.Origin.Y == 0 && target != entityPos && po.OffsetYMinusX < 0)//上边缘
                 {
                     VorT = false;
                     entityRDorLU = true;
                 }
-                else if (po.Origin.X == lieShu - 1 && target != entityPos && po.OffsetYMinusX > 0)
+                else if (po.Origin.X == lieShu - 1 && target != entityPos && po.OffsetYMinusX > 0)//右边缘
                 {
                     VorT = true;
                     entityRDorLU = false;
                 }
-                else if (po.Origin.Y == hangShu - 1 && target != entityPos && po.OffsetYMinusX < 0)
+                else if (po.Origin.Y == hangShu - 1 && target != entityPos && po.OffsetYMinusX < 0)//下边缘
                 {
                     VorT = false;
                     entityRDorLU = false;
                 }
-                else
+                else//其它
                 {
                     VorT = true;
                     entityRDorLU = true;
+                    //很难完全保证没有例外
+                    if (po.Origin.Y == po.End.Y && (mnPosition - mnPosition % lieShu) / mnPosition > po.Origin.Y && mnPosition % lieShu < po.End.X)//同一行,mn列坐标小于目标列
+                        mnToVorT = false;
+                    if (po.Offset.Y + po.Offset.X == 2)
+                        VorT = false;
                 }
-                if (po.Origin.Y == po.End.Y && (mnPosition - mnPosition % lieShu) / mnPosition > po.Origin.Y && mnPosition % lieShu < po.Origin.X)
-                    mnToVorT = false;
+               
             }
         } 
         #endregion
