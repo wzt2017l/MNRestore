@@ -218,7 +218,8 @@ namespace MNPuzzle
             if (origin+1<Total&& Items[origin + 1] == blockNo) return origin + 1;
             if (origin-1>-1&& Items[origin - 1] == blockNo) return origin - 1;
             if (origin+LieShu<Total&&Items[origin + LieShu] == blockNo) return origin + LieShu;
-            if (origin-LieShu>-1&&Items[origin + 1] == blockNo) return origin - LieShu;
+            if (origin-LieShu>-1&&Items[origin -LieShu] == blockNo) return origin - LieShu;
+            if (origin + LieShu - 1<Total&&Items[origin + LieShu - 1] == blockNo) return origin + LieShu - 1;
             return -1;
         }
         #endregion

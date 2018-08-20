@@ -119,6 +119,7 @@ namespace MNPuzzle
         /// </summary>
         LateralEntityOblique
     }
+
     /// <summary>
     /// 拼图助手
     /// </summary>
@@ -1388,7 +1389,7 @@ namespace MNPuzzle
         /// <param name="puzzle">被复原的拼图</param>
         /// <param name="action">每移动一次要附加的行动</param>
         /// <returns>true:成功</returns>
-        public bool Restore(Action<Swap>action)
+        public bool Restore(Action<Swap>action=null)
         {
             int hangShu = puzzle.HangShu, lieShu = puzzle.LieShu,mn=puzzle.Total-1;
             int mnPos = puzzle.GetEntityPos(puzzle.Total-1);//找到mn当前的位置
@@ -1396,30 +1397,97 @@ namespace MNPuzzle
             {
                 for (int j=0;j<lieShu;j++)
                 {
+                    Command.Clear();//清空队列
                     int index = i * puzzle.LieShu + j;//当前需复原拼图编号
-                    int entityPos = puzzle.GetEntityPos(index);
                     if (hangShu - i > 2)
                     {
-                        if (lieShu-i>2)
+                        if (lieShu-j>2)
                         {
                             if (puzzle.Items[index] == index) continue;
-                            mnPos = EntityTo(new EntityToArgs(mnPos, puzzle.GetEntityPos(index,index), index, lieShu, hangShu));
-                            Swap swap= CheckExecutePlanFast(action);//检查执行
+                            mnPos = EntityTo(new EntityToArgs(mnPos, puzzle.GetEntityPos(index, index), index, lieShu, hangShu));
+                            Swap swap= CheckExecutePlanFast(index,action);//检查执行
                             if (swap != null)//未完成复原
                             {
+                                mnPos = swap.Empty;//重定位
                                 if (puzzle.Items[index] == index) continue;
-                                Command= new Structure(swap.Empty, puzzle.GetNearBlock(swap.Empty, index), index, hangShu, lieShu).SearchPath();
+                                Command = Structure.GetParticularSolution(mnPos,puzzle.GetNearBlock(swap.Empty,index),index,lieShu,true);
                                 ExecutePlanFast(action);
                                 mnPos = puzzle.Items[index + 1] == mn ? index + 1 : index + lieShu;
                             }
                         }
-                        else if (lieShu-i==2)
+                        else if (lieShu-j==2)
                         {
-
+                            if (puzzle.Items[index + 1] == index) continue;
+                            mnPos = EntityTo(new EntityToArgs(mnPos,puzzle.GetEntityPos(index,index),index+1,lieShu,hangShu));
+                            Swap swap = CheckExecutePlanFast(index-1,action);
+                            if (swap!=null)
+                            {
+                                mnPos = swap.Empty;//重定位
+                                if (puzzle.Items[index + 1] == index) continue;
+                                Command = Structure.GetParticularSolution(mnPos,puzzle.GetNearBlock(swap.Empty,index),index+1,lieShu,false);
+                                ExecutePlanFast(action);
+                                mnPos = puzzle.Items[index] == mn ? index : index + 1 + lieShu;
+                            }
                         }
                         else
                         {
-
+                            //在复原某一行最后一个时可能会破坏已复原的图块，必须要找到方法解决才行
+                            if (mnPos == index - 1)//矫正mn避免错误
+                            {
+                                Command.Enqueue(new Swap(mnPos, mnPos + 1));//向下移动一行
+                                ExecutePlanFast(action);
+                                mnPos = mnPos + 1;
+                            }
+                            if (puzzle.Items[index + lieShu] == index)
+                            { }//已在目标，但还不能结束循环
+                            else if (mnPos == index + lieShu && puzzle.Items[index - 1] == index)
+                            {//特解2
+                                Command.Enqueue(new Swap(mnPos,mnPos-1));
+                                Command.Enqueue(new Swap(mnPos-1, mnPos-lieShu-1));
+                                ExecutePlanFast(action);
+                                mnPos = mnPos - lieShu - 1;
+                                Command.Enqueue(new Swap(mnPos, mnPos + 1));
+                                Command.Enqueue(new Swap(mnPos + 1, mnPos + lieShu + 1));
+                                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + lieShu));
+                                Command.Enqueue(new Swap(mnPos + lieShu, mnPos + 2 * lieShu));
+                                Command.Enqueue(new Swap(mnPos + 2 * lieShu, mnPos + 2 * lieShu + 1));
+                                Command.Enqueue(new Swap(mnPos + 2 * lieShu + 1, mnPos + lieShu + 1));
+                                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + 1));
+                                Command.Enqueue(new Swap(mnPos + 1, mnPos));
+                                Command.Enqueue(new Swap(mnPos, mnPos + lieShu));
+                                Command.Enqueue(new Swap(mnPos + lieShu, mnPos + lieShu + 1));
+                                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + 2 * lieShu + 1));
+                                ExecutePlanFast(action);
+                                mnPos = mnPos + 2 * lieShu + 1;
+                            }
+                            else
+                            {
+                                mnPos = EntityTo(new EntityToArgs(mnPos,puzzle.GetEntityPos(index,index),index+lieShu,lieShu,hangShu));
+                                Swap swap = CheckExecutePlanFast(index,action);//必然要到达目标
+                                if (swap!=null)
+                                {
+                                    mnPos = swap.Empty;
+                                }
+                            }
+                            Command.Clear();//有可能需要清空命令队列
+                            if (mnPos==index+2*lieShu)//mn可能有三个位置
+                            {
+                                Command.Enqueue(new Swap(mnPos,mnPos-1));
+                                Command.Enqueue(new Swap(mnPos-1,mnPos-lieShu-1));
+                                Command.Enqueue(new Swap(mnPos-lieShu-1,mnPos-2*lieShu-1));
+                                ExecutePlanFast(action);
+                                mnPos = mnPos - 2 * lieShu - 1;
+                            }
+                            else if(mnPos==index+lieShu-1)
+                            {
+                                Command.Enqueue(new Swap(mnPos, mnPos - lieShu));
+                                ExecutePlanFast(action);
+                                mnPos =mnPos-lieShu;
+                            }
+                            Command.Enqueue(new Swap(mnPos,mnPos+1));
+                            Command.Enqueue(new Swap(mnPos+1,mnPos+lieShu+1));
+                            ExecutePlanFast(action);
+                            mnPos = index+lieShu;
                         }
                     }
                     else
@@ -1459,13 +1527,13 @@ namespace MNPuzzle
         /// <param name="command">命令队列</param>
         /// <param name="action">执行命令后要执行的行动</param>
         /// <returns>第一个未被执行的交换，如果都执行了返回null</returns>
-        public Swap CheckExecutePlan(Queue<Swap> command,Action<Swap> action=null)
+        public Swap CheckExecutePlan(Queue<Swap> command,int index=0,Action<Swap> action=null)
         {
             int count = command.Count;
             for (int i=0;i<count;i++)
             {
                 Swap swap = command.Dequeue();
-                if (CheckSwap(swap))
+                if (CheckSwap(swap,index))
                 {
                     puzzle.SwapAction(command.Dequeue());
                     StepNum++;
@@ -1476,9 +1544,9 @@ namespace MNPuzzle
             }
             return null;
         }
-        public Swap CheckExecutePlan(Action<Swap> action=null)
+        public Swap CheckExecutePlan(int index=0,Action<Swap> action=null)
         {
-            return CheckExecutePlan(this.Command,action);
+            return CheckExecutePlan(this.Command,index,action);
         }
 
         /// <summary>
@@ -1505,17 +1573,18 @@ namespace MNPuzzle
         /// 必须使用带参构造函数实例化PuzzleAide
         /// </summary>
         /// <param name="command">命令队列</param>
+        /// <param name="index">当前复原图块的编号</param>
         /// <param name="action">执行命令后要执行的行动</param>
         /// <returns>第一个未被执行的交换，如果都执行了返回null</returns>
-        public Swap CheckExecutePlanFast(Queue<Swap> command, Action<Swap> action=null)
+        public Swap CheckExecutePlanFast(Queue<Swap> command,int index=0, Action<Swap> action=null)
         {
             int count = command.Count;
             for (int i = 0; i < count; i++)
             {
                 Swap swap = command.Dequeue();
-                if (CheckSwap(swap))
+                if (CheckSwap(swap,index))
                 {
-                    puzzle.Swap(command.Dequeue());
+                    puzzle.Swap(swap);
                     StepNum++;
                     action?.Invoke(swap);
                 }
@@ -1524,9 +1593,9 @@ namespace MNPuzzle
             }
             return null;
         }
-        public Swap CheckExecutePlanFast(Action<Swap> action=null)
+        public Swap CheckExecutePlanFast(int index=0,Action<Swap> action=null)
         {
-            return CheckExecutePlanFast(this.Command, action);
+            return CheckExecutePlanFast(this.Command,index,action);
         }
         #endregion
 
@@ -1537,10 +1606,11 @@ namespace MNPuzzle
         /// <param name="swap">交换</param>
         /// <param name="hanghu">拼图行数</param>
         /// <param name="lieShu">拼图列数</param>
+        ///  <param name="index">当前复原图块的编号</param>
         /// <returns></returns>
-        public bool CheckSwap(Swap swap,int hanghu,int lieShu)
+        public bool CheckSwap(Swap swap, int hanghu,int lieShu,int index=0)
         {
-            if (swap.Entity<0||swap.Entity>=hanghu*lieShu)
+            if (swap.Entity<index||swap.Entity>=hanghu*lieShu)
             {
                 return false;
             }
@@ -1550,9 +1620,9 @@ namespace MNPuzzle
             }
             return true;
         }
-        public bool CheckSwap(Swap swap)
+        public bool CheckSwap(Swap swap, int index = 0)
         {
-            return CheckSwap(swap,puzzle.HangShu,puzzle.LieShu);
+            return CheckSwap(swap,puzzle.HangShu,puzzle.LieShu,index);
         }
         #endregion
         #region 高级命令参数
@@ -1611,7 +1681,7 @@ namespace MNPuzzle
                     VorT = true;
                     entityRDorLU = true;
                     //很难完全保证没有例外
-                    if (po.Origin.Y == po.End.Y && (mnPosition - mnPosition % lieShu) / mnPosition > po.Origin.Y && mnPosition % lieShu < po.End.X)//同一行,mn列坐标小于目标列
+                    if (po.Origin.Y == po.End.Y && (mnPosition - mnPosition % lieShu) / lieShu > po.Origin.Y && mnPosition % lieShu < po.End.X)//同一行,mn列坐标小于目标列
                         mnToVorT = false;
                     if (po.Offset.Y + po.Offset.X == 2)
                         VorT = false;

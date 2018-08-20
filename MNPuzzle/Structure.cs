@@ -130,85 +130,83 @@ namespace MNPuzzle
         /// <returns>命令队列</returns>
         public Queue<Swap> SearchPath()
         {
-            Queue<Swap> comm = new Queue<Swap>();
-            IEnumerable<Node> beginNodes = from f in NodeGrid where f.Valid==true&&(f.swap.Empty == mnPosNo.Pos || f.swap.Entity == mnPosNo.Pos )select f;
-            Node indexNode = null, beginNode = null ;//当前交换，上一步交换
-            PosNo mnIndexNo = mnPosNo, mnNextNo = null;//mn当前位置，mn执行完当前交换后的位置
-            PosNo entityIndexNo = EntityPosNo, entityNextNo = EntityPosNo;//entity当前位置，entity执行完当前交换后的位置
-            int distance = Math.Abs(entityIndexNo.hangNo-TargetPosNo.hangNo) + Math.Abs(entityIndexNo.lieNo-TargetPosNo.lieNo);//到达目标的距离
-            switch (distance)
-            {
-                case 2:
-                    foreach (Node node in beginNodes)
-                    {
-                        PosNo next = node.PosNos[0].posNoType == PosNoType.mnPos ? node.PosNos[1] : node.PosNos[0];//mn要到达的位置
-                        if (next.posNoType != PosNoType.EntityPos && Math.Abs(next.lieNo - EntityPosNo.lieNo) < 2 && Math.Abs(next.hangNo - EntityPosNo.hangNo) < 2)
-                        {
-                            indexNode = node;
-                            comm.Enqueue(node.swap);
-                            mnNextNo = node.PosNos[0].Pos == mnIndexNo.Pos ? node.PosNos[1] : node.PosNos[0];
-                        }
-                    }
-                    break;
-                case 1:break;
-            }
-            
-            //必须分两个步骤进行：在distance=2时和distance=1时，当distance=2时entityPos=target+lieShu-1,mnPos=entityPos-1
-            while (entityNextNo.posNoType!=PosNoType.Target)//假定执行完当前交换后
-            {
-                mnIndexNo = mnNextNo;
-                entityIndexNo = entityNextNo;
-                IEnumerable<Node> tempNodes = from f in indexNode.nearNodes where f.swap.Empty == mnIndexNo.Pos || f.swap.Entity == mnIndexNo.Pos select f;//下一步可能的交换
-                switch (distance)
-                {
-                    case 2:
-                        foreach (Node node in tempNodes)//可能的下一步
-                        {
-                            PosNo tempmnNextPos = node.PosNos[0].Pos == mnIndexNo.Pos ? node.PosNos[1] : node.PosNos[1];//假设为node，则执行完node后mn在的位置
-                            if (tempmnNextPos.Pos == entityIndexNo.Pos)//如果mn与entity交换，则entity会到达位置mnIndexNo
-                            {
-                                int tempdis = Math.Abs(mnIndexNo.hangNo - TargetPosNo.hangNo) + Math.Abs(mnIndexNo.lieNo - TargetPosNo.lieNo);//entity是否离目标更近
-                                if (tempdis < distance)
-                                {
-                                    beginNode = indexNode;
-                                    indexNode = node;
-                                    mnNextNo = tempmnNextPos;
-                                    entityNextNo = mnIndexNo;
-                                    comm.Enqueue(node.swap);
-                                    distance = tempdis;
-                                    break;//结束当前循环
-                                }
-                            }
-                            else//mn与不是entity的位置的图块交换？
-                            {
-                                //if (beginNode == null)
-                                //{
-                                    if (Math.Abs(tempmnNextPos.hangNo - entityIndexNo.hangNo) + Math.Abs(tempmnNextPos.lieNo - entityIndexNo.lieNo) > 2) continue;
-                                    else//下一步距离不大于2则选中
-                                    {
-                                        beginNode = indexNode;
-                                        indexNode = node;
-                                        mnNextNo = tempmnNextPos;
-                                        entityNextNo = mnIndexNo;
-                                        comm.Enqueue(node.swap);
-                                        break;//结束当前循环
-                                    }
-                                //}
-                                //else//如果有上一步
-                                //{
-
-                                //}
-                            }
-                        }
-                        break;
-                    case 1:
-
-                        break;
-                }
-               
-            }
-            return comm;
+            return null;
         }
+        /// <summary>
+        /// 求特解
+        /// </summary>
+        /// <param name="mnPos"></param>
+        /// <param name="entityPos"></param>
+        /// <param name="target"></param>
+        /// <param name="lieShu"></param>
+        /// <param name="pType"></param>
+        /// <returns></returns>
+        public static Queue<Swap> GetParticularSolution(int mnPos,int entityPos,int target,int lieShu,bool pType)
+        {
+            Queue<Swap> comm = new Queue<Swap>();
+            if (mnPos != entityPos - 1&&mnPos!=entityPos+1-lieShu)
+                return null;
+            if (pType)
+            {
+                if (entityPos==target+lieShu-1)
+                {
+                    comm.Enqueue(new Swap(mnPos,mnPos+lieShu));
+                    comm.Enqueue(new Swap(mnPos+lieShu,mnPos+lieShu+1));
+                    comm.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + lieShu + 2));
+                    comm.Enqueue(new Swap(mnPos + lieShu + 2,mnPos+2));
+                    comm.Enqueue(new Swap(mnPos + 2,mnPos+1));
+                    comm.Enqueue(new Swap(mnPos+1,mnPos+lieShu+1));
+                    comm.Enqueue(new Swap(mnPos+lieShu+1,mnPos+lieShu+2));
+                    comm.Enqueue(new Swap(mnPos+lieShu+2,mnPos+lieShu+3));
+                    comm.Enqueue(new Swap(mnPos+lieShu+3,mnPos+3));
+                    comm.Enqueue(new Swap(mnPos+3,mnPos-lieShu+3));
+                    comm.Enqueue(new Swap(mnPos + 3-lieShu, mnPos - lieShu + 2));
+                    comm.Enqueue(new Swap(mnPos-lieShu+2,mnPos+2));
+                    return comm;
+                }
+                else if (entityPos==target+lieShu)
+                {
+                    comm.Enqueue(new Swap(mnPos,mnPos+lieShu));
+                    comm.Enqueue(new Swap(mnPos+lieShu,mnPos+lieShu+1));
+                    comm.Enqueue(new Swap(mnPos+lieShu+1,mnPos+lieShu+2));
+                    comm.Enqueue(new Swap(mnPos+lieShu+2,mnPos+2));
+                    comm.Enqueue(new Swap(mnPos+2,mnPos-lieShu+2));
+                    comm.Enqueue(new Swap(mnPos-lieShu+2,mnPos-lieShu+1));
+                    comm.Enqueue(new Swap(mnPos-lieShu+1,mnPos+1));
+                    return comm;
+                }
+                else if (entityPos==target+lieShu-1&&target==mnPos)//暂时不知道是什么情况导致这种状况
+                {
+                    comm.Enqueue(new Swap(mnPos,mnPos+lieShu));
+                    comm.Enqueue(new Swap(mnPos + lieShu, mnPos + lieShu - 1));
+                    comm.Enqueue(new Swap(mnPos + lieShu-1, mnPos+2*lieShu-1));
+                    comm.Enqueue(new Swap(mnPos + 2*lieShu-1, mnPos + 2*lieShu));
+                    comm.Enqueue(new Swap(mnPos +2*lieShu, mnPos + 2*lieShu + 1));
+                    comm.Enqueue(new Swap(mnPos + 2*lieShu+1, mnPos + lieShu + 1));
+                    comm.Enqueue(new Swap(mnPos + lieShu+1, mnPos +1));
+                    comm.Enqueue(new Swap(mnPos  + 1, mnPos));
+                    comm.Enqueue(new Swap(mnPos , mnPos +lieShu));
+                    return comm;
+                }
+            }
+            else
+            {
+                if (entityPos==target+lieShu-1)
+                {
+                    comm.Enqueue(new Swap(mnPos, mnPos + lieShu));
+                    comm.Enqueue(new Swap(mnPos + lieShu, mnPos + lieShu + 1));
+                    comm.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + lieShu + 2));
+                    comm.Enqueue(new Swap(mnPos + lieShu + 2, mnPos + 2));
+                    comm.Enqueue(new Swap(mnPos + 2, mnPos + 1));
+                    comm.Enqueue(new Swap(mnPos + 1, mnPos - lieShu + 1));
+                    comm.Enqueue(new Swap(mnPos - lieShu + 1, mnPos - lieShu + 2));
+                    comm.Enqueue(new Swap(mnPos - lieShu + 2, mnPos + 2));
+                    return comm;
+                }
+            }
+            return null;
+        }
+
 
         #region 辅助实体
         /// <summary>
