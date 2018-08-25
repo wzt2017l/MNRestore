@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:MNPuzzleSimulation"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="puButStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#54FF9F"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Label.FontSize" Value="18"></Setter>
+        </Style>
     </Application.Resources>
 </Application>

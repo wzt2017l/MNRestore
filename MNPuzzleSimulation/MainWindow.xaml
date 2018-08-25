@@ -5,8 +5,62 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MNPuzzleSimulation"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="拼图模拟" Height="720" Width="1020" MinWidth="1020" MinHeight="720" MaxWidth="1020" MaxHeight="720" >
+    <Grid Name="mainGrid" Margin="10,10,10,10" Background="AliceBlue">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.7*"></ColumnDefinition>
+            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <WrapPanel Name="puButs" Grid.Column="0" Grid.Row="0" Background="AntiqueWhite">
+            
+        </WrapPanel>
+        <Grid Grid.Column="1" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.45*"></RowDefinition>
+                <RowDefinition Height="0.55*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Label Content="拼图参数："></Label>
+                <Label Content="行数："></Label>
+                <ComboBox Name="hangShu" Height="30" Width="280">
+                    <ComboBoxItem>2</ComboBoxItem>
+                    <ComboBoxItem>3</ComboBoxItem>
+                    <ComboBoxItem>4</ComboBoxItem>
+                    <ComboBoxItem>5</ComboBoxItem>
+                    <ComboBoxItem>6</ComboBoxItem>
+                    <ComboBoxItem>7</ComboBoxItem>
+                    <ComboBoxItem>8</ComboBoxItem>
+                    <ComboBoxItem>9</ComboBoxItem>
+                    <ComboBoxItem>10</ComboBoxItem>
+                </ComboBox>
+                <Label Content="列数:"></Label>
+                <ComboBox Name="lieShu" Height="30" Width="280">
+                    <ComboBoxItem>2</ComboBoxItem>
+                    <ComboBoxItem>3</ComboBoxItem>
+                    <ComboBoxItem>4</ComboBoxItem>
+                    <ComboBoxItem>5</ComboBoxItem>
+                    <ComboBoxItem>6</ComboBoxItem>
+                    <ComboBoxItem>7</ComboBoxItem>
+                    <ComboBoxItem>8</ComboBoxItem>
+                    <ComboBoxItem>9</ComboBoxItem>
+                    <ComboBoxItem>10</ComboBoxItem>
+                </ComboBox>
+                <Label Height="20"></Label>
+                <Button Name="initBut" Background="#4E87D4" Height="30" Width="240" Click="initBut_Click">初始化</Button>
+                <Label Height="20"></Label>
+                <Button Name="disBut" Background="#4E87D4" Height="30" Width="240" Click="disBut_Click">打乱</Button>
+                <Label Height="20"></Label>
+                <Button Name="resBut" Background="#4E87D4" Height="30" Width="240" Click="resBut_Click">自动复原</Button>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

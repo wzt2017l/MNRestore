@@ -94,5 +94,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MNPuzzle\MNPuzzle.csproj">
+      <Project>{b38cc334-1e2c-4e7f-86c2-e4aac2cd5fc6}</Project>
+      <Name>MNPuzzle</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
