@@ -45,6 +45,7 @@
     <Compile Include="Puzzle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PuzzleAide.cs" />
+    <Compile Include="RestoreRunInfo.cs" />
     <Compile Include="Structure.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNPuzzle", "MNPuzzle\MNPuzz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNTest", "MNTest\MNTest.csproj", "{8163EB18-3F58-48AC-ACB3-4E414D1B265D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNPuzzleSimulation", "MNPuzzleSimulation\MNPuzzleSimulation.csproj", "{FB9F54E4-C7A4-4B22-A9EF-9FD05905309D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8163EB18-3F58-48AC-ACB3-4E414D1B265D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8163EB18-3F58-48AC-ACB3-4E414D1B265D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8163EB18-3F58-48AC-ACB3-4E414D1B265D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB9F54E4-C7A4-4B22-A9EF-9FD05905309D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB9F54E4-C7A4-4B22-A9EF-9FD05905309D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB9F54E4-C7A4-4B22-A9EF-9FD05905309D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB9F54E4-C7A4-4B22-A9EF-9FD05905309D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
