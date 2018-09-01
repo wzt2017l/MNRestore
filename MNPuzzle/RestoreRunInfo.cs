@@ -10,7 +10,8 @@ namespace MNPuzzle
     {
         public bool BEGIN { get; set; }//命令开始
         public int index { get; set; }//当前要被复原的图块
-        public int target { get; set; }//目标位置
+        public int entityPos { get; set; }//开始时entity的位置
+        public int target { get; set; }//目的地位置
         public int beginMnPos { get; set; }//开始时mn的位置
         public PuzzleAide.EntityToArgs entityToArgs { get; set; }//高级命令参数
         public Swap swap { get; set; }//检查执行的返回值

@@ -62,14 +62,20 @@
                 <Label Height="25" Background="#FF90CE63">运行信息</Label>
                 <Label Content="延时：（ms）"></Label>
                 <ComboBox Name="yanShi" Height="30" Width="280">
+                    <ComboBoxItem>50</ComboBoxItem>
+                    <ComboBoxItem>100</ComboBoxItem>
                     <ComboBoxItem>200</ComboBoxItem>
                     <ComboBoxItem>400</ComboBoxItem>
                     <ComboBoxItem>600</ComboBoxItem>
                     <ComboBoxItem>800</ComboBoxItem>
                     <ComboBoxItem>1000</ComboBoxItem>
                 </ComboBox>
+                <Label Name="indexLab">被复原：</Label>
                 <Label Name="buShuLab">步数：</Label>
-                <Label Name="SwapLab">交换</Label>
+                <Label Name="SwapLab">交换:</Label>
+                <Label Name="mnPosLab">mn初始位置:</Label>
+                <Label Name="indexPosLab">index初始位置:</Label>
+                <Label Name="tarLab">目的地位置:</Label>
             </StackPanel>
         </Grid>
     </Grid>

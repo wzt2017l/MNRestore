@@ -148,7 +148,7 @@ namespace MNPuzzle
                 return null;
             if (pType)
             {
-                if (entityPos==target+lieShu-1)
+                if (entityPos==target+lieShu-1&& mnPos==entityPos-1)
                 {
                     comm.Enqueue(new Swap(mnPos,mnPos+lieShu));
                     comm.Enqueue(new Swap(mnPos+lieShu,mnPos+lieShu+1));

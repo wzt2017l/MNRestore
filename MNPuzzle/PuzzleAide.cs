@@ -123,8 +123,8 @@ namespace MNPuzzle
     /// <summary>
     /// 拼图助手
     /// </summary>
-   public class PuzzleAide
-   {
+    public class PuzzleAide
+    {
         public Queue<Swap> Command { get; set; }//命令队列
         public Puzzle puzzle { get; private set; }
         public long StepNum { get; private set; }
@@ -161,8 +161,8 @@ namespace MNPuzzle
                     rngServiceProvider.GetBytes(ranBytes);
                     rans[m] = Math.Abs(BitConverter.ToInt32(ranBytes, 0));
                 }
-                k = Math.Abs(rans[0]%(i+1));
-                j = Math.Abs(rans[1]%(Total-i))+i;
+                k = Math.Abs(rans[0] % (i + 1));
+                j = Math.Abs(rans[1] % (Total - i)) + i;
                 if (k != j)
                 {
                     puzzle.Swap(k, j);
@@ -208,8 +208,8 @@ namespace MNPuzzle
         }
         public long DisruptReducible()
         {
-           StepNum = 0;
-           return DisruptReducible(this.puzzle);
+            StepNum = 0;
+            return DisruptReducible(this.puzzle);
         }
         #endregion
 
@@ -339,13 +339,13 @@ namespace MNPuzzle
         /// <param name="directionR">行方向1/-1/0</param>
         /// <param name="directionC">列方向1/-1/0</param>
         /// <returns></returns>
-        public int MnPosition(int mnPosition,int lieShu,int offset, int directionR,int directionC )
+        public int MnPosition(int mnPosition, int lieShu, int offset, int directionR, int directionC)
         {
             return mnPosition + offset * directionR * lieShu + offset * directionC; ;
         }
         public int MnPosition(int mnPosition, int offset, int directionR, int directionC)
         {
-           return MnPosition(mnPosition,puzzle.LieShu,offset,directionR,directionC);
+            return MnPosition(mnPosition, puzzle.LieShu, offset, directionR, directionC);
         }
         /// <summary>
         /// 计算出执行一次基础命令后mn的位置，参数参照相应的基础命令，如果基础命令没有与之对应的参数，则使其为0
@@ -355,7 +355,7 @@ namespace MNPuzzle
         /// <param name="directionR">行方向1/-1/0</param>
         /// <param name="directionC">列方向1/-1/0</param>
         /// <returns></returns>
-        public int MnPosition( int offset, int directionR, int directionC)
+        public int MnPosition(int offset, int directionR, int directionC)
         {
             return MnPosition(puzzle.mnPosition, puzzle.LieShu, offset, directionR, directionC);
         }
@@ -372,7 +372,7 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int EmptyVerticalPlan(Queue<Swap> command ,int mnPosition, int offset, int direction, int lieShu)
+        public int EmptyVerticalPlan(Queue<Swap> command, int mnPosition, int offset, int direction, int lieShu)
         {
             int k = lieShu * direction;
             for (int i = 0; i < offset; i++)
@@ -383,17 +383,17 @@ namespace MNPuzzle
             }
             return mnPosition + k * offset;
         }
-        public int EmptyVerticalPlan(int mnPosition, int offset, int direction ,int lieShu)
+        public int EmptyVerticalPlan(int mnPosition, int offset, int direction, int lieShu)
         {
             return EmptyVerticalPlan(this.Command, mnPosition, offset, direction, lieShu);
         }
         public int EmptyVerticalPlan(int mnPosition, int offset, int direction)
         {
-           return EmptyVerticalPlan(this.Command,mnPosition,offset,direction,puzzle.LieShu);
+            return EmptyVerticalPlan(this.Command, mnPosition, offset, direction, puzzle.LieShu);
         }
         public int EmptyVerticalPlan(int offset, int direction)
         {
-           return EmptyVerticalPlan(this.Command,puzzle.mnPosition, offset, direction,puzzle.LieShu);
+            return EmptyVerticalPlan(this.Command, puzzle.mnPosition, offset, direction, puzzle.LieShu);
         }
         #endregion
         #region mn横向移动命令
@@ -405,7 +405,7 @@ namespace MNPuzzle
         /// <param name="offset">移动格数</param>
         /// <param name="direction">方向-1或1</param>
         /// <returns>mn移动后的位置</returns>
-        public int EmptyTransversePlan(Queue<Swap> command,int mnPosition, int offset, int direction)
+        public int EmptyTransversePlan(Queue<Swap> command, int mnPosition, int offset, int direction)
         {
             for (int i = 0; i < offset; i++)
             {
@@ -417,11 +417,11 @@ namespace MNPuzzle
         }
         public int EmptyTransversePlan(int mnPosition, int offset, int direction)
         {
-            return EmptyTransversePlan(this.Command,mnPosition,offset,direction);
+            return EmptyTransversePlan(this.Command, mnPosition, offset, direction);
         }
         public int EmptyTransversePlan(int offset, int direction)
         {
-           return EmptyTransversePlan(this.Command,puzzle.mnPosition, offset, direction);
+            return EmptyTransversePlan(this.Command, puzzle.mnPosition, offset, direction);
         }
         #endregion
 
@@ -435,7 +435,7 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int RigthEntityVerticalPlan(Queue<Swap> command,int mnPosition, int offset, int direction, int lieShu)
+        public int RigthEntityVerticalPlan(Queue<Swap> command, int mnPosition, int offset, int direction, int lieShu)
         {
             int k = lieShu * direction;
             for (int i = 0; i < offset; i++)
@@ -454,17 +454,17 @@ namespace MNPuzzle
             }
             return mnPosition + offset * k;
         }
-        public int RigthEntityVerticalPlan(int mnPosition, int offset, int direction ,int lieShu)
+        public int RigthEntityVerticalPlan(int mnPosition, int offset, int direction, int lieShu)
         {
-            return RigthEntityVerticalPlan(this.Command,mnPosition,offset,direction,lieShu);
+            return RigthEntityVerticalPlan(this.Command, mnPosition, offset, direction, lieShu);
         }
         public int RigthEntityVerticalPlan(int mnPosition, int offset, int direction)
         {
-           return RigthEntityVerticalPlan(this.Command,mnPosition,offset,direction,puzzle.LieShu);
+            return RigthEntityVerticalPlan(this.Command, mnPosition, offset, direction, puzzle.LieShu);
         }
         public int RigthEntityVerticalPlan(int offset, int direction)
         {
-           return RigthEntityVerticalPlan(this.Command,puzzle.mnPosition, offset, direction,puzzle.LieShu);
+            return RigthEntityVerticalPlan(this.Command, puzzle.mnPosition, offset, direction, puzzle.LieShu);
         }
         #endregion
         #region 左侧a_j竖向移动命令
@@ -477,7 +477,7 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int LeftEntityVerticalPlan(Queue<Swap> command,int mnPosition, int offset, int direction, int lieShu)
+        public int LeftEntityVerticalPlan(Queue<Swap> command, int mnPosition, int offset, int direction, int lieShu)
         {
             int k = lieShu * direction;
             for (int i = 0; i < offset; i++)
@@ -496,17 +496,17 @@ namespace MNPuzzle
             }
             return mnPosition + offset * k;
         }
-        public int LeftEntityVerticalPlan(int mnPosition, int offset, int direction,int lieShu)
+        public int LeftEntityVerticalPlan(int mnPosition, int offset, int direction, int lieShu)
         {
-            return LeftEntityVerticalPlan(this.Command,mnPosition,offset,direction,lieShu);
+            return LeftEntityVerticalPlan(this.Command, mnPosition, offset, direction, lieShu);
         }
         public int LeftEntityVerticalPlan(int mnPosition, int offset, int direction)
         {
-           return LeftEntityVerticalPlan(this.Command,mnPosition,offset,direction,puzzle.LieShu);
+            return LeftEntityVerticalPlan(this.Command, mnPosition, offset, direction, puzzle.LieShu);
         }
         public int LeftEntityVerticalPlan(int offset, int direction)
         {
-           return LeftEntityVerticalPlan(this.Command,puzzle.mnPosition, offset, direction,puzzle.LieShu);
+            return LeftEntityVerticalPlan(this.Command, puzzle.mnPosition, offset, direction, puzzle.LieShu);
         }
         #endregion
 
@@ -520,7 +520,7 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int LowerEntityTransversePlan(Queue<Swap> command,int mnPosition, int offset, int direction, int lieShu)
+        public int LowerEntityTransversePlan(Queue<Swap> command, int mnPosition, int offset, int direction, int lieShu)
         {
             for (int i = 0; i < offset; i++)
             {
@@ -538,17 +538,17 @@ namespace MNPuzzle
             }
             return mnPosition + offset * direction;
         }
-        public int LowerEntityTransversePlan(int mnPosition, int offset, int direction ,int lieShu)
+        public int LowerEntityTransversePlan(int mnPosition, int offset, int direction, int lieShu)
         {
             return LowerEntityTransversePlan(this.Command, mnPosition, offset, direction, lieShu);
         }
         public int LowerEntityTransversePlan(int mnPosition, int offset, int direction)
         {
-            return LowerEntityTransversePlan(this.Command,mnPosition,offset,direction,puzzle.LieShu);
+            return LowerEntityTransversePlan(this.Command, mnPosition, offset, direction, puzzle.LieShu);
         }
         public int LowerEntityTransversePlan(int offset, int direction)
         {
-            return LowerEntityTransversePlan(this.Command,puzzle.mnPosition, offset, direction,puzzle.LieShu);
+            return LowerEntityTransversePlan(this.Command, puzzle.mnPosition, offset, direction, puzzle.LieShu);
         }
         #endregion
         #region 上侧a_j横向移动命令
@@ -561,7 +561,7 @@ namespace MNPuzzle
         /// <param name="direction">方向1或-1</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int RiseEntityTransversePlan(Queue<Swap> command,int mnPosition, int offset, int direction, int lieShu)
+        public int RiseEntityTransversePlan(Queue<Swap> command, int mnPosition, int offset, int direction, int lieShu)
         {
             for (int i = 0; i < offset; i++)
             {
@@ -581,15 +581,15 @@ namespace MNPuzzle
         }
         public int RiseEntityTransversePlan(int mnPosition, int offset, int direction, int lieShu)
         {
-            return RiseEntityTransversePlan(this.Command,mnPosition,offset,direction,lieShu);
+            return RiseEntityTransversePlan(this.Command, mnPosition, offset, direction, lieShu);
         }
         public int RiseEntityTransversePlan(int mnPosition, int offset, int direction)
         {
-           return RiseEntityTransversePlan(this.Command,mnPosition,offset,direction,puzzle.LieShu);
+            return RiseEntityTransversePlan(this.Command, mnPosition, offset, direction, puzzle.LieShu);
         }
         public int RiseEntityTransversePlan(int offset, int direction)
         {
-           return RiseEntityTransversePlan(this.Command,puzzle.mnPosition, offset, direction,puzzle.LieShu);
+            return RiseEntityTransversePlan(this.Command, puzzle.mnPosition, offset, direction, puzzle.LieShu);
         }
         #endregion
 
@@ -604,7 +604,7 @@ namespace MNPuzzle
         /// <param name="directionC">列方向1或-1</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int RiseEntityObliquePlan(Queue<Swap> command,int mnPosition, int offset, int directionR, int directionC, int lieShu)
+        public int RiseEntityObliquePlan(Queue<Swap> command, int mnPosition, int offset, int directionR, int directionC, int lieShu)
         {
             int k = lieShu * directionR;
             for (int i = 0; i < offset; i++)
@@ -625,17 +625,17 @@ namespace MNPuzzle
             }
             return mnPosition + k * offset + offset * directionC;
         }
-        public int RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC,int lieShu)
+        public int RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC, int lieShu)
         {
             return RiseEntityObliquePlan(this.Command, mnPosition, offset, directionR, directionC, lieShu);
         }
         public int RiseEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC)
         {
-           return RiseEntityObliquePlan(this.Command,mnPosition,offset,directionR,directionC,puzzle.LieShu);
+            return RiseEntityObliquePlan(this.Command, mnPosition, offset, directionR, directionC, puzzle.LieShu);
         }
         public int RiseEntityObliquePlan(int offset, int directionR, int directionC)
         {
-           return RiseEntityObliquePlan(this.Command,puzzle.mnPosition, offset, directionR, directionC,puzzle.LieShu);
+            return RiseEntityObliquePlan(this.Command, puzzle.mnPosition, offset, directionR, directionC, puzzle.LieShu);
         }
         #endregion
         #region 横侧a_j斜向移动命令
@@ -649,7 +649,7 @@ namespace MNPuzzle
         /// <param name="directionC">列方向1或-1</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int LateralEntityObliquePlan(Queue<Swap> command,int mnPosition, int offset, int directionR, int directionC, int lieShu)
+        public int LateralEntityObliquePlan(Queue<Swap> command, int mnPosition, int offset, int directionR, int directionC, int lieShu)
         {
             int k = lieShu * directionR;
             for (int i = 0; i < offset; i++)
@@ -670,17 +670,17 @@ namespace MNPuzzle
             }
             return mnPosition + offset * k + offset * directionC;
         }
-        public int LateralEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC,int lieShu)
+        public int LateralEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC, int lieShu)
         {
-            return LateralEntityObliquePlan(this.Command,mnPosition,offset,directionR,directionC,lieShu);
+            return LateralEntityObliquePlan(this.Command, mnPosition, offset, directionR, directionC, lieShu);
         }
         public int LateralEntityObliquePlan(int mnPosition, int offset, int directionR, int directionC)
         {
-           return LateralEntityObliquePlan(this.Command,mnPosition,offset,directionR,directionC,puzzle.LieShu);
+            return LateralEntityObliquePlan(this.Command, mnPosition, offset, directionR, directionC, puzzle.LieShu);
         }
         public int LateralEntityObliquePlan(int offset, int directionR, int directionC)
         {
-           return LateralEntityObliquePlan(this.Command,puzzle.mnPosition, offset, directionR, directionC,puzzle.LieShu);
+            return LateralEntityObliquePlan(this.Command, puzzle.mnPosition, offset, directionR, directionC, puzzle.LieShu);
         }
         #endregion
         #endregion
@@ -698,20 +698,20 @@ namespace MNPuzzle
         public int EmptyToVt(Queue<Swap> command, int mnPosition, int target, int lieShu)
         {
             PointOffset po = new PointOffset(mnPosition, target, lieShu);
-            int mnPos= EmptyVerticalPlan(command,mnPosition, po.Offset.Y, po.Direction.Y,lieShu);
-            return EmptyTransversePlan(command,mnPos, po.Offset.X, po.Direction.X);
+            int mnPos = EmptyVerticalPlan(command, mnPosition, po.Offset.Y, po.Direction.Y, lieShu);
+            return EmptyTransversePlan(command, mnPos, po.Offset.X, po.Direction.X);
         }
-        public int EmptyToVt(int mnPosition, int target ,int lieShu)
+        public int EmptyToVt(int mnPosition, int target, int lieShu)
         {
-            return EmptyToVt(this.Command,mnPosition,target,lieShu);
+            return EmptyToVt(this.Command, mnPosition, target, lieShu);
         }
-        public int EmptyToVt(int mnPosition,int target)
+        public int EmptyToVt(int mnPosition, int target)
         {
-           return EmptyToVt(this.Command,mnPosition,target,puzzle.LieShu);
+            return EmptyToVt(this.Command, mnPosition, target, puzzle.LieShu);
         }
         public int EmptyToVt(int target)
         {
-           return EmptyToVt(this.Command,puzzle.mnPosition,target,puzzle.LieShu);
+            return EmptyToVt(this.Command, puzzle.mnPosition, target, puzzle.LieShu);
         }
         #endregion
         #region 生成mn到目标位置的命令,先横移
@@ -722,23 +722,23 @@ namespace MNPuzzle
         /// <param name="target">目标位置</param>
         /// <param name="lieShu">列数</param>
         /// <returns>mn移动后的位置</returns>
-        public int EmptyToTv(Queue<Swap> command,int mnPosition, int target, int lieShu)
+        public int EmptyToTv(Queue<Swap> command, int mnPosition, int target, int lieShu)
         {
             PointOffset po = new PointOffset(mnPosition, target, lieShu);
-            int mnPos= EmptyTransversePlan(command,mnPosition, po.Offset.X, po.Direction.X);
-            return EmptyVerticalPlan(command,mnPos, po.Offset.Y, po.Direction.Y, lieShu);
+            int mnPos = EmptyTransversePlan(command, mnPosition, po.Offset.X, po.Direction.X);
+            return EmptyVerticalPlan(command, mnPos, po.Offset.Y, po.Direction.Y, lieShu);
         }
-        public int EmptyToTv(int mnPosition, int target ,int lieShu)
+        public int EmptyToTv(int mnPosition, int target, int lieShu)
         {
-            return EmptyToTv(this.Command,mnPosition,target,lieShu);
+            return EmptyToTv(this.Command, mnPosition, target, lieShu);
         }
         public int EmptyToTv(int mnPosition, int target)
         {
-           return EmptyToTv(this.Command,mnPosition,target,puzzle.LieShu);
+            return EmptyToTv(this.Command, mnPosition, target, puzzle.LieShu);
         }
         public int EmptyToTv(int target)
         {
-           return EmptyToTv(this.Command,puzzle.mnPosition,target,puzzle.LieShu);
+            return EmptyToTv(this.Command, puzzle.mnPosition, target, puzzle.LieShu);
         }
         #endregion
 
@@ -752,14 +752,14 @@ namespace MNPuzzle
         /// <param name="lieShu">列数</param>
         /// <param name="rOrL">如果mn在目标正下方，则有两种可选移动方式，默认值为"Right"，如果rOrL！= "Right"则选择另一种方式</param>
         /// <returns>mn移动后的位置</returns>
-        public int EmptyToVtUp(Queue<Swap> command, int mnPosition, int target, int lieShu,string rOrL= "Right")
+        public int EmptyToVtUp(Queue<Swap> command, int mnPosition, int target, int lieShu, string rOrL = "Right")
         {
-            if (mnPosition>target&&mnPosition%lieShu==target%lieShu)
+            if (mnPosition > target && mnPosition % lieShu == target % lieShu)
             {
                 int y1 = (mnPosition - mnPosition % lieShu) / lieShu;
                 int y2 = (target - target % lieShu) / lieShu;
                 int mnPos = EmptyVerticalPlan(command, mnPosition, y1 - y2 - 1, -1, lieShu);
-                if (rOrL== "Right")
+                if (rOrL == "Right")
                 {
                     command.Enqueue(new Swap(mnPos, mnPos + 1));
                     command.Enqueue(new Swap(mnPos + 1, mnPos + 1 - lieShu));
@@ -777,18 +777,18 @@ namespace MNPuzzle
             }
             else
             {
-                return EmptyToVt(command,mnPosition,target-lieShu,lieShu);
+                return EmptyToVt(command, mnPosition, target - lieShu, lieShu);
             }
         }
-        public int EmptyToVtUp( int mnPosition, int target, int lieShu, string rOrL = "Right")
+        public int EmptyToVtUp(int mnPosition, int target, int lieShu, string rOrL = "Right")
         {
-            return EmptyToVtUp(this.Command, mnPosition, target, lieShu,  rOrL);
+            return EmptyToVtUp(this.Command, mnPosition, target, lieShu, rOrL);
         }
         public int EmptyToVtUp(int mnPosition, int target, string rOrL = "Right")
         {
             return EmptyToVtUp(this.Command, mnPosition, target, puzzle.LieShu, rOrL);
         }
-        public int EmptyToVtUp( int target, string rOrL = "Right")
+        public int EmptyToVtUp(int target, string rOrL = "Right")
         {
             return EmptyToVtUp(this.Command, puzzle.mnPosition, target, puzzle.LieShu, rOrL);
         }
@@ -830,26 +830,26 @@ namespace MNPuzzle
                 return target - lieShu;
             }
             else
-            if (y1>=y2)//
+            if (y1 >= y2)//
             {
-                if (x1>x2)//偏左上，正左
+                if (x1 > x2)//偏左上，正左
                 {
-                    mnPos = EmptyTransversePlan(command, mnPosition,x1-x2-1,-1);
-                    mnPos = EmptyVerticalPlan(command,mnPos,y1-y2+1,-1,lieShu);
-                    command.Enqueue(new Swap(mnPos,mnPos-1));
+                    mnPos = EmptyTransversePlan(command, mnPosition, x1 - x2 - 1, -1);
+                    mnPos = EmptyVerticalPlan(command, mnPos, y1 - y2 + 1, -1, lieShu);
+                    command.Enqueue(new Swap(mnPos, mnPos - 1));
                 }
                 else
-                if (x1<x2)//偏右上，正右
+                if (x1 < x2)//偏右上，正右
                 {
                     mnPos = EmptyTransversePlan(command, mnPosition, x2 - x1 - 1, 1);
-                    mnPos = EmptyVerticalPlan(command,mnPos,y1-y2+1,-1,lieShu);
-                    command.Enqueue(new Swap(mnPos, mnPos +1));
+                    mnPos = EmptyVerticalPlan(command, mnPos, y1 - y2 + 1, -1, lieShu);
+                    command.Enqueue(new Swap(mnPos, mnPos + 1));
                 }
                 return target - lieShu;
             }
             else
             {
-                return EmptyToTv(command,mnPosition,target-lieShu,lieShu);
+                return EmptyToTv(command, mnPosition, target - lieShu, lieShu);
             }
         }
         public int EmptyToTvUp(int mnPosition, int target, int lieShu, string rOrL = "Right")
@@ -883,15 +883,15 @@ namespace MNPuzzle
             int x2 = target % lieShu;
             int y2 = (target - x2) / lieShu;
             int mnPos = 0;
-            if (y1==y2&&x1>x2)
+            if (y1 == y2 && x1 > x2)
             {
-                mnPos = EmptyTransversePlan(command,mnPosition,x1-x2-1,-1);
-                if (upOrdown=="Down")
+                mnPos = EmptyTransversePlan(command, mnPosition, x1 - x2 - 1, -1);
+                if (upOrdown == "Down")
                 {
-                    command.Enqueue(new Swap(mnPos,mnPos+lieShu));
-                    command.Enqueue(new Swap(mnPos+lieShu, mnPos + lieShu-1));
-                    command.Enqueue(new Swap(mnPos+lieShu-1, mnPos + lieShu-2));
-                    command.Enqueue(new Swap(mnPos+lieShu-2, mnPos-2));
+                    command.Enqueue(new Swap(mnPos, mnPos + lieShu));
+                    command.Enqueue(new Swap(mnPos + lieShu, mnPos + lieShu - 1));
+                    command.Enqueue(new Swap(mnPos + lieShu - 1, mnPos + lieShu - 2));
+                    command.Enqueue(new Swap(mnPos + lieShu - 2, mnPos - 2));
                 }
                 else
                 {
@@ -903,32 +903,32 @@ namespace MNPuzzle
                 return mnPos - 2;
             }
             else
-            if (x1>=x2)
+            if (x1 >= x2)
             {
-                if (y1>y2)
+                if (y1 > y2)
                 {
-                    mnPos = EmptyVerticalPlan(command,mnPosition,y1-y2-1,-1,lieShu);
-                    mnPos = EmptyTransversePlan(command,mnPos,x1-x2+1,-1);
-                    command.Enqueue(new Swap(mnPos,mnPos-lieShu));
+                    mnPos = EmptyVerticalPlan(command, mnPosition, y1 - y2 - 1, -1, lieShu);
+                    mnPos = EmptyTransversePlan(command, mnPos, x1 - x2 + 1, -1);
+                    command.Enqueue(new Swap(mnPos, mnPos - lieShu));
                 }
                 else
-                if(y1<y2)
+                if (y1 < y2)
                 {
                     mnPos = EmptyVerticalPlan(command, mnPosition, y2 - y1 - 1, 1, lieShu);
                     mnPos = EmptyTransversePlan(command, mnPos, x1 - x2 + 1, -1);
-                    command.Enqueue(new Swap(mnPos, mnPos +lieShu));
+                    command.Enqueue(new Swap(mnPos, mnPos + lieShu));
                 }
                 return target - 1;
             }
             else
             {
-                return EmptyToVt(command,mnPosition,target-1,lieShu);
+                return EmptyToVt(command, mnPosition, target - 1, lieShu);
             }
-            
+
         }
         public int EmptyToVtLeft(int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
-            return EmptyToVtLeft(this.Command,mnPosition,target,lieShu,upOrdown);
+            return EmptyToVtLeft(this.Command, mnPosition, target, lieShu, upOrdown);
         }
         public int EmptyToVtLeft(int mnPosition, int target, string upOrdown = "Down")
         {
@@ -936,7 +936,7 @@ namespace MNPuzzle
         }
         public int EmptyToVtLeft(int target, string upOrdown = "Down")
         {
-            return EmptyToVtLeft(this.Command,puzzle.mnPosition, target, puzzle.LieShu, upOrdown);
+            return EmptyToVtLeft(this.Command, puzzle.mnPosition, target, puzzle.LieShu, upOrdown);
         }
         #endregion
         #region 生成mn到目标位置左侧的命令，先横移
@@ -951,9 +951,9 @@ namespace MNPuzzle
         /// <returns>mn移动后的位置</returns>
         public int EmptyToTvLeft(Queue<Swap> command, int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
-            if (target<mnPosition&&(target-target%lieShu)/lieShu==(mnPosition-mnPosition%lieShu)/lieShu)
+            if (target < mnPosition && (target - target % lieShu) / lieShu == (mnPosition - mnPosition % lieShu) / lieShu)
             {
-                int mnPos = EmptyTransversePlan(command, mnPosition, mnPosition%lieShu - target%lieShu - 1, -1);
+                int mnPos = EmptyTransversePlan(command, mnPosition, mnPosition % lieShu - target % lieShu - 1, -1);
                 if (upOrdown == "Down")
                 {
                     command.Enqueue(new Swap(mnPos, mnPos + lieShu));
@@ -972,12 +972,12 @@ namespace MNPuzzle
             }
             else
             {
-                return EmptyToTv(command,mnPosition,target-1,lieShu);
+                return EmptyToTv(command, mnPosition, target - 1, lieShu);
             }
         }
         public int EmptyToTvLeft(int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
-            return EmptyToTvLeft(this.Command,mnPosition,target,lieShu,upOrdown);
+            return EmptyToTvLeft(this.Command, mnPosition, target, lieShu, upOrdown);
         }
         public int EmptyToTvLeft(int mnPosition, int target, string upOrdown = "Down")
         {
@@ -1001,16 +1001,16 @@ namespace MNPuzzle
         /// <returns>mn移动后的位置</returns>
         public int EmptyToVtDown(Queue<Swap> command, int mnPosition, int target, int lieShu, string rOrL = "Right")
         {
-            if (mnPosition<target&&mnPosition%lieShu==target%lieShu)
+            if (mnPosition < target && mnPosition % lieShu == target % lieShu)
             {
                 int y1 = (mnPosition - mnPosition % lieShu) / lieShu;
                 int y2 = (target - target % lieShu) / lieShu;
-                int mnPos = EmptyVerticalPlan(command,mnPosition,y2-y1-1,1,lieShu);
-                if (rOrL=="Right")
+                int mnPos = EmptyVerticalPlan(command, mnPosition, y2 - y1 - 1, 1, lieShu);
+                if (rOrL == "Right")
                 {
-                    command.Enqueue(new Swap(mnPos,mnPos+1));
-                    command.Enqueue(new Swap(mnPos+1,mnPos+1+lieShu));
-                    command.Enqueue(new Swap(mnPos+1+lieShu,mnPos+1+2*lieShu));
+                    command.Enqueue(new Swap(mnPos, mnPos + 1));
+                    command.Enqueue(new Swap(mnPos + 1, mnPos + 1 + lieShu));
+                    command.Enqueue(new Swap(mnPos + 1 + lieShu, mnPos + 1 + 2 * lieShu));
                     command.Enqueue(new Swap(mnPos + 1 + 2 * lieShu, mnPos + 2 * lieShu));
                 }
                 else
@@ -1024,18 +1024,18 @@ namespace MNPuzzle
             }
             else
             {
-                return EmptyToVt(command,mnPosition,target+lieShu,lieShu);
+                return EmptyToVt(command, mnPosition, target + lieShu, lieShu);
             }
         }
         public int EmptyToVtDown(int mnPosition, int target, int lieShu, string rOrL = "Right")
         {
-            return EmptyToVtDown(this.Command,mnPosition,target,lieShu,rOrL);
+            return EmptyToVtDown(this.Command, mnPosition, target, lieShu, rOrL);
         }
         public int EmptyToVtDown(int mnPosition, int target, string rOrL = "Right")
         {
             return EmptyToVtDown(this.Command, mnPosition, target, this.puzzle.LieShu, rOrL);
         }
-        public int EmptyToVtDown( int target, string rOrL = "Right")
+        public int EmptyToVtDown(int target, string rOrL = "Right")
         {
             return EmptyToVtDown(this.Command, this.puzzle.mnPosition, target, this.puzzle.LieShu, rOrL);
         }
@@ -1059,7 +1059,7 @@ namespace MNPuzzle
             int mnPos = 0;
             if (y2 > y1 && x1 == x2)
             {
-                mnPos = EmptyVerticalPlan(command, mnPosition, y2-y1 - 1, 1, lieShu);
+                mnPos = EmptyVerticalPlan(command, mnPosition, y2 - y1 - 1, 1, lieShu);
                 if (rOrL == "Right")
                 {
                     command.Enqueue(new Swap(mnPos, mnPos + 1));
@@ -1079,17 +1079,17 @@ namespace MNPuzzle
             else
             if (y2 >= y1)//
             {
-                if (x1 >x2)//偏左下，正左
+                if (x1 > x2)//偏左下，正左
                 {
-                    mnPos = EmptyTransversePlan(command, mnPosition, x1-x2 - 1, -1);
-                    mnPos = EmptyVerticalPlan(command, mnPos, y2-y1 + 1, 1, lieShu);
+                    mnPos = EmptyTransversePlan(command, mnPosition, x1 - x2 - 1, -1);
+                    mnPos = EmptyVerticalPlan(command, mnPos, y2 - y1 + 1, 1, lieShu);
                     command.Enqueue(new Swap(mnPos, mnPos - 1));
                 }
                 else
                 if (x1 < x2)//偏右上，正右
                 {
                     mnPos = EmptyTransversePlan(command, mnPosition, x2 - x1 - 1, 1);
-                    mnPos = EmptyVerticalPlan(command, mnPos, y2-y1 + 1, 1, lieShu);
+                    mnPos = EmptyVerticalPlan(command, mnPos, y2 - y1 + 1, 1, lieShu);
                     command.Enqueue(new Swap(mnPos, mnPos + 1));
                 }
                 return target + lieShu;
@@ -1099,9 +1099,9 @@ namespace MNPuzzle
                 return EmptyToTv(command, mnPosition, target + lieShu, lieShu);
             }
         }
-        public int EmptyToTvDown( int mnPosition, int target, int lieShu, string rOrL = "Right")
+        public int EmptyToTvDown(int mnPosition, int target, int lieShu, string rOrL = "Right")
         {
-            return EmptyToTvDown(this.Command, mnPosition, target,  lieShu, rOrL);
+            return EmptyToTvDown(this.Command, mnPosition, target, lieShu, rOrL);
         }
         public int EmptyToTvDown(int mnPosition, int target, string rOrL = "Right")
         {
@@ -1109,7 +1109,7 @@ namespace MNPuzzle
         }
         public int EmptyToTvDown(int target, string rOrL = "Right")
         {
-            return EmptyToTvDown(this.Command,this.puzzle.mnPosition, target, this.puzzle.LieShu, rOrL);
+            return EmptyToTvDown(this.Command, this.puzzle.mnPosition, target, this.puzzle.LieShu, rOrL);
         }
         #endregion
 
@@ -1132,7 +1132,7 @@ namespace MNPuzzle
             int mnPos = 0;
             if (y1 == y2 && x2 > x1)
             {
-                mnPos = EmptyTransversePlan(command, mnPosition, x2-x1-1, 1);
+                mnPos = EmptyTransversePlan(command, mnPosition, x2 - x1 - 1, 1);
                 if (upOrdown == "Down")
                 {
                     command.Enqueue(new Swap(mnPos, mnPos + lieShu));
@@ -1175,7 +1175,7 @@ namespace MNPuzzle
         }
         public int EmptyToVtRight(int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
-            return EmptyToVtRight(this.Command,mnPosition,target,lieShu,upOrdown);
+            return EmptyToVtRight(this.Command, mnPosition, target, lieShu, upOrdown);
         }
         public int EmptyToVtRight(int mnPosition, int target, string upOrdown = "Down")
         {
@@ -1224,13 +1224,13 @@ namespace MNPuzzle
         }
         public int EmptyToTvRight(int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
-            return EmptyToTvRight(this.Command,mnPosition,target,lieShu,upOrdown);
+            return EmptyToTvRight(this.Command, mnPosition, target, lieShu, upOrdown);
         }
-        public int EmptyToTvRight(int mnPosition, int target,string upOrdown = "Down")
+        public int EmptyToTvRight(int mnPosition, int target, string upOrdown = "Down")
         {
             return EmptyToTvRight(this.Command, mnPosition, target, this.puzzle.LieShu, upOrdown);
         }
-        public int EmptyToTvRight( int target, string upOrdown = "Down")
+        public int EmptyToTvRight(int target, string upOrdown = "Down")
         {
             return EmptyToTvRight(this.Command, this.puzzle.mnPosition, target, this.puzzle.LieShu, upOrdown);
         }
@@ -1373,11 +1373,11 @@ namespace MNPuzzle
         /// <returns></returns>
         public int EntityTo(Queue<Swap> command, EntityToArgs entityToArgs)
         {
-            return EntityTo(command,entityToArgs.mnPosition,entityToArgs.entityPos,entityToArgs.target,entityToArgs.lieShu,entityToArgs.VorT,entityToArgs.entityRDorLU,entityToArgs.mnToVorT);
+            return EntityTo(command, entityToArgs.mnPosition, entityToArgs.entityPos, entityToArgs.target, entityToArgs.lieShu, entityToArgs.VorT, entityToArgs.entityRDorLU, entityToArgs.mnToVorT, entityToArgs.mnToDefault);
         }
         public int EntityTo(EntityToArgs entityToArgs)
         {
-            return EntityTo(this.Command, entityToArgs.mnPosition, entityToArgs.entityPos, entityToArgs.target, entityToArgs.lieShu, entityToArgs.VorT, entityToArgs.entityRDorLU, entityToArgs.mnToVorT);
+            return EntityTo(this.Command, entityToArgs.mnPosition, entityToArgs.entityPos, entityToArgs.target, entityToArgs.lieShu, entityToArgs.VorT, entityToArgs.entityRDorLU, entityToArgs.mnToVorT,entityToArgs.mnToDefault);
         }
         #endregion
         #endregion
@@ -1389,13 +1389,14 @@ namespace MNPuzzle
         /// <param name="puzzle">被复原的拼图</param>
         /// <param name="action">每移动一次要附加的行动</param>
         /// <returns>true:成功</returns>
-        public bool Restore(Action<Swap,RestoreRunInfo> action=null)
+        public bool Restore(Action<Swap, RestoreRunInfo> action = null)
         {
-            int hangShu = puzzle.HangShu, lieShu = puzzle.LieShu,mn=puzzle.Total-1;
-            int mnPos = puzzle.GetEntityPos(puzzle.Total-1);//找到mn当前的位置
-            for (int i=0;i<hangShu;i++)
+            int hangShu = puzzle.HangShu, lieShu = puzzle.LieShu, mn = puzzle.Total - 1;
+            int mnPos = puzzle.GetEntityPos(puzzle.Total - 1);//找到mn当前的位置
+            //倒数后两行之前
+            for (int i = 0; i < hangShu; i++)
             {
-                for (int j=0;j<lieShu;j++)
+                for (int j = 0; j < lieShu; j++)
                 {
                     Command.Clear();//清空队列
                     int index = i * puzzle.LieShu + j;//当前需复原拼图编号
@@ -1407,171 +1408,306 @@ namespace MNPuzzle
                     };
                     if (hangShu - i > 2)
                     {
-                        if (lieShu-j>2)
+                        if (lieShu - j > 2)
                         {
-                            restoreRunInfo.target = index;
-                            if (puzzle.Items[index] == index)
-                            {
-                                restoreRunInfo.IsOrigin = true;
-                                restoreRunInfo.END = true;
-                                continue;
-                            }
-                            EntityToArgs entityToArgs = new EntityToArgs(mnPos, puzzle.GetEntityPos(index, index), index, lieShu, hangShu);
-                            restoreRunInfo.entityToArgs = entityToArgs;
-                            mnPos = EntityTo(entityToArgs);
-                            restoreRunInfo.checkMnPos = mnPos;//如果执行了全部
-                            Swap swap= CheckExecutePlanFast(index,action,restoreRunInfo);//检查执行
-                            restoreRunInfo.swap = swap;//监测
-                            if (swap != null)//未完成复原
-                            {
-                                mnPos = swap.Empty;//重定位
-                                restoreRunInfo.checkMnPos = mnPos;
-                                if (puzzle.Items[index] == index)
-                                {
-                                    restoreRunInfo.endMnPos = mnPos;
-                                    restoreRunInfo.END = true;
-                                    continue;
-                                }
-                                int nearBlock = puzzle.GetNearBlock(swap.Empty, index);
-                                restoreRunInfo.nearBlock = nearBlock;//监测
-                                restoreRunInfo.IsPType = true;
-                                Command = Structure.GetParticularSolution(mnPos,nearBlock,index,lieShu,true);
-                                ExecutePlanFast(action,restoreRunInfo);
-                                mnPos = puzzle.Items[index + 1] == mn ? index + 1 : index + lieShu;
-                            }
-                            restoreRunInfo.endMnPos = mnPos;
-                            restoreRunInfo.END = true;
-                        }
-                        else if (lieShu-j==2)
-                        {
-                            restoreRunInfo.target = index + 1;
-                            if (puzzle.Items[index + 1] == index)
-                            {
-                                restoreRunInfo.IsOrigin = true;
-                                restoreRunInfo.endMnPos = mnPos;
-                                restoreRunInfo.END = true;
-                                continue;
-                            }
-                            EntityToArgs entityToArgs = new EntityToArgs(mnPos, puzzle.GetEntityPos(index, index), index + 1, lieShu, hangShu);
-                            restoreRunInfo.entityToArgs = entityToArgs;
-                            mnPos = EntityTo(entityToArgs);
-                            Swap swap = CheckExecutePlanFast(index-1,action,restoreRunInfo);
-                            restoreRunInfo.swap = swap;
-                            restoreRunInfo.checkMnPos = mnPos;
-                            if (swap!=null)
-                            {
-                                mnPos = swap.Empty;//重定位
-                                restoreRunInfo.checkMnPos = mnPos;
-                                if (puzzle.Items[index + 1] == index)
-                                {
-                                    restoreRunInfo.END = true;
-                                    restoreRunInfo.endMnPos = mnPos;
-                                    continue;
-                                }
-                                int nearBlock = puzzle.GetNearBlock(swap.Empty, index);
-                                restoreRunInfo.nearBlock = nearBlock;
-                                restoreRunInfo.IsPType = false;
-                                Command = Structure.GetParticularSolution(mnPos,puzzle.GetNearBlock(swap.Empty,index),index+1,lieShu,false);
-                                ExecutePlanFast(action,restoreRunInfo);
-                                mnPos = puzzle.Items[index] == mn ? index : index + 1 + lieShu;
-                            }
-                            restoreRunInfo.endMnPos = mnPos;
-                            restoreRunInfo.END = true;
+                            mnPos = RestoreRgt2Cgt2(mnPos, index, lieShu, hangShu, mn, action, restoreRunInfo);
                         }
                         else
                         {
-                            restoreRunInfo.target = index + lieShu;
-                            restoreRunInfo.beginMnPos = mnPos;
-                            restoreRunInfo.otherMess = "";
-                            //在复原某一行最后一个时可能会破坏已复原的图块，必须要找到方法解决才行
-                            if (mnPos == index - 1)//矫正mn避免错误
+                            
+                            //需进行更完善的检查
+                            if (lieShu - j == 2)
                             {
-                                Command.Enqueue(new Swap(mnPos, mnPos + lieShu));//向下移动一行
-                                ExecutePlanFast(action,restoreRunInfo);
-                                mnPos = mnPos + lieShu;
-                                restoreRunInfo.otherMess = "矫正mn的位置，mn到达了"+mnPos;
-                            }
-                            if (puzzle.Items[index + lieShu] == index)
-                            {
-                                restoreRunInfo.otherMess += "===已在目标，但还不能结束循环,mn在位置：" + mnPos;
-                            }//已在目标，但还不能结束循环
-                            else if (puzzle.Items[index - 1] == index)
-                            {//特解2
-                                restoreRunInfo.otherMess += "===特解,mn在位置：" + mnPos;
-                                if (mnPos==index+lieShu)
+                                if (puzzle.Items[index] == index && puzzle.Items[index + 1] == index + 1)
                                 {
-                                    Command.Enqueue(new Swap(mnPos, mnPos - 1));
-                                    Command.Enqueue(new Swap(mnPos - 1, mnPos - lieShu - 1));
-                                    ExecutePlanFast(action,restoreRunInfo);
-                                    mnPos = mnPos - lieShu - 1;
-                                    restoreRunInfo.otherMess += "===特解1,mn在位置：" + mnPos;
+                                    continue;
                                 }
-                                else
+                                if (puzzle.Items[index + 1] == index && puzzle.Items[index + lieShu + 1] == index + 1)//后两个都在目标位置
                                 {
-                                    Command.Enqueue(new Swap(mnPos, mnPos - lieShu));
-                                    ExecutePlanFast(action,restoreRunInfo);
-                                    mnPos = mnPos - lieShu;
-                                    restoreRunInfo.otherMess += "==特解2,mn在位置：" + mnPos;
+                                    mnPos = EmptyToVtLeft(index + lieShu);
+                                    ExecutePlanFast(action, restoreRunInfo);
+                                    continue;
                                 }
-                                Command.Enqueue(new Swap(mnPos, mnPos + 1));
-                                Command.Enqueue(new Swap(mnPos + 1, mnPos + lieShu + 1));
-                                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + lieShu));
-                                Command.Enqueue(new Swap(mnPos + lieShu, mnPos + 2 * lieShu));
-                                Command.Enqueue(new Swap(mnPos + 2 * lieShu, mnPos + 2 * lieShu + 1));
-                                Command.Enqueue(new Swap(mnPos + 2 * lieShu + 1, mnPos + lieShu + 1));
-                                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + 1));
-                                Command.Enqueue(new Swap(mnPos + 1, mnPos));
-                                Command.Enqueue(new Swap(mnPos, mnPos + lieShu));
-                                Command.Enqueue(new Swap(mnPos + lieShu, mnPos + lieShu + 1));
-                                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + 2 * lieShu + 1));
-                                ExecutePlanFast(action,restoreRunInfo);
-                                mnPos = mnPos + 2 * lieShu + 1;
-                                restoreRunInfo.otherMess += "===特解结束，mn:" + mnPos;
+                                mnPos = RestoreRgt2Ceq2(mnPos, index, lieShu, hangShu, mn, action, restoreRunInfo);
                             }
                             else
                             {
-                                restoreRunInfo.otherMess += "===非特解结束，mn:" + mnPos;
-                                EntityToArgs entityToArgs = new EntityToArgs(mnPos, puzzle.GetEntityPos(index, index), index + lieShu, lieShu, hangShu);
-                                restoreRunInfo.entityToArgs = entityToArgs;
-                                mnPos = EntityTo(entityToArgs);
-                                restoreRunInfo.checkMnPos = mnPos;
-                                Swap swap = CheckExecutePlanFast(index,action,restoreRunInfo);//必然要到达目标
-                                if (swap!=null)
+                                if (puzzle.Items[index] == index && puzzle.Items[index - 1] == index - 1)
                                 {
-                                    mnPos = swap.Empty;
-                                    restoreRunInfo.checkMnPos = mnPos;
+                                    continue;
                                 }
+                                mnPos = RestoreRgt2Ceq1(mnPos, index, lieShu, hangShu, mn, action, restoreRunInfo);
                             }
-                            Command.Clear();//有可能需要清空命令队列
-                            if (mnPos==index+2*lieShu)//mn可能有三个位置
-                            {
-                                Command.Enqueue(new Swap(mnPos,mnPos-1));
-                                Command.Enqueue(new Swap(mnPos-1,mnPos-lieShu-1));
-                                Command.Enqueue(new Swap(mnPos-lieShu-1,mnPos-2*lieShu-1));
-                                ExecutePlanFast(action,restoreRunInfo);
-                                mnPos = mnPos - 2 * lieShu - 1;
-                            }
-                            else if(mnPos==index+lieShu-1)
-                            {
-                                Command.Enqueue(new Swap(mnPos, mnPos - lieShu));
-                                ExecutePlanFast(action,restoreRunInfo);
-                                mnPos =mnPos-lieShu;
-                            }
-                            Command.Enqueue(new Swap(mnPos,mnPos+1));
-                            Command.Enqueue(new Swap(mnPos+1,mnPos+lieShu+1));
-                            ExecutePlanFast(action,restoreRunInfo);
-                            mnPos = index+lieShu;
-                            restoreRunInfo.endMnPos = mnPos;
-                            restoreRunInfo.END = true;
+                        }
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            //倒数后两行
+            for (int j=0;j<lieShu;j++)//列
+            {
+                for (int i=2;i>0;i--)//行
+                {
+                    Command.Clear();
+                    int index = (hangShu - 3+i) * lieShu + j;//当前要挪动的图块
+                    RestoreRunInfo restoreRunInfo = new RestoreRunInfo()
+                    {
+                        BEGIN = true,
+                        index = index,
+                        beginMnPos = mnPos
+                    };
+                    if (lieShu-j>2)//列数>2
+                    {
+                        //这里需要检查两个是否都在目标
+                        if (i==2)
+                        {
+                            //需检查是否都在目标
+                            mnPos = RestoreReq2Cgt2(mnPos, index, lieShu, hangShu, mn, action, restoreRunInfo);
+                        }
+                        else
+                        {
+
                         }
                     }
                     else
                     {
-
+                        break;
                     }
                 }
             }
             return true;
+        }
+        private int RestoreRgt2Cgt2(int mnPos, int index, int lieShu, int hangShu, int mn, Action<Swap, RestoreRunInfo> action = null, RestoreRunInfo restoreRunInfo = null)
+        {
+            restoreRunInfo.target = index;
+            int enPos = puzzle.GetEntityPos(index, index);
+            restoreRunInfo.entityPos = enPos;
+            if (puzzle.Items[index] == index)
+            {
+                restoreRunInfo.IsOrigin = true;
+                restoreRunInfo.END = true;
+                return mnPos;
+            }
+            EntityToArgs entityToArgs = new EntityToArgs(mnPos, enPos, index, lieShu, hangShu);
+            restoreRunInfo.entityToArgs = entityToArgs;
+            mnPos = EntityTo(entityToArgs);
+            restoreRunInfo.checkMnPos = mnPos;//如果执行了全部
+            Swap swap = CheckExecutePlanFast(index, action, restoreRunInfo);//检查执行
+            restoreRunInfo.swap = swap;//监测
+            if (swap != null)//未完成复原
+            {
+                mnPos = swap.Empty;//重定位
+                restoreRunInfo.checkMnPos = mnPos;
+                if (puzzle.Items[index] == index)
+                {
+                    restoreRunInfo.endMnPos = mnPos;
+                    restoreRunInfo.END = true;
+                    return mnPos;
+                }
+                int nearBlock = puzzle.GetNearBlock(swap.Empty, index);
+                restoreRunInfo.nearBlock = nearBlock;//监测
+                restoreRunInfo.IsPType = true;
+                Command = Structure.GetParticularSolution(mnPos, nearBlock, index, lieShu, true);
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = puzzle.Items[index + 1] == mn ? index + 1 : index + lieShu;
+            }
+            restoreRunInfo.endMnPos = mnPos;
+            restoreRunInfo.END = true;
+            return mnPos;
+        }
+        private int RestoreRgt2Ceq2(int mnPos, int index, int lieShu, int hangShu, int mn, Action<Swap, RestoreRunInfo> action = null, RestoreRunInfo restoreRunInfo = null)
+        {
+            restoreRunInfo.target = index + 1;
+            if (puzzle.Items[index + 1] == index)
+            {
+                restoreRunInfo.IsOrigin = true;
+                restoreRunInfo.endMnPos = mnPos;
+                restoreRunInfo.END = true;
+                return mnPos;
+            }
+            int enPos = puzzle.GetEntityPos(index, index);
+            restoreRunInfo.entityPos = enPos;
+            EntityToArgs entityToArgs = new EntityToArgs(mnPos, enPos, index + 1, lieShu, hangShu);
+            restoreRunInfo.entityToArgs = entityToArgs;
+            mnPos = EntityTo(entityToArgs);
+            Swap swap = CheckExecutePlanFast(index, action, restoreRunInfo);
+            restoreRunInfo.swap = swap;
+            restoreRunInfo.checkMnPos = mnPos;
+            if (swap != null)
+            {
+                mnPos = swap.Empty;//重定位
+                restoreRunInfo.checkMnPos = mnPos;
+                if (puzzle.Items[index + 1] == index)
+                {
+                    restoreRunInfo.END = true;
+                    restoreRunInfo.endMnPos = mnPos;
+                    return mnPos;
+                }
+                int nearBlock = puzzle.GetNearBlock(swap.Empty, index);
+                restoreRunInfo.nearBlock = nearBlock;
+                restoreRunInfo.IsPType = false;
+                Command = Structure.GetParticularSolution(mnPos, puzzle.GetNearBlock(swap.Empty, index), index + 1, lieShu, false);
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = puzzle.Items[index] == mn ? index : index + 1 + lieShu;
+            }
+            restoreRunInfo.endMnPos = mnPos;
+            restoreRunInfo.END = true;
+            return mnPos;
+        }
+        private int RestoreRgt2Ceq1(int mnPos, int index, int lieShu, int hangShu, int mn, Action<Swap, RestoreRunInfo> action = null, RestoreRunInfo restoreRunInfo = null)
+        {
+            restoreRunInfo.target = index + lieShu;
+            restoreRunInfo.beginMnPos = mnPos;
+            restoreRunInfo.otherMess = "";
+            int enPos = puzzle.GetEntityPos(index, index-1);
+            restoreRunInfo.entityPos = enPos;
+            //在复原某一行最后一个时可能会破坏已复原的图块，必须要找到方法解决才行
+            if (mnPos == index - 1)//矫正mn避免错误
+            {
+                Command.Enqueue(new Swap(mnPos, mnPos + lieShu));//向下移动一行
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = mnPos + lieShu;
+                restoreRunInfo.otherMess = "矫正mn的位置，mn到达了" + mnPos;
+            }
+            if (puzzle.Items[index + lieShu] == index)
+            {
+                restoreRunInfo.otherMess += "===已在目标，但还不能结束循环,mn在位置：" + mnPos;
+            }//已在目标，但还不能结束循环
+            else if (puzzle.Items[index - 1] == index)
+            {//特解2
+                restoreRunInfo.otherMess += "===特解,mn在位置：" + mnPos;
+                if (mnPos == index + lieShu)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos - 1));
+                    Command.Enqueue(new Swap(mnPos - 1, mnPos - lieShu - 1));
+                    ExecutePlanFast(action, restoreRunInfo);
+                    mnPos = mnPos - lieShu - 1;
+                    restoreRunInfo.otherMess += "===特解1,mn在位置：" + mnPos;
+                }
+                else
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos - lieShu));
+                    ExecutePlanFast(action, restoreRunInfo);
+                    mnPos = mnPos - lieShu;
+                    restoreRunInfo.otherMess += "==特解2,mn在位置：" + mnPos;
+                }
+                Command.Enqueue(new Swap(mnPos, mnPos + 1));
+                Command.Enqueue(new Swap(mnPos + 1, mnPos + lieShu + 1));
+                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + lieShu));
+                Command.Enqueue(new Swap(mnPos + lieShu, mnPos + 2 * lieShu));
+                Command.Enqueue(new Swap(mnPos + 2 * lieShu, mnPos + 2 * lieShu + 1));
+                Command.Enqueue(new Swap(mnPos + 2 * lieShu + 1, mnPos + lieShu + 1));
+                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + 1));
+                Command.Enqueue(new Swap(mnPos + 1, mnPos));
+                Command.Enqueue(new Swap(mnPos, mnPos + lieShu));
+                Command.Enqueue(new Swap(mnPos + lieShu, mnPos + lieShu + 1));
+                Command.Enqueue(new Swap(mnPos + lieShu + 1, mnPos + 2 * lieShu + 1));
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = mnPos + 2 * lieShu + 1;
+                restoreRunInfo.otherMess += "===特解结束，mn:" + mnPos;
+            }
+            else
+            {
+                restoreRunInfo.otherMess += "===非特解结束，mn:" + mnPos;
+                EntityToArgs entityToArgs = new EntityToArgs(mnPos, enPos, index + lieShu, lieShu, hangShu);
+                restoreRunInfo.entityToArgs = entityToArgs;
+                mnPos = EntityTo(entityToArgs);
+                restoreRunInfo.checkMnPos = mnPos;
+                Swap swap = CheckExecutePlanFast(index, action, restoreRunInfo);//必然要到达目标
+                if (swap != null)
+                {
+                    mnPos = swap.Empty;
+                    restoreRunInfo.checkMnPos = mnPos;
+                }
+            }
+            Command.Clear();//有可能需要清空命令队列
+            if (mnPos == index + 2 * lieShu)//mn可能有三个位置
+            {
+                Command.Enqueue(new Swap(mnPos, mnPos - 1));
+                Command.Enqueue(new Swap(mnPos - 1, mnPos - lieShu - 1));
+                Command.Enqueue(new Swap(mnPos - lieShu - 1, mnPos - 2 * lieShu - 1));
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = mnPos - 2 * lieShu - 1;
+            }
+            else if (mnPos == index + lieShu - 1)
+            {
+                Command.Enqueue(new Swap(mnPos, mnPos - lieShu));
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = mnPos - lieShu;
+            }
+            Command.Enqueue(new Swap(mnPos, mnPos + 1));
+            Command.Enqueue(new Swap(mnPos + 1, mnPos + lieShu + 1));
+            ExecutePlanFast(action, restoreRunInfo);
+            mnPos = index + lieShu;
+            restoreRunInfo.endMnPos = mnPos;
+            restoreRunInfo.END = true;
+            return mnPos;
+        }
+        private int RestoreReq2Cgt2(int mnPos, int index, int lieShu, int hangShu, int mn, Action<Swap, RestoreRunInfo> action = null, RestoreRunInfo restoreRunInfo = null)
+        {//倒数第二行某列第一个
+            int tarPos = index - lieShu;//目标位置
+            restoreRunInfo.target = tarPos;
+            int enPos = puzzle.GetEntityPos(index, index-lieShu);
+            restoreRunInfo.entityPos = enPos;
+            if (puzzle.Items[tarPos] == index)//检查是否在目标
+            {
+                restoreRunInfo.IsOrigin = true;
+                restoreRunInfo.END = true;
+                return mnPos;
+            }
+            EntityToArgs entityToArgs = new EntityToArgs(mnPos, enPos, tarPos, lieShu, hangShu);
+            restoreRunInfo.entityToArgs = entityToArgs;
+            Queue<Swap> swaps = new Queue<Swap>();
+            EntityTo(swaps,entityToArgs);//生成命令
+            //设置双重检查
+            mnPos = RestoreReq2Cgt2Reset(swaps, index, lieShu);//重置命令
+            restoreRunInfo.checkMnPos = mnPos;//如果执行了全部
+            Swap swap = CheckExecutePlanFast(index-lieShu, action, restoreRunInfo);//检查执行
+            restoreRunInfo.swap = swap;//监测
+            if (swap != null)//未完成复原
+            {
+                mnPos = swap.Empty;//重定位
+                restoreRunInfo.checkMnPos = mnPos;
+                if (puzzle.Items[index] == index)
+                {
+                    restoreRunInfo.endMnPos = mnPos;
+                    restoreRunInfo.END = true;
+                    return mnPos;
+                }
+                int nearBlock = puzzle.GetNearBlock(swap.Empty, index);
+                restoreRunInfo.nearBlock = nearBlock;//监测
+                restoreRunInfo.IsPType = true;
+                Command = Structure.GetParticularSolution(mnPos, nearBlock, index, lieShu, true);
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = puzzle.Items[index + 1] == mn ? index + 1 : index + lieShu;
+            }
+            restoreRunInfo.endMnPos = mnPos;
+            restoreRunInfo.END = true;
+            return mnPos;
+        }
+        private int RestoreReq2Cgt2Reset(Queue<Swap> swaps,int index,int lieShu)//重置命令
+        {
+            int count = swaps.Count;
+            Swap swap = null;
+            for (int i = 0; i < count; i++)
+            {
+                Swap sp = swaps.Dequeue();
+                swap = sp;
+                bool b = CheckSwap(sp, index % lieShu, lieShu);
+                if (b)
+                {
+                    Command.Enqueue(sp);
+                }
+                else
+                {
+                    return sp.Empty;
+                }
+            }
+            return swap.Entity;
         }
         #endregion
 
@@ -1699,6 +1835,14 @@ namespace MNPuzzle
         {
             return CheckSwap(swap,puzzle.HangShu,puzzle.LieShu,index);
         }
+        private bool CheckSwap(Swap swap,int indexLie,int lieShu)//必须大于某列数
+        {
+            if (swap.Entity%lieShu<indexLie)
+            {
+                return false;
+            }
+            return true;
+        }
         #endregion
         #region 高级命令参数
         /// <summary>
@@ -1738,6 +1882,8 @@ namespace MNPuzzle
                 PointOffset po = new PointOffset(entityPos, target, lieShu);
                 if (po.Origin.Y == 0 && target != entityPos && po.OffsetYMinusX < 0)//上边缘
                 {
+                    if(mnPosition%lieShu<target%lieShu)
+                        mnToVorT = false;
                     VorT = false;
                     entityRDorLU = true;
                 }
@@ -1745,6 +1891,11 @@ namespace MNPuzzle
                 {
                     VorT = true;
                     entityRDorLU = false;
+                    mnToVorT = false;
+                    if (mnPosition%lieShu==lieShu-1&&mnPosition>entityPos)//当要到达正上方时
+                    {
+                        mnToDefault = false;
+                    }
                 }
                 else if (po.Origin.Y == hangShu - 1 && target != entityPos && po.OffsetYMinusX < 0)//下边缘
                 {
@@ -1755,6 +1906,11 @@ namespace MNPuzzle
                 {
                     VorT = true;
                     entityRDorLU = true;
+                    if (mnPosition%lieShu<target%lieShu&&po.Origin.Y==po.End.Y||po.Origin.Y==po.End.Y+1&&mnPosition%lieShu<po.Origin.X&&(mnPosition- mnPosition%lieShu)/lieShu==po.Origin.Y)//mn需先横移
+                    {
+                        mnToVorT = false;
+                    }
+                    
                     if (po.Offset.Y + po.Offset.X == 2)
                         VorT = false;
                 }

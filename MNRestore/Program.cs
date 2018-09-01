@@ -13,10 +13,22 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
-            Puzzle puzzle = new Puzzle(10,10);
+            int hangshu = 10;
+            int lieshu = 3;
+            Puzzle puzzle = new Puzzle(hangshu,lieshu);
             PuzzleAide puzzleAide = new PuzzleAide(puzzle);
-            puzzleAide.DisruptReducible();
-            puzzleAide.Restore();
+            Queue<Swap> swaps = new Queue<Swap>();
+            int index = 22;
+            int mnpos = 24;
+            int enpos = 26;
+            int target = 23;
+            PuzzleAide.EntityToArgs entityToArgs = new PuzzleAide.EntityToArgs(mnpos, enpos, target, lieshu, hangshu);
+            puzzleAide.EntityTo(swaps,entityToArgs);
+            Swap swap1= puzzleAide.CheckExecutePlanFast(swaps,index, (swap,restoreRunInfo)=> {
+                Console.WriteLine($"({swap.Empty},{swap.Entity})");
+            });
+            Console.WriteLine($"({swap1.Empty},{swap1.Entity})");
+           // puzzleAide.CheckSwap(new Swap(37,27),27);
             Console.Read();
         }
        

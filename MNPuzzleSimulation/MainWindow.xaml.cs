@@ -125,8 +125,12 @@ namespace MNPuzzleSimulation
         
         private void SwapMess(Swap swap,RestoreRunInfo restoreRunInfo)
         {
+            indexLab.Content = "被复原：" + restoreRunInfo.index;
             buShuLab.Content = "步数:" + puzzleAide.StepNum;
             SwapLab.Content = "交换:(" + swap.Empty.ToString() + "," + swap.Entity.ToString() + ")";
+            mnPosLab.Content = "mn初始位置:" + restoreRunInfo.beginMnPos;
+            indexPosLab.Content = "index初始位置:" + restoreRunInfo.entityPos;
+            tarLab.Content = "目的地位置：" + restoreRunInfo.target;
             string content =( puButs.Children[swap.Entity] as Button).Content.ToString();//被移动的图块
             Button temp = mnBut;
             mnBut = puButs.Children[swap.Entity] as Button;
@@ -135,7 +139,7 @@ namespace MNPuzzleSimulation
             temp.Background = new SolidColorBrush(Color.FromRgb(84, 255, 159));//54FF9F
             temp.Content = content;
             App.DoEvents();
-            Thread.Sleep(200);
+            Thread.Sleep(50);
         }
     }
 }
