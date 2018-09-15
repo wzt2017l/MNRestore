@@ -139,7 +139,7 @@ namespace MNPuzzleSimulation
             temp.Background = new SolidColorBrush(Color.FromRgb(84, 255, 159));//54FF9F
             temp.Content = content;
             App.DoEvents();
-            Thread.Sleep(50);
+           // Thread.Sleep(200);
         }
     }
 }

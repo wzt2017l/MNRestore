@@ -223,6 +223,18 @@ namespace MNPuzzle
             return -1;
         }
         #endregion
+
+        public bool IsRestore()
+        {
+            for (int i=0;i<Total;i++)
+            {
+                if (i!=Items[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
     
 }
