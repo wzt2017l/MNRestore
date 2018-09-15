@@ -1468,25 +1468,10 @@ namespace MNPuzzle
                         {
                             //需检查是否都在目标
                             mnPos = RestoreReq2Cgt2(mnPos, index, lieShu, hangShu, action, restoreRunInfo);
-                            //if (puzzle.Items[mnPos]!=29)
-                            //{
-                            //    bool b = false;
-                            //}
-                            //if(puzzle.Items[index-lieShu]!=index){
-                            //    string s = "";
-                            //}
                         }
                         else
                         {
                             mnPos = RestoreReq2Cgt1(mnPos, index, lieShu,hangShu, action, restoreRunInfo);
-                            //if (puzzle.Items[mnPos] != 29)
-                            //{
-                            //    bool b = false;
-                            //}
-                            //if (puzzle.Items[index] != index|| puzzle.Items[index+lieShu] != index+lieShu)
-                            //{
-                            //     string s = "";
-                            //}
                         }
                     }
                     else

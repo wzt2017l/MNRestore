@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
 using MNPuzzle;
+using System.Windows.Threading;
 
 namespace MNPuzzleSimulation
 {
@@ -25,9 +26,18 @@ namespace MNPuzzleSimulation
         private Puzzle puzzle=null;
         private PuzzleAide puzzleAide = null;
         private Button mnBut = null;
+        private DispatcherTimer timer =null;
+ 
         public MainWindow()
         {
             InitializeComponent();
+            yanShi.SelectedIndex = 0;
+            timer = new DispatcherTimer();
+            //timer.Interval=new TimeSpan(10000000);
+            //timer.Tick += new EventHandler((object sender, EventArgs e) => {
+            //   // MessageBox.Show("自动复原成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            //});
+            timer.Start();
         }
         /// <summary>
         /// 初始化
@@ -42,6 +52,13 @@ namespace MNPuzzleSimulation
                 InitPuzzle();
                 puzzleAide = new PuzzleAide(puzzle);
             }
+            indexLab.Content = "被复原：" ;
+            buShuLab.Content = "步数:" ;
+            SwapLab.Content = "交换:";
+            mnPosLab.Content = "mn初始位置:";
+            indexPosLab.Content = "index初始位置:";
+            tarLab.Content = "目的地位置：";
+            messLab.Content = "其它信息：";
         }
         private void InitPuzzle()
         {
@@ -93,7 +110,31 @@ namespace MNPuzzleSimulation
         {
             if (puzzle!=null)
             {
-                puzzleAide.Restore(SwapMess);
+                try
+                {
+                    initBut.IsEnabled = false;
+                    disBut.IsEnabled = false;
+                    resBut.IsEnabled = false;
+                    bool res = puzzleAide.Restore(SwapMess);
+                    if (res)
+                    {
+                        MessageBox.Show("自动复原成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    }
+                    else
+                    {
+                        MessageBox.Show("自动复原失败！", "失败", MessageBoxButton.OK, MessageBoxImage.Question);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("发生异常！", "异常", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    initBut.IsEnabled = true;
+                    disBut.IsEnabled = true;
+                    resBut.IsEnabled = true;
+                }
             }
         }
         //移动
@@ -131,6 +172,7 @@ namespace MNPuzzleSimulation
             mnPosLab.Content = "mn初始位置:" + restoreRunInfo.beginMnPos;
             indexPosLab.Content = "index初始位置:" + restoreRunInfo.entityPos;
             tarLab.Content = "目的地位置：" + restoreRunInfo.target;
+            messLab.Content = "其它信息："+restoreRunInfo.otherMess;
             string content =( puButs.Children[swap.Entity] as Button).Content.ToString();//被移动的图块
             Button temp = mnBut;
             mnBut = puButs.Children[swap.Entity] as Button;
@@ -139,7 +181,9 @@ namespace MNPuzzleSimulation
             temp.Background = new SolidColorBrush(Color.FromRgb(84, 255, 159));//54FF9F
             temp.Content = content;
             App.DoEvents();
-           // Thread.Sleep(200);
+            int time = Convert.ToInt32(yanShi.SelectionBoxItem);
+            if(time>0)
+            Thread.Sleep(time);
         }
     }
 }
