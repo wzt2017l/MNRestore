@@ -203,6 +203,11 @@ namespace MNPuzzle
                 if (Items[i] == entity)
                     return i;
             }
+            for (int i=0;i<Total;i++)
+            {
+                if (Items[i] == entity)
+                    return i;
+            }
             return -1;
         }
         #endregion
@@ -220,7 +225,7 @@ namespace MNPuzzle
             if (origin+LieShu<Total&&Items[origin + LieShu] == blockNo) return origin + LieShu;
             if (origin-LieShu>-1&&Items[origin -LieShu] == blockNo) return origin - LieShu;
             if (origin + LieShu - 1<Total&&Items[origin + LieShu - 1] == blockNo) return origin + LieShu - 1;
-            return -1;
+            return GetEntityPos(blockNo,  0);
         }
         #endregion
 

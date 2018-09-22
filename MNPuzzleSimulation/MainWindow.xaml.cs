@@ -27,17 +27,15 @@ namespace MNPuzzleSimulation
         private PuzzleAide puzzleAide = null;
         private Button mnBut = null;
         private DispatcherTimer timer =null;
- 
+        private DateTime dt0 = new DateTime();
         public MainWindow()
         {
             InitializeComponent();
             yanShi.SelectedIndex = 0;
             timer = new DispatcherTimer();
-            //timer.Interval=new TimeSpan(10000000);
-            //timer.Tick += new EventHandler((object sender, EventArgs e) => {
-            //   // MessageBox.Show("自动复原成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-            //});
-            timer.Start();
+            timer.Interval = new TimeSpan(100000);//1ms
+            timer.Tick += new EventHandler(AddTime);
+           
         }
         /// <summary>
         /// 初始化
@@ -52,6 +50,9 @@ namespace MNPuzzleSimulation
                 InitPuzzle();
                 puzzleAide = new PuzzleAide(puzzle);
             }
+            if(timer.IsEnabled)
+               timer.Stop();
+            timeLab.Content = "计时：";
             indexLab.Content = "被复原：" ;
             buShuLab.Content = "步数:" ;
             SwapLab.Content = "交换:";
@@ -84,6 +85,8 @@ namespace MNPuzzleSimulation
         {
             if (puzzle != null)
             {
+                if (timer.IsEnabled)
+                    timer.Stop();
                 puzzleAide.DisruptReducible();
                 for (int i=0;i<puzzle.Total;i++)
                 {
@@ -115,7 +118,13 @@ namespace MNPuzzleSimulation
                     initBut.IsEnabled = false;
                     disBut.IsEnabled = false;
                     resBut.IsEnabled = false;
+                    if (!timer.IsEnabled)
+                    {
+                        timer.Start();
+                        dt0 = DateTime.Now;
+                    }
                     bool res = puzzleAide.Restore(SwapMess);
+                    timer.Stop();
                     if (res)
                     {
                         MessageBox.Show("自动复原成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -127,6 +136,7 @@ namespace MNPuzzleSimulation
                 }
                 catch (Exception ex)
                 {
+                    timer.Stop();
                     MessageBox.Show("发生异常！", "异常", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
@@ -147,6 +157,11 @@ namespace MNPuzzleSimulation
                int index=Convert.ToInt32(but.Content);
                if (indexPos+puzzle.LieShu==Convert.ToInt32(mnBut.Tag)|| indexPos - puzzle.LieShu == Convert.ToInt32(mnBut.Tag) || indexPos - 1 == Convert.ToInt32(mnBut.Tag) || indexPos + 1 == Convert.ToInt32(mnBut.Tag))//上下左右
                {
+                    if (!timer.IsEnabled)
+                    {
+                        timer.Start();
+                        dt0 = DateTime.Now;
+                    }
                     puzzleAide.Command.Clear();
                     Swap swap = new Swap(Convert.ToInt32(mnBut.Tag), indexPos);
                     puzzleAide.Command.Enqueue(swap);
@@ -158,9 +173,14 @@ namespace MNPuzzleSimulation
                     mnBut.Content = "mn";
                     temp.Background=new SolidColorBrush(Color.FromRgb(84,255,159));//54FF9F
                     temp.Content = content;
+                   // timeLab.Content = timeStr;
                     buShuLab.Content = "步数:" + puzzleAide.StepNum;
                     SwapLab.Content = "交换:(" + swap.Empty.ToString() + "," + swap.Entity.ToString() + ")";
                 }
+            }
+            if (puzzle.IsRestore())
+            {
+                timer.Stop();
             }
         }
         
@@ -184,6 +204,13 @@ namespace MNPuzzleSimulation
             int time = Convert.ToInt32(yanShi.SelectionBoxItem);
             if(time>0)
             Thread.Sleep(time);
+        }
+        private void AddTime(object sender, EventArgs e)
+        {
+            TimeSpan ts = DateTime.Now - dt0;
+            string timeStr = "计时："+(ts.Minutes>9?ts.Minutes.ToString():"0"+ts.Minutes)+ ":" + (ts.Seconds>9?ts.Seconds.ToString():"0"+ts.Seconds)+ ":" + (ts.Milliseconds>99?ts.Milliseconds.ToString():(ts.Milliseconds>9?"0"+ts.Milliseconds:"00"+ts.Milliseconds));
+            timeLab.Content = timeStr;
+            App.DoEvents();
         }
     }
 }

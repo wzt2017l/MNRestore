@@ -1393,6 +1393,7 @@ namespace MNPuzzle
         {
             int hangShu = puzzle.HangShu, lieShu = puzzle.LieShu, mn = puzzle.Total - 1;
             int mnPos = puzzle.GetEntityPos(puzzle.Total - 1);//找到mn当前的位置
+            
             //倒数后两行之前
             for (int i = 0; i < hangShu; i++)
             {
@@ -1435,7 +1436,7 @@ namespace MNPuzzle
                                 {
                                     continue;
                                 }
-                                mnPos = RestoreRgt2Ceq1(mnPos, index, lieShu, hangShu,action, restoreRunInfo);
+                                mnPos = RestoreRgt2Ceq1(mnPos, index, lieShu, hangShu, action, restoreRunInfo);
                             }
                         }
 
@@ -1447,31 +1448,31 @@ namespace MNPuzzle
                 }
             }
             //倒数后两行
-            for (int j=0;j<lieShu;j++)//列
+            for (int j = 0; j < lieShu; j++)//列
             {
-                if (puzzle.Items[(hangShu-2)*lieShu+j]== (hangShu - 2) * lieShu + j&& puzzle.Items[(hangShu - 1) * lieShu + j] == (hangShu - 1) * lieShu + j)
+                if (puzzle.Items[(hangShu - 2) * lieShu + j] == (hangShu - 2) * lieShu + j && puzzle.Items[(hangShu - 1) * lieShu + j] == (hangShu - 1) * lieShu + j)
                 { continue; }
-                for (int i=2;i>0;i--)//行
+                for (int i = 2; i > 0; i--)//行
                 {
                     Command.Clear();
-                    int index = (hangShu - 3+i) * lieShu + j;//当前要挪动的图块
+                    int index = (hangShu - 3 + i) * lieShu + j;//当前要挪动的图块
                     RestoreRunInfo restoreRunInfo = new RestoreRunInfo()
                     {
                         BEGIN = true,
                         index = index,
                         beginMnPos = mnPos
                     };
-                    if (lieShu-j>2)//列数>2
+                    if (lieShu - j > 2)//列数>2
                     {
                         //这里需要检查两个是否都在目标
-                        if (i==2)
+                        if (i == 2)
                         {
                             //需检查是否都在目标
                             mnPos = RestoreReq2Cgt2(mnPos, index, lieShu, hangShu, action, restoreRunInfo);
                         }
                         else
                         {
-                            mnPos = RestoreReq2Cgt1(mnPos, index, lieShu,hangShu, action, restoreRunInfo);
+                            mnPos = RestoreReq2Cgt1(mnPos, index, lieShu, hangShu, action, restoreRunInfo);
                         }
                     }
                     else
@@ -1485,7 +1486,7 @@ namespace MNPuzzle
                 BEGIN = true,
                 beginMnPos = mnPos
             };
-            RestoreEnd(mnPos,lieShu,mn,action,restoreRunInfoEnd);
+            mnPos= RestoreEnd(mnPos,lieShu,mn,action,restoreRunInfoEnd);
             return puzzle.IsRestore();
         }
         private int RestoreRgt2Cgt2(int mnPos, int index, int lieShu, int hangShu, int mn, Action<Swap, RestoreRunInfo> action = null, RestoreRunInfo restoreRunInfo = null)
@@ -1804,15 +1805,101 @@ namespace MNPuzzle
                     Command.Enqueue(new Swap(mnPos+1,mnPos+lieShu+1));
                     restoreRunInfo.otherMess = "===最后四块，情况3";
                 }
-                ExecutePlanFast(action, restoreRunInfo);
-                restoreRunInfo.END = true;
-                return mn - 1;
+                else
+                {
+                    return -1; //出错
+                }
+            }
+            else if (mnPos==mn-lieShu)
+            {
+                if (puzzle.Items[mnPos-1]==mn-lieShu)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos -1));
+                    Command.Enqueue(new Swap(mnPos -1, mnPos + lieShu - 1));
+                    Command.Enqueue(new Swap(mnPos +lieShu-1, mnPos + lieShu));
+                    restoreRunInfo.otherMess = "===最后四块，情况4";
+                }
+                else if (puzzle.Items[mnPos-1]==mn-1)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos +lieShu));
+                    Command.Enqueue(new Swap(mnPos +lieShu, mnPos + lieShu - 1));
+                    Command.Enqueue(new Swap(mnPos + lieShu - 1, mnPos -1));
+                    Command.Enqueue(new Swap(mnPos - 1, mnPos));
+                    Command.Enqueue(new Swap(mnPos , mnPos +lieShu));
+                    restoreRunInfo.otherMess = "===最后四块，情况5";
+                }
+                else if (puzzle.Items[mnPos-1]==mn-lieShu-1)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos + lieShu));
+                    restoreRunInfo.otherMess = "===最后四块，情况6";
+                }
+                else
+                {
+                    return -1; //出错
+                }
+            }
+            else if (mnPos==mn-1)
+            {
+                if (puzzle.Items[mnPos+1]==mn-1)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos + 1));
+                    restoreRunInfo.otherMess = "===最后四块，情况7";
+                }
+                else if (puzzle.Items[mnPos+1]==mn-lieShu-1)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos + 1));
+                    Command.Enqueue(new Swap(mnPos+1, mnPos-lieShu + 1));
+                    Command.Enqueue(new Swap(mnPos-lieShu+1, mnPos-lieShu));
+                    Command.Enqueue(new Swap(mnPos-lieShu, mnPos));
+                    Command.Enqueue(new Swap(mnPos, mnPos + 1));
+                    restoreRunInfo.otherMess = "===最后四块，情况8";
+                }
+                else if (puzzle.Items[mnPos + 1] == mn-lieShu)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos - lieShu));
+                    Command.Enqueue(new Swap(mnPos - lieShu, mnPos-lieShu+1));
+                    Command.Enqueue(new Swap(mnPos-lieShu+1, mnPos + 1));
+                    restoreRunInfo.otherMess = "===最后四块，情况9";
+                }
+                else
+                {
+                    return -1; //出错
+                }
+            }
+            else if (mnPos==mn)
+            {
+                if (puzzle.Items[mnPos-1]==mn-lieShu)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos -1));
+                    Command.Enqueue(new Swap(mnPos -1, mnPos - lieShu-1));
+                    Command.Enqueue(new Swap(mnPos - lieShu-1, mnPos-lieShu));
+                    Command.Enqueue(new Swap(mnPos-lieShu, mnPos));
+                    restoreRunInfo.otherMess = "===最后四块，情况10";
+                }
+                else if (puzzle.Items[mnPos-1]==mn-lieShu-1)
+                {
+                    Command.Enqueue(new Swap(mnPos, mnPos-lieShu));
+                    Command.Enqueue(new Swap(mnPos -lieShu, mnPos - lieShu - 1));
+                    Command.Enqueue(new Swap(mnPos - lieShu - 1, mnPos -1));
+                    Command.Enqueue(new Swap(mnPos -1, mnPos));
+                    restoreRunInfo.otherMess = "===最后四块，情况11";
+                }
+                else if (puzzle.Items[mnPos-1]==mn-1)
+                {
+                    restoreRunInfo.otherMess = "===最后四块，情况12";
+                }
+                else
+                {
+                    return -1; //出错
+                }
             }
             else
             {
                 return -1; //出错
             }
-            
+            ExecutePlanFast(action, restoreRunInfo);
+            restoreRunInfo.END = true;
+            return mn;
         }
         private int RestoreReq2Cgt2Reset(Queue<Swap> swaps,int index,int lieShu)//重置命令
         {

@@ -13,25 +13,74 @@ namespace MNRestore
     {
         static void Main(string[] args)
         {
-            int hangshu = 10;
-            int lieshu = 3;
-            Puzzle puzzle = new Puzzle(hangshu,lieshu);
-            PuzzleAide puzzleAide = new PuzzleAide(puzzle);
-            Queue<Swap> swaps = new Queue<Swap>();
-            int index = 22;
-            int mnpos = 24;
-            int enpos = 26;
-            int target = 23;
-            PuzzleAide.EntityToArgs entityToArgs = new PuzzleAide.EntityToArgs(mnpos, enpos, target, lieshu, hangshu);
-            puzzleAide.EntityTo(swaps,entityToArgs);
-            Swap swap1= puzzleAide.CheckExecutePlanFast(swaps,index, (swap,restoreRunInfo)=> {
-                Console.WriteLine($"({swap.Empty},{swap.Entity})");
-            });
-            Console.WriteLine($"({swap1.Empty},{swap1.Entity})");
-           // puzzleAide.CheckSwap(new Swap(37,27),27);
+            // int hangshu = 10;
+            // int lieshu = 3;
+            // Puzzle puzzle = new Puzzle(hangshu,lieshu);
+            // PuzzleAide puzzleAide = new PuzzleAide(puzzle);
+            // Queue<Swap> swaps = new Queue<Swap>();
+            // int index = 22;
+            // int mnpos = 24;
+            // int enpos = 26;
+            // int target = 23;
+            // PuzzleAide.EntityToArgs entityToArgs = new PuzzleAide.EntityToArgs(mnpos, enpos, target, lieshu, hangshu);
+            // puzzleAide.EntityTo(swaps,entityToArgs);
+            // Swap swap1= puzzleAide.CheckExecutePlanFast(swaps,index, (swap,restoreRunInfo)=> {
+            //     Console.WriteLine($"({swap.Empty},{swap.Entity})");
+            // });
+            // Console.WriteLine($"({swap1.Empty},{swap1.Entity})");
+            //// puzzleAide.CheckSwap(new Swap(37,27),27);
+            //Puzzle puzzle = new Puzzle(3,3);
+            //PuzzleAide puzzleAide = new PuzzleAide(puzzle);
+            int ok = 0,fail=0, err = 0;
+            for (int i=0;i<100;i++)
+            {
+                Puzzle puzzle = new Puzzle(3, 3);
+                PuzzleAide puzzleAide = new PuzzleAide(puzzle);
+                puzzleAide.DisruptReducible();
+                try
+                {
+                    Console.WriteLine("");
+                    for (int j = 0; j < puzzle.Total; j++)
+                    {
+                        Console.Write($"{puzzle.Items[j]},");
+                    }
+                    Console.WriteLine("");
+                    bool b= puzzleAide.Restore(jiance);
+                    if (b)
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("成功！");
+                        ok++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("失败！");
+                        Console.Read();
+                        fail++;
+                    }
+                }
+                catch
+               {
+                    Console.WriteLine("");
+                    Console.WriteLine("发生异常！");
+                    Console.Read();
+                    err++;
+                //puzzle = new Puzzle(100, 100);
+                //puzzleAide = new PuzzleAide(puzzle);
+                }
+
+            }
+            Console.WriteLine($"成功：{ok },失败：{fail},出错：{err}");
             Console.Read();
         }
-       
+        public static void jiance(Swap swap, RestoreRunInfo restoreRunInfo)
+        {
+            if(restoreRunInfo!=null)
+                Console.Write($"[index:{restoreRunInfo.index},enPos:{restoreRunInfo.entityPos},其它消息：{restoreRunInfo.otherMess}]");
+            Console.Write($"({swap.Empty},{swap.Entity})*");
+
+        }
         public static long RetryNiXu(int[] array)
         {
             long inversion = 0;
