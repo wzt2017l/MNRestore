@@ -38,6 +38,8 @@
                     <ComboBoxItem>8</ComboBoxItem>
                     <ComboBoxItem>9</ComboBoxItem>
                     <ComboBoxItem>10</ComboBoxItem>
+                    <ComboBoxItem>15</ComboBoxItem>
+                    <ComboBoxItem>20</ComboBoxItem>
                 </ComboBox>
                 <Label Content="列数:"></Label>
                 <ComboBox Name="lieShu" Height="30" Width="280">
@@ -50,6 +52,8 @@
                     <ComboBoxItem>8</ComboBoxItem>
                     <ComboBoxItem>9</ComboBoxItem>
                     <ComboBoxItem>10</ComboBoxItem>
+                    <ComboBoxItem>15</ComboBoxItem>
+                    <ComboBoxItem>20</ComboBoxItem>
                 </ComboBox>
                 <Label Height="20"></Label>
                 <Button Name="initBut" Background="#4E87D4" Height="30" Width="240" Click="initBut_Click">初始化</Button>

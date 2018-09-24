@@ -165,6 +165,7 @@ namespace MNPuzzle
                 j = Math.Abs(rans[1] % (Total - i)) + i;
                 if (k != j)
                 {
+                    lock(puzzle)
                     puzzle.Swap(k, j);
                 }
             });
@@ -1695,6 +1696,13 @@ namespace MNPuzzle
                 restoreRunInfo.END = true;
                 return mnPos;
             }
+            if ((mnPos - mnPos % lieShu) / lieShu == hangShu - 1 &&(enPos-enPos%lieShu)/lieShu==hangShu-1&&enPos<mnPos)
+            {
+                Command.Enqueue(new Swap(mnPos, mnPos -lieShu));
+                restoreRunInfo.otherMess = "===倒数第二行第一个，矫正位置1";
+                ExecutePlanFast(action, restoreRunInfo);
+                mnPos = mnPos -lieShu;
+            }
             EntityToArgs entityToArgs = new EntityToArgs(mnPos, enPos, tarPos, lieShu, hangShu);
             restoreRunInfo.entityToArgs = entityToArgs;
             Queue<Swap> swaps = new Queue<Swap>();
@@ -2127,7 +2135,7 @@ namespace MNPuzzle
                     VorT = false;
                     entityRDorLU = true;
                 }
-                else if (po.Origin.X == lieShu - 1 && target != entityPos && po.OffsetYMinusX > 0)//右边缘
+                else if (po.Origin.X == lieShu - 1 && target != entityPos && po.OffsetYMinusX >= 0)//右边缘
                 {
                     VorT = true;
                     entityRDorLU = false;
@@ -2137,7 +2145,7 @@ namespace MNPuzzle
                         mnToDefault = false;
                     }
                 }
-                else if (po.Origin.Y == hangShu - 1 && target != entityPos && po.OffsetYMinusX < 0)//下边缘
+                else if (po.Origin.Y == hangShu - 1 && target != entityPos && po.OffsetYMinusX <0)//下边缘
                 {
                     VorT = false;
                     entityRDorLU = false;

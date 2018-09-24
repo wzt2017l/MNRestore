@@ -31,11 +31,38 @@ namespace MNRestore
             //// puzzleAide.CheckSwap(new Swap(37,27),27);
             //Puzzle puzzle = new Puzzle(3,3);
             //PuzzleAide puzzleAide = new PuzzleAide(puzzle);
+            //for (int i = 0; i < 100000; i++)
+            //{
+            //    Puzzle puzzle = new Puzzle(3, 3);
+            //    PuzzleAide puzzleAide = new PuzzleAide();
+            //    puzzleAide.Disrupt(puzzle);
+            //    for (int j=0;j<9;j++)
+            //    {
+            //        for (int k=j+1;k<9;k++)
+            //        {
+            //            if (puzzle.Items[k]==puzzle.Items[j])
+            //            {
+            //                Console.WriteLine("重复");
+            //                Console.Read();
+            //            }
+            //        }
+            //    }
+            //}
             moni();
             int ok = 0,fail=0, err = 0;
             for (int i=0;i<1000;i++)
             {
-                Puzzle puzzle = new Puzzle(3, 3);
+                //byte[] ranBytes = new byte[4];
+                //RNGCryptoServiceProvider rngServiceProvider = new RNGCryptoServiceProvider();
+                //rngServiceProvider.GetBytes(ranBytes);
+                //int hang = Math.Abs(BitConverter.ToInt32(ranBytes, 0));
+                //byte[] ranBytes1 = new byte[4];
+                //RNGCryptoServiceProvider rngServiceProvider1 = new RNGCryptoServiceProvider();
+                //rngServiceProvider.GetBytes(ranBytes1);
+                //int lie = Math.Abs(BitConverter.ToInt32(ranBytes1, 0));
+                //hang = hang % 98 + 2;
+                //lie = lie % 98 + 2;
+                Puzzle puzzle = new Puzzle(10,10);
                 PuzzleAide puzzleAide = new PuzzleAide(puzzle);
                 puzzleAide.DisruptReducible();
                 try
@@ -55,7 +82,7 @@ namespace MNRestore
                             Console.Write($"{puzzle.Items[j]},");
                         }
                         Console.WriteLine("");
-                        Console.WriteLine("成功！");
+                        Console.WriteLine("成功！" );
                         ok++;
                     }
                     else
@@ -104,7 +131,7 @@ namespace MNRestore
         public static void moni()
         {
             Puzzle puzzle = new Puzzle(3,3);
-            puzzle.Items = new int[] { 0, 4, 1, 3, 2, 8, 6, 7, 5 };
+            puzzle.Items = new int[] { 0, 2, 5, 3, 4, 8, 6, 7, 1 };
             PuzzleAide puzzleAide = new PuzzleAide(puzzle);
             try
             {
