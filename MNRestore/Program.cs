@@ -31,8 +31,9 @@ namespace MNRestore
             //// puzzleAide.CheckSwap(new Swap(37,27),27);
             //Puzzle puzzle = new Puzzle(3,3);
             //PuzzleAide puzzleAide = new PuzzleAide(puzzle);
+            moni();
             int ok = 0,fail=0, err = 0;
-            for (int i=0;i<100;i++)
+            for (int i=0;i<1000;i++)
             {
                 Puzzle puzzle = new Puzzle(3, 3);
                 PuzzleAide puzzleAide = new PuzzleAide(puzzle);
@@ -49,11 +50,21 @@ namespace MNRestore
                     if (b)
                     {
                         Console.WriteLine("");
+                        for (int j = 0; j < puzzle.Total; j++)
+                        {
+                            Console.Write($"{puzzle.Items[j]},");
+                        }
+                        Console.WriteLine("");
                         Console.WriteLine("成功！");
                         ok++;
                     }
                     else
                     {
+                        Console.WriteLine("");
+                        for (int j = 0; j < puzzle.Total; j++)
+                        {
+                            Console.Write($"{puzzle.Items[j]},");
+                        }
                         Console.WriteLine("");
                         Console.WriteLine("失败！");
                         Console.Read();
@@ -63,6 +74,11 @@ namespace MNRestore
                 catch
                {
                     Console.WriteLine("");
+                    for (int j = 0; j < puzzle.Total; j++)
+                    {
+                        Console.Write($"{puzzle.Items[j]},");
+                    }
+                    Console.WriteLine("");
                     Console.WriteLine("发生异常！");
                     Console.Read();
                     err++;
@@ -71,14 +87,72 @@ namespace MNRestore
                 }
 
             }
+
+
             Console.WriteLine($"成功：{ok },失败：{fail},出错：{err}");
+            Console.Read();
             Console.Read();
         }
         public static void jiance(Swap swap, RestoreRunInfo restoreRunInfo)
         {
-            if(restoreRunInfo!=null)
-                Console.Write($"[index:{restoreRunInfo.index},enPos:{restoreRunInfo.entityPos},其它消息：{restoreRunInfo.otherMess}]");
+            Console.WriteLine();
             Console.Write($"({swap.Empty},{swap.Entity})*");
+            if (restoreRunInfo != null)
+                Console.Write($"[index:{restoreRunInfo.index},enPos:{restoreRunInfo.entityPos},其它消息：{restoreRunInfo.otherMess}]");
+           
+        }
+        public static void moni()
+        {
+            Puzzle puzzle = new Puzzle(3,3);
+            puzzle.Items = new int[] { 0, 4, 1, 3, 2, 8, 6, 7, 5 };
+            PuzzleAide puzzleAide = new PuzzleAide(puzzle);
+            try
+            {
+                Console.WriteLine("");
+                for (int j = 0; j < puzzle.Total; j++)
+                {
+                    Console.Write($"{puzzle.Items[j]},");
+                }
+                Console.WriteLine("");
+                bool b = puzzleAide.Restore();
+                if (b)
+                {
+                    Console.WriteLine("");
+                    for (int j = 0; j < puzzle.Total; j++)
+                    {
+                        Console.Write($"{puzzle.Items[j]},");
+                    }
+                    Console.WriteLine("");
+                    Console.WriteLine("成功！");
+                    
+                }
+                else
+                {
+                    Console.WriteLine("");
+                    for (int j = 0; j < puzzle.Total; j++)
+                    {
+                        Console.Write($"{puzzle.Items[j]},");
+                    }
+                    Console.WriteLine("");
+                    Console.WriteLine("失败！");
+                    Console.Read();
+                    
+                }
+            }
+            catch
+            {
+                Console.WriteLine("");
+                for (int j = 0; j < puzzle.Total; j++)
+                {
+                    Console.Write($"{puzzle.Items[j]},");
+                }
+                Console.WriteLine("");
+                Console.WriteLine("发生异常！");
+                Console.Read();
+                
+                //puzzle = new Puzzle(100, 100);
+                //puzzleAide = new PuzzleAide(puzzle);
+            }
 
         }
         public static long RetryNiXu(int[] array)

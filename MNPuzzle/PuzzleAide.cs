@@ -805,6 +805,11 @@ namespace MNPuzzle
         /// <returns>mn移动后的位置</returns>
         public int EmptyToTvUp(Queue<Swap> command, int mnPosition, int target, int lieShu, string rOrL = "Right")
         {
+            if (mnPosition==target)
+            {
+                command.Enqueue(new Swap(mnPosition, mnPosition-lieShu));
+                return mnPosition - lieShu;
+            }
             int x1 = mnPosition % lieShu;
             int y1 = (mnPosition - x1) / lieShu;
             int x2 = target % lieShu;
@@ -878,6 +883,11 @@ namespace MNPuzzle
         /// <returns>mn移动后的位置</returns>
         public int EmptyToVtLeft(Queue<Swap> command, int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
+            if (mnPosition==target)
+            {
+                command.Enqueue(new Swap(mnPosition,mnPosition-1));
+                return mnPosition - 1;
+            }
             int x1 = mnPosition % lieShu;
             int y1 = (mnPosition - x1) / lieShu;
             int x2 = target % lieShu;
@@ -1052,6 +1062,12 @@ namespace MNPuzzle
         /// <returns>mn移动后的位置</returns>
         public int EmptyToTvDown(Queue<Swap> command, int mnPosition, int target, int lieShu, string rOrL = "Right")
         {
+            if (mnPosition==target)
+            {
+                command.Enqueue(new Swap(mnPosition, mnPosition+lieShu));
+                return mnPosition + lieShu;
+
+            }
             int x1 = mnPosition % lieShu;
             int y1 = (mnPosition - x1) / lieShu;
             int x2 = target % lieShu;
@@ -1125,6 +1141,11 @@ namespace MNPuzzle
         /// <returns>mn移动后的位置</returns>
         public int EmptyToVtRight(Queue<Swap> command, int mnPosition, int target, int lieShu, string upOrdown = "Down")
         {
+            if (mnPosition==target)
+            {
+                command.Enqueue(new Swap(mnPosition,mnPosition+1));
+                return mnPosition + 1;
+            }
             int x1 = mnPosition % lieShu;
             int y1 = (mnPosition - x1) / lieShu;
             int x2 = target % lieShu;
@@ -1422,9 +1443,10 @@ namespace MNPuzzle
                                 {
                                     continue;
                                 }
-                                if (puzzle.Items[index + 1] == index && puzzle.Items[index + lieShu + 1] == index + 1)//后两个都在目标位置
+                                if (puzzle.Items[index + 1] == index)//后两个都在目标位置
                                 {
-                                    mnPos = EmptyToVtLeft(index + lieShu);
+                                    mnPos = EmptyToVtLeft(mnPos,index + lieShu+1);
+                                    restoreRunInfo.otherMess += "后两个的第一个，矫正位置";
                                     ExecutePlanFast(action, restoreRunInfo);
                                     continue;
                                 }
@@ -1467,7 +1489,13 @@ namespace MNPuzzle
                         //这里需要检查两个是否都在目标
                         if (i == 2)
                         {
-                            //需检查是否都在目标
+                            //检查index 是否在目标
+                            if (puzzle.Items[index-lieShu]==index&&mnPos!=index-lieShu+1)
+                            {
+                                mnPos = EmptyToTvRight(mnPos, index-lieShu);
+                                ExecutePlanFast(action, restoreRunInfo);
+                                continue;
+                            }
                             mnPos = RestoreReq2Cgt2(mnPos, index, lieShu, hangShu, action, restoreRunInfo);
                         }
                         else
@@ -1746,7 +1774,7 @@ namespace MNPuzzle
             //Queue<Swap> swaps = new Queue<Swap>();
                 mnPos= EntityTo(entityToArgs);//生成命令
             ////设置双重检查
-            //mnPos = RestoreReq2Cgt2Reset(swaps, index, lieShu);//重置命令
+                //mnPos = RestoreReq2Cgt2Reset(swaps, index, lieShu);//重置命令
                 restoreRunInfo.checkMnPos = mnPos;//如果执行了全部
                 Swap swap = CheckExecutePlanFast(index+1 , action, restoreRunInfo);//检查执行
                 restoreRunInfo.swap = swap;//监测

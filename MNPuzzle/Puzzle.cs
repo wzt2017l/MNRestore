@@ -26,7 +26,7 @@ namespace MNPuzzle
         public int LieShu { get; private set; }//列数
         public int Total { get; private set; }//拼图总块数
         public int mnPosition { get; set; }//mn当前位置
-        public int[] Items { get; private set; }//拼图数组
+        public int[] Items { get; set; }//拼图数组
         public long NiXu { get; set; }//数组逆序数
         public PuzzleState State { get; set; }//状态 
         #endregion
@@ -45,7 +45,6 @@ namespace MNPuzzle
             }
             NiXu = 0;
             State = PuzzleState.Original;
-          
         }
         #endregion
 
