@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace MNPuzzle
 {
+    /// <summary>
+    /// 状态枚举
+    /// </summary>
     public enum PuzzleState
     {
         /// <summary>
